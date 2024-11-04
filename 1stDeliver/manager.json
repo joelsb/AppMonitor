@@ -1,5 +1,51 @@
 MANAGER ENDPOINTS
 
+- Um gestor consulta os seus dados pessoais,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/manager/{managerUsername}
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "username": "manager1",
+    "name": "Manager 1",
+    "email": "manager1@mail.com",
+    "address": "Rua do Manager 1",
+    "phone": "912345678",
+    "office": "Lisboa"
+    //Falta perceber como vai enviar a password
+}
+
+
+- Um gestor dá update aos seus dados pessoais,
+utilizando o protocolo HTTP, verbo PUT,
+para o sitio: /appmonitor/api/manager/{managerUsername}
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "username": "manager1",
+    "name": "Manager 1 UPDATED",
+    "email": "",
+    "address": "Rua do Manager 1",
+    "phone": "912345678",
+    "office": "Lisboa"
+    //Falta perceber como vai enviar a password
+}
+
+Resposta devolvida por este recurso segue o formato JSON:
+
+{
+    "username": "manager1",
+    "name": "Manager 1 UPDATED",
+    "email": "",
+    "address": "Rua do Manager 1",
+    "phone": "912345678",
+    "office": "Lisboa"
+    //Falta perceber como vai enviar a password
+}
+
+
 - Um gestor consulta as encomendas efetuadas pelos clientes,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/orders

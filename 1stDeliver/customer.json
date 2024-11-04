@@ -11,7 +11,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     "name": "Customer 1",
     "email": "customer1@mail.com",
     "address": "Rua do Cliente 1",
-    "phone": "912345678",
+    "phone": "912345678"
     //Falta perceber como vai enviar a password
 }
 
@@ -27,7 +27,7 @@ Resposta enviada para este recurso segue o formato JSON:
     "name": "Customer 1 UPDATED",
     "email": "customer1@mail.com",
     "address": "Rua do Cliente 1",
-    "phone": "912345678",
+    "phone": "912345678"
     //Falta perceber como vai enviar a password
 }
 
@@ -38,7 +38,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     "name": "Customer 1 UPDATED",
     "email": "customer1@mail.com",
     "address": "Rua do Cliente 1",
-    "phone": "912345678",
+    "phone": "912345678"
     //Falta perceber como vai enviar a password
 }
 
