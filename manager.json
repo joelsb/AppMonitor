@@ -1,0 +1,173 @@
+MANAGER ENDPOINTS
+
+- Um gestor consulta as encomendas efetuadas pelos clientes,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/orders
+
+Resposta devolvida por este recurso segue o formato JSON: [
+    {
+        "id": 600,
+        "customerId": 0101,
+        "volumesId": [
+            1,
+            2
+        ]
+    },
+    {
+        "id": 603,
+        "customerId": 0102,
+        "volumesId": [
+            4
+        ]
+    },
+    {
+        "id": 604,
+        "customerId": 0103,
+        "volumesId": [
+            5
+        ]
+    }
+]
+
+
+- Um gestor consulta uma determinada encomenda,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/order/{orderId}
+
+Resposta devolvida por este recurso segue o formato JSON: {
+    "id": 600,
+    "customerId": 0101,
+    "volumesId": [
+        1,
+        2
+    ]
+}
+
+
+- Um gestor consulta os volumes de uma determinada encomenda,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/order/{orderId}/volumes
+
+Resposta devolvida por este recurso segue o formato JSON: [
+    {
+        "id": 1,
+        "package": {
+            "id": 9998,
+            "packageTypeId": 000002, // 2 - saco plastico (com bolhas)
+            "size": "M",
+            "productsId": [
+                11005, // copo vinho
+                11001 // garrafa vinho
+            ],
+            "volumeId": 1
+        },
+        "productId": null,
+        "sensorsId": [
+            1001 // movimento
+        ],
+        "orderId": 600,
+        "status": "IN_TRANSIT"
+    },
+    {
+        "id": 2,
+        "package": {
+            "id": 9997,
+            "packageTypeId": 000001, // 1 - caixa isotermica
+            "size": "M",
+            "productsId": [
+                11006, // caixa gelados 1L
+                11008 // caixa geladdos (6unidades)
+            ],
+            "volumeId": 2
+        },
+        "productId": null,
+        "sensorsId": [
+            1002 // temperatura
+        ],
+        "orderId": 600,
+        "status": "IN_TRANSIT"
+    }
+]
+
+
+- Um gestor consulta os sensores associados a um determinado volume,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/sensors
+
+Resposta devolvida por este recurso segue o formato JSON: [
+    {
+        "id": 1001,
+        "sensorType": {
+            "id": 000003,
+            "type": "movement",
+            "unit": " m/s^2 "
+        },
+        "volumeId": 1,
+        "history": [
+            {
+                "time": "2024-10-20T10:00:00Z",
+                "value": 1.2 // valor de aceleração
+            },
+            {
+                "time": "2021-10-21T00:00:00Z",
+                "value": 5.8 // movimento brusco detetado
+            },
+            {
+                "time": "2021-10-23T12:00:00Z",
+                "value": 2.3
+            }
+        ]
+    }
+]
+
+
+- Um gestor consulta os produtos associados a um determinado volume,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/products
+
+Resposta devolvida por este recurso segue o formato JSON: [
+    {
+        "id": 11005,
+        "name": "copo vinho",
+        "quantity": 2,
+        "description": "copo de vinho de vidro",
+        "photo": "https://www.google.com",
+        "mandatoryPackageId": 002,
+        "size": "M",
+        "mandatorySensorsId": [
+            1001
+        ],
+        "packageId": 9998,
+        "volumeId": 1,
+        "restrictions": [
+            {
+                "id": 1,
+                "limitAbove": 0,
+                "limitBelow": 10,
+                "sensorType": "movement"
+            }
+        ]
+    },
+    {
+        "id": 11010,
+        "name": "garrafa vinho",
+        "quantity": 1,
+        "description": "garrafa de vinho tinto de vidro",
+        "photo": "https://www.google.com",
+        "mandatoryPackageId": 000002,
+        "size": "M",
+        "mandatorySensorId": [
+            1001
+        ],
+        "packageId": 9998,
+        "volumeId": 1,
+        "restrictions": [
+            {
+                "id": 1,
+                "limitAbove": 0,
+                "limitBelow": 10,
+                "sensorType": "movement"
+            }
+        ]
+    }
+]
