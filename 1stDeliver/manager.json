@@ -8,7 +8,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 [
     {
         "id": 600,
-        "customerId": 0101,
+        "customerUsername": "silvioSantos",
         "volumesId": [
             1,
             2
@@ -16,14 +16,14 @@ Resposta devolvida por este recurso segue o formato JSON:
     },
     {
         "id": 603,
-        "customerId": 0102,
+        "customerUsername": "ManelAguiar",
         "volumesId": [
             4
         ]
     },
     {
         "id": 604,
-        "customerId": 0103,
+        "customerUsername": "CaslteloBranco",
         "volumesId": [
             5
         ]
@@ -38,7 +38,7 @@ para o sitio: /appmonitor/api/order/{orderId}
 Resposta devolvida por este recurso segue o formato JSON: 
 {
     "id": 600,
-    "customerId": 0101,
+    "customerUsername": "silvioSantos",
     "volumesId": [
         1,
         2
@@ -103,7 +103,7 @@ Resposta devolvida por este recurso segue o formato JSON:
         "id": 1001,
         "sensorType": {
             "id": 000003,
-            "type": "movement",
+            "type": "Movement",
             "unit": " m/s^2 "
         },
         "volumeId": 1,
@@ -149,7 +149,7 @@ Resposta devolvida por este recurso segue o formato JSON:
                 "id": 1,
                 "limitAbove": 0,
                 "limitBelow": 10,
-                "sensorType": "movement"
+                "sensorType": "Movement"
             }
         ]
     },
@@ -171,7 +171,7 @@ Resposta devolvida por este recurso segue o formato JSON:
                 "id": 1,
                 "limitAbove": 0,
                 "limitBelow": 10,
-                "sensorType": "movement"
+                "sensorType": "Movement"
             }
         ]
     }

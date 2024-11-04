@@ -1,15 +1,58 @@
 CUSTOMER ENDPOINTS
 
+- Um cliente consulta os seus dados pessoais,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/customer/{customerUsername}
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "username": "customer1",
+    "name": "Customer 1",
+    "email": "customer1@mail.com",
+    "address": "Rua do Cliente 1",
+    "phone": "912345678",
+    //Falta perceber como vai enviar a password
+}
+
+
+- Um cliente dá update aos seus dados pessoais,
+utilizando o protocolo HTTP, verbo PUT,
+para o sitio: /appmonitor/api/customer/{customerUsername}
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "username": "customer1",
+    "name": "Customer 1 UPDATED",
+    "email": "customer1@mail.com",
+    "address": "Rua do Cliente 1",
+    "phone": "912345678",
+    //Falta perceber como vai enviar a password
+}
+
+Resposta devolvida por este recurso segue o formato JSON:
+
+{
+    "username": "customer1",
+    "name": "Customer 1 UPDATED",
+    "email": "customer1@mail.com",
+    "address": "Rua do Cliente 1",
+    "phone": "912345678",
+    //Falta perceber como vai enviar a password
+}
+
+
 - Um cliente consulta as suas encomendas,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerId}/orders
+para o sitio: /appmonitor/api/customer/{customerUsername}/orders
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 [
     {
         "id": 600,
-        "customerId": 0101,
+        "customerUsername": "customer2",
         "volumesId": [
             1,
             2
@@ -17,7 +60,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     },
     {
         "id": 601,
-        "customerId": 0101,
+        "customerUsername": "Customer1",
         "volumesId": [
             3
         ]
@@ -27,7 +70,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 - Um cliente consulta os volumes de uma determinada encomenda,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerId}/order/{orderId}/volumes
+para o sitio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volumes
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -58,7 +101,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 - Um cliente consulta os sensores associados a um determinado volume,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerId}/order/{orderId}/volume/{volumeId}/sensors
+para o sitio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/sensors
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -68,11 +111,9 @@ Resposta devolvida por este recurso segue o formato JSON:
         "sensorType": {
             "id": 0001,
             "name": "Temperature Sensor",
-            "unit": " ºC "
+            "unit": " ºC"
         },
         "volumeId": 3,
-        "activationTime": "2024-10-31T00:00:00",
-        "deactivationTime": null,
         "history": [
             {
                 "dateTime": "2024-10-31T00:00:00",
@@ -85,11 +126,9 @@ Resposta devolvida por este recurso segue o formato JSON:
         "sensorType": {
             "id": 0002,
             "name": "Luminosity Sensor",
-            "unit": " % "
+            "unit": " %"
         },
         "volumeId": 3,
-        "activationTime": "2024-10-31T00:00:00",
-        "deactivationTime": null,
         "history": [
             {
                 "dateTime": "2024-10-31T00:00:01",
@@ -102,7 +141,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 - Um cliente consulta os produtos de um determinado volume
 utilizando o protocolo HTTP, verbo GET
-para o sítio: /appmonitor/api/customer/{customerId}/order/{orderId}/volume/{volumeId}/products
+para o sítio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/products
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -121,10 +160,15 @@ Resposta devolvida por este recurso segue o formato JSON:
         ],
         "packageId": 9999,
         "volumeId": 3,
-        "restrictions": { // é uma restrição imposta pelo cliente
-            "limitAbove": 15,
-            "limitBelow": -25
-        }
+        "restrictions": 
+        [
+            { // é uma restrição imposta pelo cliente
+                "id": 2,
+                "limitAbove": 15,
+                "limitBelow": -25,
+                "sensorType": "Temperature"
+            }
+        ]
     },
     {
         "id": 11002,
@@ -139,10 +183,15 @@ Resposta devolvida por este recurso segue o formato JSON:
         ],
         "packageId": 9998,
         "volumeId": 3,
-        "restrictions": {
-            "limitAbove": -5,
-            "limitBelow": 10
-        }
+        "restrictions":
+        [
+             {
+                "id": 3,
+                "limitAbove": -5,
+                "limitBelow": 10,
+                "sensorType": "Temperature"
+            }
+        ]
     },
     {
         "id": 11003,
