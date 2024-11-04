@@ -4,7 +4,8 @@ MANAGER ENDPOINTS
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/orders
 
-Resposta devolvida por este recurso segue o formato JSON: [
+Resposta devolvida por este recurso segue o formato JSON: 
+[
     {
         "id": 600,
         "customerId": 0101,
@@ -34,7 +35,8 @@ Resposta devolvida por este recurso segue o formato JSON: [
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}
 
-Resposta devolvida por este recurso segue o formato JSON: {
+Resposta devolvida por este recurso segue o formato JSON: 
+{
     "id": 600,
     "customerId": 0101,
     "volumesId": [
@@ -48,7 +50,8 @@ Resposta devolvida por este recurso segue o formato JSON: {
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}/volumes
 
-Resposta devolvida por este recurso segue o formato JSON: [
+Resposta devolvida por este recurso segue o formato JSON: 
+[
     {
         "id": 1,
         "package": {
@@ -94,7 +97,8 @@ Resposta devolvida por este recurso segue o formato JSON: [
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/sensors
 
-Resposta devolvida por este recurso segue o formato JSON: [
+Resposta devolvida por este recurso segue o formato JSON: 
+[
     {
         "id": 1001,
         "sensorType": {
@@ -125,7 +129,8 @@ Resposta devolvida por este recurso segue o formato JSON: [
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/products
 
-Resposta devolvida por este recurso segue o formato JSON: [
+Resposta devolvida por este recurso segue o formato JSON: 
+[
     {
         "id": 11005,
         "name": "copo vinho",
