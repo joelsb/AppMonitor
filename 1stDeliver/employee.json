@@ -339,12 +339,31 @@ Resposta enviada para este recurso segue o formato JSON:
     "volumesId": null
 }
 
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "id": 600,
+    "customerUsername": "customer1",
+    "volumesId": null
+}
+
 
 - Um empregado cria um novo volume associado a uma encomenda,
 utilizando o protocolo HTTP, verbo POST,
 para o sitio: /appmonitor/api/volume
 
 Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "id": 1,
+    "packageId": null, 
+    "productId": null,
+    "sensorsId": null,
+    "orderId": 600,
+    "status": "PACKING"
+}
+
+Resposta devolvida por este recurso segue o formato JSON: 
 
 {
     "id": 1,
@@ -369,6 +388,30 @@ Resposta enviada para este recurso segue o formato JSON:
     "history": null
 }
 
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "id": 1001,
+    "sensorTypeId": 1,
+    "volumeId": 1,
+    "history": null
+}
+
+
+- Um empregado adiciona um valor a um sensor
+utilizando o protocolo HTTP, verbo PUT,
+para o sitio: /appmonitor/api/sensor/{sensorId}/addValue
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    {
+        "value": 20.0,
+        "date": null //preechido pelo sistema com a data atual
+    }
+}
+
+
 
 - Um empregado associa varios produtos (que tem um mandatoryPackage) a uma embalagem,
 utilizando o protocolo HTTP, verbo PUT,
@@ -377,6 +420,19 @@ para o sitio: /appmonitor/api/package/{packageId}/addProducts
 Resposta enviada para este recurso segue o formato JSON: 
 
 {
+    "productsId": [
+        11010, // sementes de plantas
+        11011, // fertilizante
+        11012 // agua desmineralizada
+    ]
+}
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "id": 9999,
+    "packageType": "Isotermic",
+    "size": "S",
     "productsId": [
         11010, // sementes de plantas
         11011, // fertilizante
@@ -397,12 +453,24 @@ Resposta enviada para este recurso segue o formato JSON:
     ]
 }
 
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "id": 9999,
+    "packageType": "Isotermic",
+    "size": "S",
+    "productsId": [
+        11011, // fertilizante
+        11012 // agua desmineralizada
+    ]
+}
+
 
 - Um empregado associa um produto (que não tem mandatoryPackage) a um volume,
 utilizando o protocolo HTTP, verbo PUT,
 para o sitio: /appmonitor/api/volume/{volumeId}/associateProduct/{productId}
 
-Resposta recebida por este recurso segue o formato JSON: 
+Resposta devolvida por este recurso segue o formato JSON: 
 
 {
     "id": 1,
@@ -413,11 +481,12 @@ Resposta recebida por este recurso segue o formato JSON:
     "status": "PACKING"
 }
 
+
 - Um empregado desassocia um produto de um volume,
 utilizando o protocolo HTTP, verbo PUT,
 para o sitio: /appmonitor/api/volume/{volumeId}/dissociateProduct/{productId}
 
-Resposta recebida por este recurso segue o formato JSON: 
+Resposta devolvida por este recurso segue o formato JSON: 
 
 {
     "id": 1,
@@ -433,7 +502,7 @@ Resposta recebida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo PUT,
 para o sitio: /appmonitor/api/volume/{volumeId}/associatePackage/{packageId}
 
-Resposta recebida por este recurso segue o formato JSON: 
+Resposta devolvida por este recurso segue o formato JSON: 
 
 {
     "id": 2,
@@ -449,7 +518,7 @@ Resposta recebida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo PUT,
 para o sitio: /appmonitor/api/volume/{volumeId}/dissociatePackage/{packageId}
 
-Resposta recebida por este recurso segue o formato JSON: 
+Resposta devolvida por este recurso segue o formato JSON: 
 
 {
     "id": 2,
@@ -484,7 +553,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/volume/{volumeId}/sensors
 
-Resposta recebida por este recurso segue o formato JSON: 
+Resposta devolvida por este recurso segue o formato JSON: 
 
 [
     {
@@ -514,7 +583,7 @@ Resposta recebida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo PATCH,
 utilizando o sitio: /appmonitor/api/volume/{volumeId}/ship
 
-Resposta recebida por este recurso segue o formato JSON: 
+Resposta devolvida por este recurso segue o formato JSON: 
 
 {
     "id": 1,
