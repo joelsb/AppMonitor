@@ -1,0 +1,159 @@
+CUSTOMER ENDPOINTS
+
+- Um cliente consulta as suas encomendas,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/customer/{customerId}/orders
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+[
+    {
+        "id": 600,
+        "volumesId": [
+            1,
+            2
+        ]
+    },
+    {
+        "id": 601,
+        "volumesId": [
+            3
+        ]
+    }
+]
+
+
+- Um cliente consulta os volumes de uma determinada encomenda,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/customer/{customerId}/order/{orderId}/volumes
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+[
+    {
+        "id": 3,
+        "package": {
+            "id": 9999,
+            "packageTypeId": 000001, // 1- caixa isotermica
+            "size": "S",
+            "productsId": [
+                11010, // sementes de plantas
+                11011, // fertilizante
+                11012 // agua desmineralizada
+            ],
+            "volumeId": 3
+        },
+        "productId": null,
+        "sensorsId": [
+            1002, // temperatura
+            1003 // luminosidade
+        ],
+        "orderId": 601,
+        "status": "IN_TRANSIT"
+    }
+]
+
+
+- Um cliente consulta os sensores associados a um determinado volume,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/customer/{customerId}/order/{orderId}/volume/{volumeId}/sensors
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+[
+    {
+        "id": 1002,
+        "sensorType": {
+            "id": 0001,
+            "name": "Temperature Sensor",
+            "unit": " ºC "
+        },
+        "volumeId": 3,
+        "activationTime": "2024-10-31T00:00:00",
+        "deactivationTime": null,
+        "history": [
+            {
+                "dateTime": "2024-10-31T00:00:00",
+                "value": "-20.0"
+            }
+        ]
+    },
+    {
+        "id": 1003,
+        "sensorType": {
+            "id": 0002,
+            "name": "Luminosity Sensor",
+            "unit": " % "
+        },
+        "volumeId": 3,
+        "activationTime": "2024-10-31T00:00:00",
+        "deactivationTime": null,
+        "history": [
+            {
+                "dateTime": "2024-10-31T00:00:01",
+                "value": "15.0"
+            }
+        ]
+    }
+]
+
+
+- Um cliente consulta os produtos de um determinado volume
+utilizando o protocolo HTTP, verbo GET
+para o sítio: /appmonitor/api/customer/{customerId}/order/{orderId}/volume/{volumeId}/products
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+[
+
+    {
+        "id": 11001,
+        "name": "Product 1",
+        "quantity": 5,
+        "description": "Plant seeds",
+        "photo": "https://www.google.com",
+        "mandatoryPackageId": 000001,
+        "size": "S",
+        "mandatorySensorsId": [
+            0001
+        ],
+        "packageId": 9999,
+        "volumeId": 3,
+        "restrictions": { // é uma restrição imposta pelo cliente
+            "limitAbove": 15,
+            "limitBelow": -25
+        }
+    },
+    {
+        "id": 11002,
+        "name": "Product 2",
+        "quantity": 2,
+        "description": "Fertilizer A - 250ml",
+        "photo": "https://www.google.com",
+        "mandatoryPackageId": 000001,
+        "size": "S",
+        "mandatorySensorsId": [
+            0001
+        ],
+        "packageId": 9998,
+        "volumeId": 3,
+        "restrictions": {
+            "limitAbove": -5,
+            "limitBelow": 10
+        }
+    },
+    {
+        "id": 11003,
+        "name": "Product 3",
+        "quantity": 2,
+        "description": "Demineralized Water - 5L",
+        "photo": "https://www.google.com",
+        "mandatoryPackageId": 000002,
+        "size": "M",
+        "mandatorySensorsId": null,
+        "packageId": 9997, // caixa normal de cartão tamanho medio
+        "volumeId": 3,
+        "restrictions": null
+    }   
+]
+
