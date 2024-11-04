@@ -9,6 +9,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 [
     {
         "id": 600,
+        "customerId": 0101,
         "volumesId": [
             1,
             2
@@ -16,6 +17,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     },
     {
         "id": 601,
+        "customerId": 0101,
         "volumesId": [
             3
         ]

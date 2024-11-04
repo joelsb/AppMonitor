@@ -4,8 +4,7 @@ MANAGER ENDPOINTS
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/orders
 
-Resposta devolvida por este recurso segue o formato JSON: 
-[
+Resposta devolvida por este recurso segue o formato JSON: [
     {
         "id": 600,
         "customerId": 0101,
@@ -35,8 +34,8 @@ Resposta devolvida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}
 
-Resposta devolvida por este recurso segue o formato JSON: 
-{
+Resposta devolvida por este recurso segue o formato JSON: {
+    "id": 600,
     "customerId": 0101,
     "volumesId": [
         1,
@@ -49,8 +48,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}/volumes
 
-Resposta devolvida por este recurso segue o formato JSON: 
-[
+Resposta devolvida por este recurso segue o formato JSON: [
     {
         "id": 1,
         "package": {
@@ -96,18 +94,16 @@ Resposta devolvida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/sensors
 
-Resposta devolvida por este recurso segue o formato JSON: 
-[
+Resposta devolvida por este recurso segue o formato JSON: [
     {
-        "sensorId": 1001,
+        "id": 1001,
         "sensorType": {
             "id": 000003,
             "type": "movement",
             "unit": " m/s^2 "
         },
         "volumeId": 1,
-        "activationTime": "2024-10-20T10:00:00Z",
-        "history" : [
+        "history": [
             {
                 "time": "2024-10-20T10:00:00Z",
                 "value": 1.2 // valor de aceleração
@@ -129,42 +125,49 @@ Resposta devolvida por este recurso segue o formato JSON:
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/products
 
-Resposta devolvida por este recurso segue o formato JSON: 
-[
+Resposta devolvida por este recurso segue o formato JSON: [
     {
-        "productId": 11005,
-        "productName": "copo vinho",
+        "id": 11005,
+        "name": "copo vinho",
         "quantity": 2,
         "description": "copo de vinho de vidro",
-        "photo" : "https://www.google.com",
-        "mandatoryPackageId" : 002,
-        "size" : "M",
-        "mandatorySensorId" : [
+        "photo": "https://www.google.com",
+        "mandatoryPackageId": 002,
+        "size": "M",
+        "mandatorySensorsId": [
             1001
         ],
         "packageId": 9998,
         "volumeId": 1,
-        "restrictions" : {
-            "limitAbove" : 0,
-            "limitBelow" : 10,
-        }
+        "restrictions": [
+            {
+                "id": 1,
+                "limitAbove": 0,
+                "limitBelow": 10,
+                "sensorType": "movement"
+            }
+        ]
     },
     {
-        "productId": 11010,
-        "productName": "garrafa vinho",
+        "id": 11010,
+        "name": "garrafa vinho",
         "quantity": 1,
         "description": "garrafa de vinho tinto de vidro",
-        "photo" : "https://www.google.com",
-        "mandatoryPackageId" : 000002,
-        "size" : "M",
-        "mandatorySensorId" : [
+        "photo": "https://www.google.com",
+        "mandatoryPackageId": 000002,
+        "size": "M",
+        "mandatorySensorId": [
             1001
         ],
         "packageId": 9998,
         "volumeId": 1,
-        "restrictions" : {
-            "limitAbove" : 0,
-            "limitBelow" : 10,
-        }
+        "restrictions": [
+            {
+                "id": 1,
+                "limitAbove": 0,
+                "limitBelow": 10,
+                "sensorType": "movement"
+            }
+        ]
     }
 ]
