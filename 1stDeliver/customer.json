@@ -150,6 +150,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 11001,
         "name": "Product 1",
+        "price": 10.0,
         "quantity": 5,
         "description": "Plant seeds",
         "photo": "https://www.google.com",
@@ -173,6 +174,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 11002,
         "name": "Product 2",
+        "price": 20.0,
         "quantity": 2,
         "description": "Fertilizer A - 250ml",
         "photo": "https://www.google.com",
@@ -196,6 +198,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 11003,
         "name": "Product 3",
+        "price": 30.0,
         "quantity": 2,
         "description": "Demineralized Water - 5L",
         "photo": "https://www.google.com",

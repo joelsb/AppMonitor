@@ -89,7 +89,9 @@
           <mxGeometry y="130" width="180" height="26" as="geometry" />
         </mxCell>
         <mxCell id="vDZfe7IzeGbe9_NpDukr-15" value="&lt;b&gt;Product&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="-1680" y="990" width="290" height="312" as="geometry" />
+          <mxGeometry x="-1680" y="990" width="290" height="338" as="geometry">
+            <mxRectangle x="-1680" y="990" width="90" height="30" as="alternateBounds" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="vDZfe7IzeGbe9_NpDukr-16" value="+ id: long" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="26" width="290" height="26" as="geometry" />
@@ -97,32 +99,35 @@
         <mxCell id="vDZfe7IzeGbe9_NpDukr-17" value="+ name: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="52" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="vDZfe7IzeGbe9_NpDukr-18" value="+ quantity: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="E2h4__j6ogRcdnFm5RxV-5" value="+ price: double" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="vDZfe7IzeGbe9_NpDukr-15">
           <mxGeometry y="78" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="vDZfe7IzeGbe9_NpDukr-19" value="+ description: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="vDZfe7IzeGbe9_NpDukr-18" value="+ quantity: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="104" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="vDZfe7IzeGbe9_NpDukr-20" value="+ photo : String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="vDZfe7IzeGbe9_NpDukr-19" value="+ description: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="130" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="_Q6XGL1x2K6SCyfAGfjQ-2" value="+ mandatoryPackage: PackageType (can be null)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="vDZfe7IzeGbe9_NpDukr-20" value="+ photo : String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="156" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="vDZfe7IzeGbe9_NpDukr-61" value="+ size: Size" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="_Q6XGL1x2K6SCyfAGfjQ-2" value="+ mandatoryPackage: PackageType (can be null)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="182" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="vDZfe7IzeGbe9_NpDukr-22" value="+ mandatorySensors: List&amp;lt;SensorType&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="vDZfe7IzeGbe9_NpDukr-61" value="+ size: Size" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="208" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="vDZfe7IzeGbe9_NpDukr-23" value="+ package: Package" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="vDZfe7IzeGbe9_NpDukr-22" value="+ mandatorySensors: List&amp;lt;SensorType&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="234" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="vDZfe7IzeGbe9_NpDukr-24" value="+ volume: Volume" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="vDZfe7IzeGbe9_NpDukr-23" value="+ package: Package" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="260" width="290" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="pqre4A-kYwZO-19_Y6kV-2" value="+ restrictions: List&amp;lt;Restriction&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+        <mxCell id="vDZfe7IzeGbe9_NpDukr-24" value="+ volume: Volume" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
           <mxGeometry y="286" width="290" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="pqre4A-kYwZO-19_Y6kV-2" value="+ restrictions: List&amp;lt;Restriction&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vDZfe7IzeGbe9_NpDukr-15" vertex="1">
+          <mxGeometry y="312" width="290" height="26" as="geometry" />
         </mxCell>
         <mxCell id="vDZfe7IzeGbe9_NpDukr-25" value="&lt;b&gt;Sensor&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1350" y="1055" width="210" height="130" as="geometry" />
@@ -311,7 +316,7 @@
             <mxPoint x="-1940" y="1296" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="_Q6XGL1x2K6SCyfAGfjQ-9" value="«Enumeration»&lt;br&gt;&lt;div&gt;&lt;b&gt;VolumeStatus&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;PACKED&lt;/div&gt;&lt;div&gt;IN_TRANSIT&lt;/div&gt;&lt;div&gt;DELIVERED&lt;b&gt;&lt;/b&gt;&lt;/div&gt;" style="html=1;dropTarget=0;whiteSpace=wrap;" parent="1" vertex="1">
+        <mxCell id="_Q6XGL1x2K6SCyfAGfjQ-9" value="«Enumeration»&lt;br&gt;&lt;div&gt;&lt;b&gt;VolumeStatus&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;PACKING&lt;/div&gt;&lt;div&gt;IN_TRANSIT&lt;/div&gt;&lt;div&gt;DELIVERED&lt;b&gt;&lt;/b&gt;&lt;/div&gt;" style="html=1;dropTarget=0;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="-1350" y="485" width="180" height="120" as="geometry" />
         </mxCell>
         <mxCell id="pqre4A-kYwZO-19_Y6kV-3" value="" style="endArrow=ERzeroToMany;html=1;rounded=0;fontSize=12;startSize=13;endSize=13;startArrow=ERzeroToMany;startFill=0;endFill=0;" parent="1" source="vDZfe7IzeGbe9_NpDukr-1" target="vDZfe7IzeGbe9_NpDukr-15" edge="1">

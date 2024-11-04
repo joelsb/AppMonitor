@@ -180,6 +180,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 11005,
         "name": "copo vinho",
+        "price": 2.0,
         "quantity": 2,
         "description": "copo de vinho de vidro",
         "photo": "https://www.google.com",
@@ -202,6 +203,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 11010,
         "name": "garrafa vinho",
+        "price": 10.0,
         "quantity": 1,
         "description": "garrafa de vinho tinto de vidro",
         "photo": "https://www.google.com",
