@@ -16,10 +16,7 @@ Resposta devolvida por este recurso segue o formato JSON:
         "id": 1,
         "name": "Warehouse 1",
         "location": "Rua do Warehouse 1",
-        "employeesUsername": [
-            "employee1",
-            "employee2"
-        ]   
+        "employeesUsername": null   
     }
 }
 
@@ -35,14 +32,11 @@ Resposta enviada para este recurso segue o formato JSON:
     "email": "employee1@mail.com",
     "address": "Rua do Employee 1",
     "phone": "912345678",
-    "warehouse": {
+    "warehouseId": {
         "id": 1,
         "name": "Warehouse 1",
         "location": "Rua do Warehouse 1",
-        "employeesUsername": [
-            "employee1",
-            "employee2"
-        ]   
+        "employeesUsername": null 
     }
 }
 
@@ -58,10 +52,7 @@ Resposta devolvida por este recurso segue o formato JSON:
         "id": 1,
         "name": "Warehouse 1",
         "location": "Rua do Warehouse 1",
-        "employeesUsername": [
-            "employee1",
-            "employee2"
-        ]   
+        "employeesUsername": null 
     }
 }
 

@@ -17,7 +17,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 }
 
 
-- Um gestor dá update aos seus dados pessoais,
+- Um gestor atualiza os seus dados pessoais,
 utilizando o protocolo HTTP, verbo PUT,
 para o sitio: /appmonitor/api/manager/{managerUsername}
 
@@ -26,7 +26,7 @@ Resposta enviada para este recurso segue o formato JSON:
 {
     "username": "manager1",
     "name": "Manager 1 UPDATED",
-    "email": "",
+    "email": "manager1@mail.com",
     "address": "Rua do Manager 1",
     "phone": "912345678",
     "office": "Lisboa"
@@ -38,7 +38,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 {
     "username": "manager1",
     "name": "Manager 1 UPDATED",
-    "email": "",
+    "email": "manager1@mail.com",
     "address": "Rua do Manager 1",
     "phone": "912345678",
     "office": "Lisboa"

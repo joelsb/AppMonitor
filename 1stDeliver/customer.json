@@ -52,7 +52,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 [
     {
         "id": 600,
-        "customerUsername": "customer2",
+        "customerUsername": "customer1",
         "volumesId": [
             1,
             2
@@ -60,7 +60,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     },
     {
         "id": 601,
-        "customerUsername": "Customer1",
+        "customerUsername": "customer1",
         "volumesId": [
             3
         ]
