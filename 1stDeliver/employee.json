@@ -1,5 +1,41 @@
 EMPLOYEE ENDPOINTS
 
+
+- Um empregado faz login no site
+utilizando o protocolo HTTP, verbo POST,
+para o sitio: /appmonitor/api/auth/login
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "username": "customer1",
+    "password": "password"
+}
+
+Resposta devolvida para este recurso segue o formato JSON:
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+}
+
+
+- Um empregado atualiza a sua password do site
+utilizando o protocolo HTTP, verbo PATCH,
+para o sitio: /appmonitor/api/auth/set-password
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "oldPassword": "old-weak-password", 
+    "newPassword": "my-new-super-strong-password", 
+    "confirmPassword": "my-new-super-strong-password",
+}
+
+Resposta devolvida para este recurso segue o formato JSON:
+{
+    "token": "sInR5cCI6IkpXVCJ9asAJOygdhb81bnAJ8b1jas99Y"
+}
+
+
 - Um empregado consulta os seus dados pessoais,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/employee/{employeeUsername}
@@ -13,10 +49,8 @@ Resposta devolvida por este recurso segue o formato JSON:
     "address": "Rua do Employee 1",
     "phone": "912345678",
     "warehouse": {
-        "id": 1,
         "name": "Warehouse 1",
         "location": "Rua do Warehouse 1",
-        "employeesUsername": null   
     }
 }
 
@@ -32,12 +66,6 @@ Resposta enviada para este recurso segue o formato JSON:
     "email": "employee1@mail.com",
     "address": "Rua do Employee 1",
     "phone": "912345678",
-    "warehouseId": {
-        "id": 1,
-        "name": "Warehouse 1",
-        "location": "Rua do Warehouse 1",
-        "employeesUsername": null 
-    }
 }
 
 Resposta devolvida por este recurso segue o formato JSON:
@@ -49,15 +77,13 @@ Resposta devolvida por este recurso segue o formato JSON:
     "address": "Rua do Employee 1",
     "phone": "912345678",
     "warehouse": {
-        "id": 1,
         "name": "Warehouse 1",
         "location": "Rua do Warehouse 1",
-        "employeesUsername": null 
     }
 }
 
 
-- Um empregado consultas os clientes que da empresa para associar a uma encomenda,
+- Um empregado consulta os clientes da empresa para associar a uma encomenda,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/customer
 
@@ -67,9 +93,6 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "username": "customer1",
         "name": "Customer 1",
-        "email": "customer1@mail.com",
-        "address": "Rua do Cliente 1",
-        "phone": "912345678",
         "ordersId": [
             600,
             601
@@ -78,9 +101,6 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "username": "customer2",
         "name": "Customer 2",
-        "email": "customer2@mail.com",
-        "address": "Rua do Cliente 2",
-        "phone": "912345678",
         "ordersId": [
             602
         ]
@@ -99,54 +119,70 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 1,
         "name": "Product 1",
-        "price": 10.0,
         "quantity": 10,
         "description": "Product 1 description",
         "photo": "www.photo.com",
-        "mandatoryPackageId": 1,
-        "size": "S",
-        "mandatorySensorsId": [
-            1,
-            2
-        ],
-        "packageId": 9999,
-        "volumeId": null,
-        "restrictions": null,
+        "mandatoryPackage":
+        {
+            "id": 1,
+            "name": "Isotermic"
+        }
     },
     {
         "id":2,
         "name": "Product 2",
-        "price": 20.0,
+        "quantity": 2,
         "description": "Product 2 description",
         "photo": "www.photo.com",
-        "mandatoryPackageId": 2,
-        "size": "M",
-        "mandatorySensorsId": null,
-        "packageId": 9988,
-        "volumeId": null,
-        "restrictions": null,
+        "mandatoryPackage": {
+            "id": 2,
+            "name": "Card Box",
+        }
     },
     {
         "id":3,
         "name": "Product 3",
-        "price": 30.0,
+        "quantity": 1,
         "description": "Product 3 description",
         "photo": "www.photo.com",
-        "mandatoryPackageId": null,
-        "size": "L",
-        "mandatorySensorsId": null,
-        "packageId": null,
-        "volumeId": null,
-        "restrictions": null,
+        "mandatorySensors": [  
+            {
+                "id": 1,
+                "name": "Temperature",
+            },
+            {
+                "id": 2,
+                "name": "Luminosity",
+            }
+        ]
+    },
+    {
+        "id":4,
+        "name": "Product 4",
+        "quantity": 1,
+        "description": "Product 2 description",
+        "photo": "www.photo.com",
+        "mandatoryPackage": {
+            "id": 2,
+            "name": "Card Box",
+        },
+        "package": {
+            "id": 4,
+            "packageType": {
+                "id": 2,
+                "name": "Card Box",
+            },
+            "size": "S"
+        }
     }
 ]
 
 
 - Um empregado consulta os produtos da empresa 
 que ainda não foram associados a um volume,
-e que ainda não têm a embalagem obrigatória associada,
+e que precisam de uma embalagem obrigatória,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/product/availableForPackaging
+para o sitio: /appmonitor/api/product/needs-package
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -154,41 +190,34 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 1,
         "name": "Product 1",
-        "price": 10.0,
         "quantity": 10,
         "description": "Product 1 description",
         "photo": "www.photo.com",
-        "mandatoryPackageId": 1,
-        "size": "S",
-        "mandatorySensorsId": [
-            1,
-            2
-        ],
-        "packageId": null,
-        "volumeId": null,
-        "restrictions": null,
+        "mandatoryPackage":
+        {
+            "id": 1,
+            "name": "Isotermic",
+        }
     },
     {
         "id":2,
         "name": "Product 2",
-        "price": 20.0,
+        "quantity": 2,
         "description": "Product 2 description",
         "photo": "www.photo.com",
-        "mandatoryPackageId": 2,
-        "size": "M",
-        "mandatorySensorsId": null,
-        "packageId": null,
-        "volumeId": null,
-        "restrictions": null,
+        "mandatoryPackage": {
+            "id": 2,
+            "name": "Card Box",
+        }
     }
 ]
 
 
 - Um empregado consulta os produtos da empresa 
 que ainda não foram associados a um volume,
-e não têm embalagem obrigatoria
+e não precisam de embalagem obrigatoria
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/product/availableForVolume
+para o sitio: /appmonitor/api/product/ready-for-volume
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -196,15 +225,19 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id":3,
         "name": "Product 3",
-        "price": 30.0,
+        "quantity": 1,
         "description": "Product 3 description",
         "photo": "www.photo.com",
-        "mandatoryPackageId": null,
-        "size": "L",
-        "mandatorySensorsId": null,
-        "packageId": null,
-        "volumeId": null,
-        "restrictions": null,
+        "mandatorySensors": [  
+            {
+                "id": 1,
+                "name": "Temperature",
+            },
+            {
+                "id": 2,
+                "name": "Luminosity",
+            }
+        ]
     }
 ]
 
@@ -219,74 +252,100 @@ Resposta devolvida por este recurso segue o formato JSON:
 [
     {
         "id": 9999,
-        "packageType": "Isotermic",
+        "packageTypeName": "Caixa Isotermica",
         "size": "S",
-        "productsId": [
-            1,
-            2
+        "products": [
+            {
+                "id": 1,
+                "name": "Product 1",
+            },
+            {
+                "id": 2,
+                "name": "Product 2",
+            }
         ]
     },
     {
         "id": 9988,
-        "packageType": "Card Box",
+        "packageTypeName": "Caixa de Cartão",
         "size": "M",
-        "productsId": [
-            3,
-            4
+        "products": [
+            {
+                "id": 3,
+                "name": "Product 3",
+            },
+            {
+                "id": 4,
+                "name": "Product 4",
+            }
         ]
     },
     {
         "id": 9977,
-        "packageType": "Plastic Bubbles",
+        "packageTypeName": "Plastico com Bolhas",
         "size": "L",
-        "productsId": null
+        "products": []
     }
 ]
 
 
-- Um empregado consulta as embalagens disponiveis da empresa
-que ainda não foram associadas a um volume,
-e que ainda não têm produtos associados,
-utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/package/availableForPackage
+// NAO FAZ SENTIDO PK PODEMOS ADICIONAR PRODUTOS A EMBALAGENS QUE JÁ TÊM PRODUTOS
 
-Resposta devolvida por este recurso segue o formato JSON: 
+// - Um empregado consulta as embalagens disponiveis da empresa
+// que ainda não foram associadas a um volume,
+// e que ainda não têm produtos associados,
+// utilizando o protocolo HTTP, verbo GET,
+// para o sitio: /appmonitor/api/package/available-for-packaging
 
-[
-    {
-        "id": 9977,
-        "packageType": "Plastic Bubbles",
-        "size": "L",
-        "productsId": null
-    }
-]
+// Resposta devolvida por este recurso segue o formato JSON: 
+
+// [
+//     {
+//         "id": 9977,
+//         "packageTypeName": "Plastico com Bolhas",
+//         "size": "L",
+//         "products": []
+//     }
+// ]
 
 
 - Um empregado consulta as embalagens disponiveis da empresa
 que ainda não foram associadas a um volume,
 e que têm produtos associados,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/package/availableForVolume
+para o sitio: /appmonitor/api/package/ready-for-volume
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 [
     {
         "id": 9999,
-        "packageType": "Isotermic",
+        "packageTypeName": "Caixa Isotermica",
         "size": "S",
-        "productsId": [
-            1,
-            2
+        "products": [
+            {
+                "id": 1,
+                "name": "Product 1",
+            },
+            {
+                "id": 2,
+                "name": "Product 2",
+            }
         ]
     },
     {
         "id": 9988,
-        "packageType": "Card Box",
+        "packageTypeName": "Caixa de Cartão",
         "size": "M",
-        "productsId": [
-            3,
-            4
+        "products": [
+            {
+                "id": 3,
+                "name": "Product 3",
+            },
+            {
+                "id": 4,
+                "name": "Product 4",
+            }
         ]
     }
 ]
@@ -302,243 +361,233 @@ Resposta devolvida por este recurso segue o formato JSON:
 [
     {
         "id": 1,
-        "type": "Temperature",
-        "unit": "ºC"
+        "name": "Temperature",
     },
     {
         "id": 2,
-        "type": "Luminosity",
-        "unit": "lux"
+        "name": "Luminosity",
     },
     {
         "id": 3,
-        "type": "Movement",
-        "unit": "m/s^2"
+        "name": "Movement",
     }
 ]
 
+// NÃO FAZ SENTIDO ESTE ENDPOINT, PORQUE A ENCOMENDA APENAS É CRIADA QUANDO 
+// EXISTIR PELO MENOS UM VOLUME 
 
-- Um empregado criar uma nova encomenda,
-utilizando o protocolo HTTP, verbo POST,
-para o sitio: /appmonitor/api/order
+// - Um empregado criar uma nova encomenda,
+// utilizando o protocolo HTTP, verbo POST,
+// para o sitio: /appmonitor/api/order
 
-Resposta enviada para este recurso segue o formato JSON: 
+// Resposta enviada para este recurso segue o formato JSON: 
 
-{
-    "id": 600,
-    "customerUsername": "customer1",
-    "volumesId": null
-}
+// {
+//     "id": 600,
+//     "customerUsername": "customer1",
+//     "volumesId": null
+// }
 
-Resposta devolvida por este recurso segue o formato JSON: 
+// Resposta devolvida por este recurso segue o formato JSON: 
 
-{
-    "id": 600,
-    "customerUsername": "customer1",
-    "volumesId": null
-}
+// {
+//     "id": 600,
+//     "customerUsername": "customer1",
+//     "volumesId": null
+// }
 
 
-- Um empregado cria um novo volume associado a uma encomenda,
+- Um empregado cria um novo volume associado a uma encomenda
+(a encomenda é criada automaticamente se ainda não existir,
+se existir envia o id da encomenda a que quer associar o volume),
 utilizando o protocolo HTTP, verbo POST,
 para o sitio: /appmonitor/api/volume
 
 Resposta enviada para este recurso segue o formato JSON: 
 
 {
-    "id": 1,
-    "packageId": null, 
-    "productId": null,
-    "sensorsId": null,
-    "orderId": 600,
-    "status": "PACKING"
+    "productId": 3
+}
+
+OR
+    
+{
+    "packageId": 9999
+}
+
+OR
+
+{
+    "orderId": 25,
+    "productId": 3
+}
+
+OR
+
+{
+    "orderId": 25,
+    "packageId": 9999
 }
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
-    "id": 1,
-    "packageId": null, 
-    "productId": null,
-    "sensorsId": null,
-    "orderId": 600,
-    "status": "PACKING"
+    "id": 10,
+    "productId": 3, 
+    "orderId": 26,
 }
 
-
-- Um empregado cria um novo sensor associado a um volume,
-utilizando o protocolo HTTP, verbo POST,
-para o sitio: /appmonitor/api/sensor
-
-Resposta enviada para este recurso segue o formato JSON: 
+OR
 
 {
-    "id": 1001,
-    "sensorTypeId": 1,
-    "volumeId": 1,
-    "history": null
+    "id": 10,
+    "packageId": 9999, 
+    "orderId": 26,
 }
-
-Resposta devolvida por este recurso segue o formato JSON: 
-
-{
-    "id": 1001,
-    "sensorTypeId": 1,
-    "volumeId": 1,
-    "history": null
-}
-
-
-- Um empregado adiciona um valor a um sensor
-utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/sensor/{sensorId}/addValue
-
-Resposta enviada para este recurso segue o formato JSON: 
-
-{
-    {
-        "value": 20.0,
-        "date": null //preechido pelo sistema com a data atual
-    }
-}
-
 
 
 - Um empregado associa varios produtos (que tem um mandatoryPackage) a uma embalagem,
 utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/package/{packageId}/addProducts
+para o sitio: /appmonitor/api/package/{packageId}/add-products
 
 Resposta enviada para este recurso segue o formato JSON: 
 
 {
     "productsId": [
-        11010, // sementes de plantas
-        11011, // fertilizante
-        11012 // agua desmineralizada
+        1
     ]
 }
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
+    //Devolve o package com os produtos associados
     "id": 9999,
-    "packageType": "Isotermic",
+    "packageTypeName": "Isotermic",
     "size": "S",
-    "productsId": [
-        11010, // sementes de plantas
-        11011, // fertilizante
-        11012 // agua desmineralizada
+    "products": [
+        {
+            "id": 1,
+            "name": "Product 1",
+        }
     ]
 }
 
 
 - Um empregado remove varios produtos de uma embalagem,
 utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/package/{packageId}/removeProducts
+para o sitio: /appmonitor/api/package/{packageId}/remove-products
 
 Resposta enviada para este recurso segue o formato JSON: 
 
 {
     "productsId": [
-        11010 // sementes de plantas
+        1
     ]
 }
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
+    //Devolve o package com os produtos associados
     "id": 9999,
-    "packageType": "Isotermic",
+    "packageTypeName": "Isotermic",
     "size": "S",
-    "productsId": [
-        11011, // fertilizante
-        11012 // agua desmineralizada
-    ]
+    "products": []
 }
 
 
 - Um empregado associa um produto (que não tem mandatoryPackage) a um volume,
 utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/volume/{volumeId}/associateProduct/{productId}
+para o sitio: /appmonitor/api/volume/{volumeId}/associate-product/{productId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
-    "id": 1,
-    "packageId": null, 
+    "id": 10,
     "productId": 3,
-    "sensorsId": null,
-    "orderId": 600,
-    "status": "PACKING"
+    "orderId": 26,
+    "sensorsId": []
 }
 
 
 - Um empregado desassocia um produto de um volume,
 utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/volume/{volumeId}/dissociateProduct/{productId}
+para o sitio: /appmonitor/api/volume/{volumeId}/dissociate-product/{productId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
-    "id": 1,
-    "packageId": null, 
-    "productId": null,
-    "sensorsId": null,
-    "orderId": 600,
-    "status": "PACKING"
+    "id": 10,
+    "orderId": 26,
+    "sensorsId": []
 }
 
 
 - Um empregado associa uma embalagem (tem de ter produtos) a um volume,
 utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/volume/{volumeId}/associatePackage/{packageId}
+para o sitio: /appmonitor/api/volume/{volumeId}/associate-package/{packageId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
-    "id": 2,
+    "id": 11,
     "packageId": 9999, 
-    "productId": null,
-    "sensorsId": null,
     "orderId": 600,
-    "status": "PACKING"
+    "sensorsId": []
 }
 
 
 - Um empregado desassocia uma embalagem de um volume,
 utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/volume/{volumeId}/dissociatePackage/{packageId}
+para o sitio: /appmonitor/api/volume/{volumeId}/dissociate-package/{packageId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
-    "id": 2,
-    "packageId": null, 
-    "productId": null,
-    "sensorsId": null,
+    "id": 11,
     "orderId": 600,
-    "status": "PACKING"
+    "sensorsId": []
 }
 
 
 - Um empregado verifica quais os sensores obrigatorios naquele volume,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/volume/{volumeId}/mandatorySensors
+para o sitio: /appmonitor/api/volume/{volumeId}/mandatory-sensors
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 [
     {
         "id": 1,
-        "type": "Temperature",
+        "name": "Temperature",
         "unit": "ºC"
-    },
-    {
-        "id": 2,
-        "type": "Luminosity",
-        "unit": "lux"
     }
 ]
+
+
+- Um empregado cria um novo sensor e associa a um volume,
+utilizando o protocolo HTTP, verbo POST,
+para o sitio: /appmonitor/api/sensor
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "sensorTypeId": 1,
+    "volumeId": 10,
+}
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    //Devolve o volume com aquele sensor associado
+    "id": 10,
+    "productId": 3,
+    "orderId": 26,
+    "sensorsId": [
+        1005
+    ]
+}
 
 - Um empregado verifica quais os sensores já colocados naquele volume,
 utilizando o protocolo HTTP, verbo GET,
@@ -548,44 +597,45 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 [
     {
-        "id": 1001,
+        "id": 1005,
         "sensorType": {
             "id": 1,
-            "type": "Temperature",
+            "name": "Temperature",
             "unit": "ºC"
         },
-        "volumeId": 1
     }
 ]
 
 
-// - Um empregado verifica se o volume está pronto para ser enviado,
-// utilizando o protocolo HTTP, verbo GET,
-// para o sitio: /appmonitor/api/volume/{volumeId}/isReadyToShip
-
-// Resposta devolvida por este recurso segue o formato JSON: 
-
-// {
-//     true
-// }
-
-
 - Um empregado altera o estado de um volume,
 utilizando o protocolo HTTP, verbo PATCH,
-utilizando o sitio: /appmonitor/api/volume/{volumeId}/ship
+utilizando o sitio: /appmonitor/api/volume/{volumeId}/send
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 {
-    "id": 1,
-    "packageId": 9999, 
-    "productId": null,
-    "sensorsId": [
-        1001, // temperatura
-        1002 // luminosidade
-    ],
+    "id": 10,
+    "sentDate": "2024-10-31T00:00:00",
+    "productId": 3, 
     "orderId": 600,
-    "status": "IN_TRANSIT"
+}
+
+OR
+
+{
+    "id": 10,
+    "sentDate": "2024-10-31T00:00:00",
+    "packageId": 9999, 
+    "orderId": 601,
 }
 
 
+- Um sensor envia um valor para o sistema,
+utilizando o protocolo HTTP, verbo PUT,
+para o sitio: /appmonitor/api/sensor/{sensorId}/add-value
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "value": 20.0,
+}
