@@ -1,5 +1,84 @@
 MANAGER ENDPOINTS
 
+
+- Um gerente faz login no site
+utilizando o protocolo HTTP, verbo POST,
+para o sitio: /appmonitor/api/auth/login
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "username": "customer1",
+    "password": "password"
+}
+
+Resposta devolvida para este recurso segue o formato JSON:
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+}
+
+
+- Um gerente atualiza a sua password do site
+utilizando o protocolo HTTP, verbo PATCH,
+para o sitio: /appmonitor/api/auth/set-password
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "oldPassword": "old-weak-password", 
+    "newPassword": "my-new-super-strong-password", 
+    "confirmPassword": "my-new-super-strong-password",
+}
+
+Resposta devolvida para este recurso segue o formato JSON:
+{
+    "token": "sInR5cCI6IkpXVCJ9asAJOygdhb81bnAJ8b1jas99Y"
+}
+
+
+- Um gestor consulta os seus dados pessoais,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/manager/{managerUsername}
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "username": "manager1",
+    "name": "Manager 1",
+    "email": "manager1@mail.com",
+    "address": "Rua do Manager 1",
+    "phone": "912345678",
+    "office": "Lisboa"
+}
+
+
+- Um gestor atualiza os seus dados pessoais,
+utilizando o protocolo HTTP, verbo PUT,
+para o sitio: /appmonitor/api/manager/{managerUsername}
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "username": "manager1",
+    "name": "Manager 1 UPDATED",
+    "email": "manager1@mail.com",
+    "address": "Rua do Manager 1",
+    "phone": "912345678",
+    "office": "Lisboa"
+}
+
+Resposta devolvida por este recurso segue o formato JSON:
+
+{
+    "username": "manager1",
+    "name": "Manager 1 UPDATED",
+    "email": "manager1@mail.com",
+    "address": "Rua do Manager 1",
+    "phone": "912345678",
+    "office": "Lisboa"
+}
+
+
 - Um gestor consulta as encomendas efetuadas pelos clientes,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/orders
@@ -8,24 +87,66 @@ Resposta devolvida por este recurso segue o formato JSON:
 [
     {
         "id": 600,
-        "customerId": 0101,
-        "volumesId": [
-            1,
-            2
+        "volumes": [
+            {
+                "id": 1, 
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            },
+            {   
+                "id": 2,             
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            }
         ]
     },
     {
-        "id": 603,
-        "customerId": 0102,
-        "volumesId": [
-            4
+        "id": 601,
+        "customerUsername": "ManelAguiar",
+        "volumes": [
+            {
+                "id": 3, 
+                "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+                "deliveredDate": "2024-11-01T16:00:00" // data da encomenda entregue
+            },
         ]
     },
     {
-        "id": 604,
-        "customerId": 0103,
-        "volumesId": [
-            5
+        "id": 602,
+        "customerUsername": "CaslteloBranco",
+        "volumes": [
+            {
+                "id": 4, 
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            },
+        ]
+    }
+]
+
+- Um gestor consulta as encomendas efetuadas por um determinado cliente,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/customer/{customerUsername}/orders
+
+Resposta devolvida por este recurso segue o formato JSON: 
+[
+    {
+        "id": 600,
+        "volumes": [
+            {
+                "id": 1, 
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            },
+            {   
+                "id": 2,             
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            }
+        ]
+    },
+    {
+        "id": 601,
+        "volumes": [
+            {
+                "id": 3, 
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            },
         ]
     }
 ]
@@ -37,11 +158,19 @@ para o sitio: /appmonitor/api/order/{orderId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 {
-    "customerId": 0101,
-    "volumesId": [
-        1,
-        2
-    ]
+    {
+        "id": 600,
+        "volumes": [
+            {
+                "id": 1, 
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            },
+            {   
+                "id": 2,             
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            }
+        ]
+    }
 }
 
 
@@ -52,42 +181,15 @@ para o sitio: /appmonitor/api/order/{orderId}/volumes
 Resposta devolvida por este recurso segue o formato JSON: 
 [
     {
-        "id": 1,
+        "id": 3,
         "package": {
-            "id": 9998,
-            "packageTypeId": 000002, // 2 - saco plastico (com bolhas)
-            "size": "M",
-            "productsId": [
-                11005, // copo vinho
-                11001 // garrafa vinho
-            ],
-            "volumeId": 1
+            "packageTypeName": "Caixa Isotermica",
+            "size": "S"            
         },
-        "productId": null,
-        "sensorsId": [
-            1001 // movimento
-        ],
-        "orderId": 600,
-        "status": "IN_TRANSIT"
-    },
-    {
-        "id": 2,
-        "package": {
-            "id": 9997,
-            "packageTypeId": 000001, // 1 - caixa isotermica
-            "size": "M",
-            "productsId": [
-                11006, // caixa gelados 1L
-                11008 // caixa geladdos (6unidades)
-            ],
-            "volumeId": 2
-        },
-        "productId": null,
-        "sensorsId": [
-            1002 // temperatura
-        ],
-        "orderId": 600,
-        "status": "IN_TRANSIT"
+       
+        
+        "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+        "deliveredDate": "2024-11-01T16:00:00" // data de quando foi entregue
     }
 ]
 
@@ -99,30 +201,62 @@ para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/sensors
 Resposta devolvida por este recurso segue o formato JSON: 
 [
     {
-        "sensorId": 1001,
+        "id": 1002,
         "sensorType": {
-            "id": 000003,
-            "type": "movement",
-            "unit": " m/s^2 "
+            "name": "Temperature Sensor",
+            "unit": " ºC"
         },
-        "volumeId": 1,
-        "activationTime": "2024-10-20T10:00:00Z",
-        "history" : [
+        "history": [
             {
-                "time": "2024-10-20T10:00:00Z",
-                "value": 1.2 // valor de aceleração
-            },
-            {
-                "time": "2021-10-21T00:00:00Z",
-                "value": 5.8 // movimento brusco detetado
-            },
-            {
-                "time": "2021-10-23T12:00:00Z",
-                "value": 2.3
+                "time": "2024-10-31T00:00:00",
+                "value": "-20.0"
             }
+        ]
+    },
+    {
+        "id": 1003,
+        "sensorType": {
+            "name": "Luminosity Sensor",
+            "unit": " %"
+        },
+        "history": [
+            {
+                "time": "2024-10-31T03:00:01",
+                "value": "75.0"
+            }
+                        
         ]
     }
 ]
+
+
+- Um gestor consulta o hitórico de um determinado sensor 
+associado a um determinado volume,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/sensor/{sensorId}
+
+Resposta devolvida por este recurso segue o formato JSON: 
+{
+    "sensorType": {
+        "name": "Luminosity Sensor",
+        "unit": " %"
+    },
+    "history": [
+        {
+            "time": "2024-10-31T03:00:01",
+            "value": "75.0"
+        },
+
+        {
+            "time": "2024-10-31T04:00:01",
+            "value": "75.0"
+        },
+        {
+            "time": "2024-10-31T05:00:01",
+            "value": "75.0"
+        }       
+    ]
+}
 
 
 - Um gestor consulta os produtos associados a um determinado volume,
@@ -132,39 +266,42 @@ para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/products
 Resposta devolvida por este recurso segue o formato JSON: 
 [
     {
-        "productId": 11005,
-        "productName": "copo vinho",
-        "quantity": 2,
-        "description": "copo de vinho de vidro",
-        "photo" : "https://www.google.com",
-        "mandatoryPackageId" : 002,
-        "size" : "M",
-        "mandatorySensorId" : [
-            1001
-        ],
-        "packageId": 9998,
-        "volumeId": 1,
-        "restrictions" : {
-            "limitAbove" : 0,
-            "limitBelow" : 10,
+        "id": 11001,
+        "name": "Product 1",
+        "price": 10.0,
+        "quantity": 5,
+        "description": "Plant seeds",
+        "photo": "https://www.google.com",
+        "size": "S",
+        "package": {
+            "packageTypeName": "Caixa Isotermica",
+            "size": "S"            
         }
     },
     {
-        "productId": 11010,
-        "productName": "garrafa vinho",
-        "quantity": 1,
-        "description": "garrafa de vinho tinto de vidro",
-        "photo" : "https://www.google.com",
-        "mandatoryPackageId" : 000002,
-        "size" : "M",
-        "mandatorySensorId" : [
-            1001
-        ],
-        "packageId": 9998,
-        "volumeId": 1,
-        "restrictions" : {
-            "limitAbove" : 0,
-            "limitBelow" : 10,
+        "id": 11002,
+        "name": "Product 2",
+        "price": 20.0,
+        "quantity": 2,
+        "description": "Fertilizer A - 250ml",
+        "photo": "https://www.google.com",
+        "size": "S",
+        "package": {
+            "packageTypeName": "Caixa Isotermica",
+            "size": "S"            
         }
-    }
+    },
+    {
+        "id": 11003,
+        "name": "Product 3",
+        "price": 30.0,
+        "quantity": 2,
+        "description": "Demineralized Water - 5L",
+        "photo": "https://www.google.com",
+        "size": "M",
+        "package": {
+            "packageTypeName": "Embalagem de plástico",
+            "size": "M"            
+        }      
+    }   
 ]
