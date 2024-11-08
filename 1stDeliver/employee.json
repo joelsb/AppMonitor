@@ -447,7 +447,7 @@ OR
 
 
 - Um empregado associa varios produtos (que tem um mandatoryPackage) a uma embalagem,
-utilizando o protocolo HTTP, verbo PUT,
+utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/package/{packageId}/add-products
 
 Resposta enviada para este recurso segue o formato JSON: 
@@ -475,7 +475,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 
 - Um empregado remove varios produtos de uma embalagem,
-utilizando o protocolo HTTP, verbo PUT,
+utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/package/{packageId}/remove-products
 
 Resposta enviada para este recurso segue o formato JSON: 
@@ -498,7 +498,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 
 - Um empregado associa um produto (que não tem mandatoryPackage) a um volume,
-utilizando o protocolo HTTP, verbo PUT,
+utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/volume/{volumeId}/associate-product/{productId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
@@ -512,7 +512,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 
 - Um empregado desassocia um produto de um volume,
-utilizando o protocolo HTTP, verbo PUT,
+utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/volume/{volumeId}/dissociate-product/{productId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
@@ -525,7 +525,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 
 - Um empregado associa uma embalagem (tem de ter produtos) a um volume,
-utilizando o protocolo HTTP, verbo PUT,
+utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/volume/{volumeId}/associate-package/{packageId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
@@ -539,7 +539,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 
 - Um empregado desassocia uma embalagem de um volume,
-utilizando o protocolo HTTP, verbo PUT,
+utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/volume/{volumeId}/dissociate-package/{packageId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
@@ -574,7 +574,7 @@ Resposta enviada para este recurso segue o formato JSON:
 
 {
     "sensorTypeId": 1,
-    "volumeId": 10,
+    "volumeId": 10
 }
 
 Resposta devolvida por este recurso segue o formato JSON: 
@@ -607,9 +607,9 @@ Resposta devolvida por este recurso segue o formato JSON:
 ]
 
 
-- Um empregado altera o estado de um volume,
+- Um empregado diz que um volume foi enviado
 utilizando o protocolo HTTP, verbo PATCH,
-utilizando o sitio: /appmonitor/api/volume/{volumeId}/send
+utilizando o sitio: /appmonitor/api/volume/{volumeId}/sent
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -617,7 +617,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     "id": 10,
     "sentDate": "2024-10-31T00:00:00",
     "productId": 3, 
-    "orderId": 600,
+    "orderId": 600
 }
 
 OR
@@ -626,16 +626,39 @@ OR
     "id": 10,
     "sentDate": "2024-10-31T00:00:00",
     "packageId": 9999, 
-    "orderId": 601,
+    "orderId": 601
+}
+
+- Um empregado diz que o volume foi entregue
+utilizando o protocolo HTTP, verbo PACTH,
+utilizando o sitio: /appmonitor/api/volume/{volumeId}/received
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "id": 10,
+    "sentDate": "2024-10-31T00:00:00",
+    "receivedDate": "2024-11-31T00:00:00",
+}
+
+- Um empregado diz que a encomenda já foi entregue
+utilizando o protocolo HTTP, verbo PATCH,
+utilizando o sitio: /appmonitor/api/order/{orderId}/delivered
+
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "id": 600,
+    "delivered": true
 }
 
 
 - Um sensor envia um valor para o sistema,
-utilizando o protocolo HTTP, verbo PUT,
+utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/sensor/{sensorId}/add-value
 
 Resposta enviada para este recurso segue o formato JSON: 
 
 {
-    "value": 20.0,
+    "value": 20.0
 }
