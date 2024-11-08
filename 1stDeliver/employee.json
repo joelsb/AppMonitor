@@ -8,7 +8,7 @@ para o sitio: /appmonitor/api/auth/login
 Resposta enviada para este recurso segue o formato JSON: 
 
 {
-    "username": "customer1",
+    "username": "employee1",
     "password": "password"
 }
 
@@ -373,28 +373,28 @@ Resposta devolvida por este recurso segue o formato JSON:
     }
 ]
 
-// NÃO FAZ SENTIDO ESTE ENDPOINT, PORQUE A ENCOMENDA APENAS É CRIADA QUANDO 
-// EXISTIR PELO MENOS UM VOLUME 
+- Um empregado consulta as encomendas disponiveis para associar a um volume,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/order/available
 
-// - Um empregado criar uma nova encomenda,
-// utilizando o protocolo HTTP, verbo POST,
-// para o sitio: /appmonitor/api/order
+Resposta devolvida por este recurso segue o formato JSON: 
 
-// Resposta enviada para este recurso segue o formato JSON: 
-
-// {
-//     "id": 600,
-//     "customerUsername": "customer1",
-//     "volumesId": null
-// }
-
-// Resposta devolvida por este recurso segue o formato JSON: 
-
-// {
-//     "id": 600,
-//     "customerUsername": "customer1",
-//     "volumesId": null
-// }
+[
+    {
+        "id": 25,
+        "volumes": [],
+        "delivered": false
+    },
+    {
+        "id": 26,
+        "customerUsername": "customer2",
+        "volumesId": [ 
+            10,
+            11
+        ],
+        "delivered": false
+    }
+]
 
 
 - Um empregado cria um novo volume associado a uma encomenda
@@ -449,8 +449,6 @@ OR
 - Um empregado associa varios produtos (que tem um mandatoryPackage) a uma embalagem,
 utilizando o protocolo HTTP, verbo PATCH,
 para o sitio: /appmonitor/api/package/{packageId}/add-products
-
-Resposta enviada para este recurso segue o formato JSON: 
 
 {
     "productsId": [

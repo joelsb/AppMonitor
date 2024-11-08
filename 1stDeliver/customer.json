@@ -1,5 +1,39 @@
 CUSTOMER ENDPOINTS
 
+- Um cliente faz login no site
+utilizando o protocolo HTTP, verbo POST,
+para o sitio: /appmonitor/api/auth/login
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "username": "customer1",
+    "password": "password"
+}
+
+Resposta devolvida para este recurso segue o formato JSON:
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+}
+
+
+- Um cliente atualiza a sua password do site
+utilizando o protocolo HTTP, verbo PATCH,
+para o sitio: /appmonitor/api/auth/set-password
+
+Resposta enviada para este recurso segue o formato JSON: 
+
+{
+    "oldPassword": "old-weak-password", 
+    "newPassword": "my-new-super-strong-password", 
+    "confirmPassword": "my-new-super-strong-password",
+}
+
+Resposta devolvida para este recurso segue o formato JSON:
+{
+    "token": "sInR5cCI6IkpXVCJ9asAJOygdhb81bnAJ8b1jas99Y"
+}
+
 - Um cliente consulta os seus dados pessoais,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/customer/{customerUsername}
@@ -46,6 +80,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 - Um cliente consulta as suas encomendas,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/customer/{customerUsername}/orders
+/appmonitor/api/order
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -80,6 +115,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 - Um cliente consulta os volumes de uma determinada encomenda,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volumes
+/appmonitor/api/order/{orderId}/volumes
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -101,6 +137,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 - Um cliente consulta os sensores associados a um determinado volume,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/sensors
+/appmonitor/api/order/{orderId}/volume/{volumeId}/sensors
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -137,6 +174,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 - Um cliente consulta o histórico de um determinado sensor, 
 utilizando o protocolo HTTP, verbo GET, 
 para o sítio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/sensor/{sensorId}
+/appmonitor/api/order/{orderId}/volume/{volumeId}/sensor/{sensorId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -166,6 +204,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 - Um cliente consulta os produtos de um determinado volume
 utilizando o protocolo HTTP, verbo GET
 para o sítio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/products
+/appmonitor/api/order/{orderId}/volume/{volumeId}/products
 
 Resposta devolvida por este recurso segue o formato JSON: 
 

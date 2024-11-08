@@ -8,7 +8,7 @@ para o sitio: /appmonitor/api/auth/login
 Resposta enviada para este recurso segue o formato JSON: 
 
 {
-    "username": "customer1",
+    "username": "manager1",
     "password": "password"
 }
 
