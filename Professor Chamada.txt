@@ -1,0 +1,31 @@
+Professor Chamada:
+
+-Convenção é deixar sempre o inicio do path do serviço no plural
+
+-Numerar os endpoints,
+-Nao é necessário atualizar os dados dos users,
+-Não é necessário o customer mandar o customerUsername,
+
+-Não se pode ter mais de 3 partes.
+order/orderId/volume + do que isto volta ao inicio
+
+-Ao criar um sensor, volume (o id é fornecido pelo empregado)
+
+POST volume
+-Duas chamadas á API (1 quando a encomenda está criada e outra para criar ao mesmo tempo)
+-Retirar a quatidade do produto
+-Adicionar quantidade ao volume
+-Se a encomenda é nova precisa do customerUsername
+-Adicionar sensores logo na criação do volume
+
+FRONT END SENSORES
+-PATCH->POST
+-Porque vamos adicionar mais um valor (mais 1 objeto á lista)
+
+GET api/orders 
+-tem de devolver o customerUsername
+
+SEMPRE que criarmos uma entidade, criamos logo com tudo o que é necessário
+
+ELIMINAR Produto e embalagem (deixar apenas tipo produto e tipo_embalagem)
+Tipo_embalagem é logo a caixa isotérmica com as diferentes medidas
