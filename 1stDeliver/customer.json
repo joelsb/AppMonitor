@@ -1,6 +1,6 @@
 CUSTOMER ENDPOINTS
 
-- Um cliente faz login no site
+1- Um cliente faz login no site
 utilizando o protocolo HTTP, verbo POST,
 para o sitio: /appmonitor/api/auth/login
 
@@ -17,26 +17,9 @@ Resposta devolvida para este recurso segue o formato JSON:
 }
 
 
-- Um cliente atualiza a sua password do site
-utilizando o protocolo HTTP, verbo PATCH,
-para o sitio: /appmonitor/api/auth/set-password
-
-Resposta enviada para este recurso segue o formato JSON: 
-
-{
-    "oldPassword": "old-weak-password", 
-    "newPassword": "my-new-super-strong-password", 
-    "confirmPassword": "my-new-super-strong-password",
-}
-
-Resposta devolvida para este recurso segue o formato JSON:
-{
-    "token": "sInR5cCI6IkpXVCJ9asAJOygdhb81bnAJ8b1jas99Y"
-}
-
-- Um cliente consulta os seus dados pessoais,
+2- Um cliente consulta os seus dados pessoais,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerUsername}
+para o sitio: /appmonitor/api/customers/{customerUsername}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -44,49 +27,20 @@ Resposta devolvida por este recurso segue o formato JSON:
     "username": "customer1",
     "name": "Customer 1",
     "email": "customer1@mail.com",
-    "address": "Rua do Cliente 1",
-    "phone": "912345678"
-    //Falta perceber como vai enviar a password
 }
 
 
-- Um cliente atualiza os seus dados pessoais,
-utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/customer/{customerUsername}
-
-Resposta enviada para este recurso segue o formato JSON: 
-
-{
-    "username": "customer1",
-    "name": "Customer 1 UPDATED",
-    "email": "customer1@mail.com",
-    "address": "Rua do Cliente 1",
-    "phone": "912345678"
-    //Falta perceber como vai enviar a password
-}
-
-Resposta devolvida por este recurso segue o formato JSON:
-
-{
-    "username": "customer1",
-    "name": "Customer 1 UPDATED",
-    "email": "customer1@mail.com",
-    "address": "Rua do Cliente 1",
-    "phone": "912345678"
-    //Falta perceber como vai enviar a password
-}
-
-
-- Um cliente consulta as suas encomendas,
+3- Um cliente consulta as suas encomendas,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerUsername}/orders
-/appmonitor/api/order
+para o sitio: /appmonitor/api/orders
+
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 [
     {
         "id": 600,
+        "createdDate": "2024-10-30T21:00:00",
         "volumes": [
             {
                 "id": 1, 
@@ -108,36 +62,41 @@ Resposta devolvida por este recurso segue o formato JSON:
                 "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
             },
         ]
+    },
+    {
+        "id": 602,
+        "createdDate": "2024-10-30T21:00:00",
+        "deliveredDate": "2024-11-01T16:00:00",
+        "volumes": [
+            {
+                "id": 4, 
+                "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+                "deliveredDate": "2024-11-01T16:00:00" // data da encomenda entregue
+            },
+        ]
     }
 ]
 
 
-- Um cliente consulta os volumes de uma determinada encomenda,
+4- Um cliente consulta os volumes de uma determinada encomenda,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volumes
-/appmonitor/api/order/{orderId}/volumes
+para o sitio: /appmonitor/api/orders/{orderId}/volumes
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
 [
     {
         "id": 3,
-        "package": {
-            "packageTypeName": "Caixa Isotermica",
-            "size": "S"            
-        },
-       
-        
+        "packageName": "Caixa Isotermica Pequena",
         "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
         "deliveredDate": "2024-11-01T16:00:00" // data de quando foi entregue
     }
 ]
 
 
-- Um cliente consulta os sensores associados a um determinado volume,
+5- Um cliente consulta os sensores associados a um determinado volume,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/sensors
-/appmonitor/api/order/{orderId}/volume/{volumeId}/sensors
+para o sitio: /appmonitor/api/volumes/{volumeId}/sensors
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -171,10 +130,9 @@ Resposta devolvida por este recurso segue o formato JSON:
     }
 ]
 
-- Um cliente consulta o histórico de um determinado sensor, 
+6- Um cliente consulta o histórico de um determinado sensor, 
 utilizando o protocolo HTTP, verbo GET, 
-para o sítio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/sensor/{sensorId}
-/appmonitor/api/order/{orderId}/volume/{volumeId}/sensor/{sensorId}
+para o sítio: /appmonitor/api/sensors/{sensorId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -201,10 +159,9 @@ Resposta devolvida por este recurso segue o formato JSON:
 }
 
 
-- Um cliente consulta os produtos de um determinado volume
+7- Um cliente consulta os produtos de um determinado volume
 utilizando o protocolo HTTP, verbo GET
-para o sítio: /appmonitor/api/customer/{customerUsername}/order/{orderId}/volume/{volumeId}/products
-/appmonitor/api/order/{orderId}/volume/{volumeId}/products
+para o sítio: /appmonitor/api/volumes/{volumeId}/products
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -213,41 +170,14 @@ Resposta devolvida por este recurso segue o formato JSON:
     {
         "id": 11001,
         "name": "Product 1",
-        "price": 10.0,
-        "quantity": 5,
-        "description": "Plant seeds",
-        "photo": "https://www.google.com",
-        "size": "S",
-        "package": {
-            "packageTypeName": "Caixa Isotermica",
-            "size": "S"            
-        }
     },
     {
         "id": 11002,
-        "name": "Product 2",
-        "price": 20.0,
-        "quantity": 2,
-        "description": "Fertilizer A - 250ml",
-        "photo": "https://www.google.com",
-        "size": "S",
-        "package": {
-            "packageTypeName": "Caixa Isotermica",
-            "size": "S"            
-        }
+        "name":"Product 2",
     },
     {
         "id": 11003,
-        "name": "Product 3",
-        "price": 30.0,
-        "quantity": 2,
-        "description": "Demineralized Water - 5L",
-        "photo": "https://www.google.com",
-        "size": "M",
-        "package": {
-            "packageTypeName": "Embalagem de plástico",
-            "size": "M"            
-        }      
+        "name": "Product 3",    
     }   
 ]
 

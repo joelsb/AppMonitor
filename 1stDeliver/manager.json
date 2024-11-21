@@ -18,27 +18,9 @@ Resposta devolvida para este recurso segue o formato JSON:
 }
 
 
-- Um gerente atualiza a sua password do site
-utilizando o protocolo HTTP, verbo PATCH,
-para o sitio: /appmonitor/api/auth/set-password
-
-Resposta enviada para este recurso segue o formato JSON: 
-
-{
-    "oldPassword": "old-weak-password", 
-    "newPassword": "my-new-super-strong-password", 
-    "confirmPassword": "my-new-super-strong-password",
-}
-
-Resposta devolvida para este recurso segue o formato JSON:
-{
-    "token": "sInR5cCI6IkpXVCJ9asAJOygdhb81bnAJ8b1jas99Y"
-}
-
-
 - Um gestor consulta os seus dados pessoais,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/manager/{managerUsername}
+para o sitio: /appmonitor/api/managers/{managerUsername}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -46,35 +28,6 @@ Resposta devolvida por este recurso segue o formato JSON:
     "username": "manager1",
     "name": "Manager 1",
     "email": "manager1@mail.com",
-    "address": "Rua do Manager 1",
-    "phone": "912345678",
-    "office": "Lisboa"
-}
-
-
-- Um gestor atualiza os seus dados pessoais,
-utilizando o protocolo HTTP, verbo PUT,
-para o sitio: /appmonitor/api/manager/{managerUsername}
-
-Resposta enviada para este recurso segue o formato JSON: 
-
-{
-    "username": "manager1",
-    "name": "Manager 1 UPDATED",
-    "email": "manager1@mail.com",
-    "address": "Rua do Manager 1",
-    "phone": "912345678",
-    "office": "Lisboa"
-}
-
-Resposta devolvida por este recurso segue o formato JSON:
-
-{
-    "username": "manager1",
-    "name": "Manager 1 UPDATED",
-    "email": "manager1@mail.com",
-    "address": "Rua do Manager 1",
-    "phone": "912345678",
     "office": "Lisboa"
 }
 
@@ -87,6 +40,8 @@ Resposta devolvida por este recurso segue o formato JSON:
 [
     {
         "id": 600,
+        "createdDate": "2024-10-30T21:00:00",
+        "customerUsername": "Customer1",
         "volumes": [
             {
                 "id": 1, 
@@ -99,7 +54,32 @@ Resposta devolvida por este recurso segue o formato JSON:
         ]
     },
     {
+        "id": 602,
+        "createdDate": "2024-10-30T21:00:00",
+        "customerUsername": "CasteloBranco",
+        "volumes": [
+            {
+                "id": 4, 
+                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+            },
+        ]
+    }
+    {
         "id": 601,
+        "createdDate": "2024-10-30T21:00:00",
+        "deliveredDate": "2024-11-01T16:00:00",
+        "customerUsername": "ManelAguiar",
+        "volumes": [
+            {
+                "id": 3, 
+                "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+                "deliveredDate": "2024-11-01T16:00:00" // data da encomenda entregue
+            },
+        ]
+    },
+    {
+        "id": 601,
+        "createdDate": "2024-10-30T21:00:00",
         "customerUsername": "ManelAguiar",
         "volumes": [
             {
@@ -111,7 +91,8 @@ Resposta devolvida por este recurso segue o formato JSON:
     },
     {
         "id": 602,
-        "customerUsername": "CaslteloBranco",
+        "createdDate": "2024-10-30T21:00:00",
+        "customerUsername": "CasteloBranco",
         "volumes": [
             {
                 "id": 4, 
@@ -123,29 +104,32 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 - Um gestor consulta as encomendas efetuadas por um determinado cliente,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/customer/{customerUsername}/orders
+para o sitio: /appmonitor/api/customers/{customerUsername}/orders
 
 Resposta devolvida por este recurso segue o formato JSON: 
 [
     {
-        "id": 600,
+        "id": 601,
+        "createdDate": "2024-10-30T21:00:00",
+        "deliveredDate": "2024-11-01T16:00:00",
+        "customerUsername": "ManelAguiar",
         "volumes": [
             {
-                "id": 1, 
-                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+                "id": 3, 
+                "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+                "deliveredDate": "2024-11-01T16:00:00" // data da encomenda entregue
             },
-            {   
-                "id": 2,             
-                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
-            }
         ]
     },
     {
         "id": 601,
+        "createdDate": "2024-10-30T21:00:00",
+        "customerUsername": "ManelAguiar",
         "volumes": [
             {
                 "id": 3, 
-                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+                "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+                "deliveredDate": "2024-11-01T16:00:00" // data da encomenda entregue
             },
         ]
     }
@@ -154,21 +138,21 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 - Um gestor consulta uma determinada encomenda,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/order/{orderId}
+para o sitio: /appmonitor/api/orders/{orderId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 {
     {
-        "id": 600,
+        "id": 601,
+        "createdDate": "2024-10-30T21:00:00",
+        "deliveredDate": "2024-11-01T16:00:00",
+        "customerUsername": "ManelAguiar",
         "volumes": [
             {
-                "id": 1, 
-                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
+                "id": 3, 
+                "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+                "deliveredDate": "2024-11-01T16:00:00" // data da encomenda entregue
             },
-            {   
-                "id": 2,             
-                "sentDate": "2024-10-30T21:00:00" // data de quando a encomenda foi criada
-            }
         ]
     }
 }
@@ -176,18 +160,13 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 - Um gestor consulta os volumes de uma determinada encomenda,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/order/{orderId}/volumes
+para o sitio: /appmonitor/api/orders/{orderId}/volumes
 
 Resposta devolvida por este recurso segue o formato JSON: 
 [
     {
         "id": 3,
-        "package": {
-            "packageTypeName": "Caixa Isotermica",
-            "size": "S"            
-        },
-       
-        
+        "packageName": "Caixa Isotermica Pequena",
         "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
         "deliveredDate": "2024-11-01T16:00:00" // data de quando foi entregue
     }
@@ -196,7 +175,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 - Um gestor consulta os sensores associados a um determinado volume,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/sensors
+para o sitio: /appmonitor/api/volumes/{volumeId}/sensors
 
 Resposta devolvida por este recurso segue o formato JSON: 
 [
@@ -233,7 +212,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 - Um gestor consulta o hitórico de um determinado sensor 
 associado a um determinado volume,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/sensor/{sensorId}
+para o sitio: /appmonitor/api/sensors/{sensorId}
 
 Resposta devolvida por este recurso segue o formato JSON: 
 {
@@ -246,7 +225,6 @@ Resposta devolvida por este recurso segue o formato JSON:
             "time": "2024-10-31T03:00:01",
             "value": "75.0"
         },
-
         {
             "time": "2024-10-31T04:00:01",
             "value": "75.0"
@@ -265,43 +243,17 @@ para o sitio: /appmonitor/api/order/{orderId}/volume/{volumeId}/products
 
 Resposta devolvida por este recurso segue o formato JSON: 
 [
+
     {
         "id": 11001,
         "name": "Product 1",
-        "price": 10.0,
-        "quantity": 5,
-        "description": "Plant seeds",
-        "photo": "https://www.google.com",
-        "size": "S",
-        "package": {
-            "packageTypeName": "Caixa Isotermica",
-            "size": "S"            
-        }
     },
     {
         "id": 11002,
-        "name": "Product 2",
-        "price": 20.0,
-        "quantity": 2,
-        "description": "Fertilizer A - 250ml",
-        "photo": "https://www.google.com",
-        "size": "S",
-        "package": {
-            "packageTypeName": "Caixa Isotermica",
-            "size": "S"            
-        }
+        "name":"Product 2",
     },
     {
         "id": 11003,
-        "name": "Product 3",
-        "price": 30.0,
-        "quantity": 2,
-        "description": "Demineralized Water - 5L",
-        "photo": "https://www.google.com",
-        "size": "M",
-        "package": {
-            "packageTypeName": "Embalagem de plástico",
-            "size": "M"            
-        }      
+        "name": "Product 3",    
     }   
 ]
