@@ -1,6 +1,8 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
-import javax.persistence.Entity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,10 +10,16 @@ import java.util.List;
 
 @Entity
 public class Order extends Versionable {
+    @Id
     private long id;
+    @NotNull
     private Date createdDate;
     private Date deliveredDate;
+    @NotNull
+    @ManyToOne
     private Customer customer;
+    @NotNull
+    @OneToMany(mappedBy = "order")
     private List<Volume> volumes;
 
 

@@ -1,31 +1,44 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class PackageType extends Versionable{
+    /*
+    Id é criado pelo sistema
+    name-String
+    mandatorySensors-List<SensorType>
+    volume-Volume
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @NotNull
     private String name;
+    @NotNull
+    @ManyToMany
+    @JoinTable(name = "packageType_sensorType",
+            joinColumns = @JoinColumn(name = "packageType_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"))
     private List<SensorType> mandatorySensors;
-    private Volume volume;
-
+    @OneToMany(mappedBy = "pack")
+    private List<Volume> volumes;
 
     public PackageType() {
     }
 
-    public PackageType(long id, String name, List<SensorType> mandatorySensors, Volume volume) {
-        this.id = id;
+    public PackageType(String name) {
         this.name = name;
         this.mandatorySensors = new ArrayList<>();
-        this.volume = volume;
+        this.volumes = new ArrayList<>();
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -37,19 +50,27 @@ public class PackageType extends Versionable{
     }
 
     public List<SensorType> getMandatorySensors() {
-        return new ArrayList<>(mandatorySensors);
-
+        return mandatorySensors;
     }
 
-    public void setMandatorySensors(List<SensorType> mandatorySensors) {
-        this.mandatorySensors = mandatorySensors;
+    public void addMandatorySensor(SensorType sensor) {
+        mandatorySensors.add(sensor);
     }
 
-    public Volume getVolume() {
-        return volume;
+    public void removeMandatorySensor(SensorType sensor) {
+        mandatorySensors.remove(sensor);
     }
 
-    public void setVolume(Volume volume) {
-        this.volume = volume;
+    public List<Volume> getVolume() {
+        return new ArrayList<>(volumes);
     }
+
+    public void addVolume(Volume volume) {
+        volumes.add(volume);
+    }
+
+    public void removeVolume(Volume volume) {
+        volumes.remove(volume);
+    }
+
 }
