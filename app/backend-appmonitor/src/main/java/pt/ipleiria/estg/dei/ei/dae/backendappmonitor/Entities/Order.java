@@ -23,7 +23,7 @@ public class Order extends Versionable {
         this.createdDate = createdDate;
         this.deliveredDate = deliveredDate;
         this.customer = customer;
-        this.volumes = volumes;
+        this.volumes = new ArrayList<>();
     }
 
     public long getId() {

@@ -16,7 +16,7 @@ public class PackageType extends Versionable{
     public PackageType(long id, String name, List<SensorType> mandatorySensors, Volume volume) {
         this.id = id;
         this.name = name;
-        this.mandatorySensors = mandatorySensors;
+        this.mandatorySensors = new ArrayList<>();
         this.volume = volume;
     }
 
