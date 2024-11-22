@@ -1,7 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
@@ -18,10 +17,13 @@ public class Sensor extends Versionable{
     @Id
     private long id;
     @NotNull
+    @ManyToOne
     private SensorType sensorType;
     @NotNull
+    @ManyToOne
     private Volume volume;
     @NotNull
+    @OneToMany(mappedBy = "sensor")
     private List<SensorRecord> history;
 
     public Sensor() {

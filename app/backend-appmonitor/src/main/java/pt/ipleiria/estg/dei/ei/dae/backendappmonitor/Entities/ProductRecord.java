@@ -14,8 +14,10 @@ public class ProductRecord extends Versionable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @ManyToOne
     private ProductType product;
     private int quantity;
+    @ManyToOne
     private Volume volume;
 
     public ProductRecord() {

@@ -1,7 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
@@ -16,12 +15,16 @@ public class Volume extends Versionable {
     @NotNull
     private Date sentDate;
     private Date deliveredDate;
+    @ManyToOne
     private PackageType pack;
     @NotNull
+    @OneToMany(mappedBy = "volume")
     private List<ProductRecord> products;
     @NotNull
+    @OneToMany(mappedBy = "volume")
     private List<Sensor> sensors;
     @NotNull
+    @ManyToOne
     private Order order;
 
     public Volume() {

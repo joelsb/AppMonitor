@@ -16,8 +16,10 @@ public class Order extends Versionable {
     private Date createdDate;
     private Date deliveredDate;
     @NotNull
+    @ManyToOne
     private Customer customer;
     @NotNull
+    @OneToMany(mappedBy = "order")
     private List<Volume> volumes;
 
 

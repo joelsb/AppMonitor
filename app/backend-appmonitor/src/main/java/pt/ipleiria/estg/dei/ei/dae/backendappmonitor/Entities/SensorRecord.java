@@ -21,6 +21,7 @@ public class SensorRecord extends Versionable{
     @NotNull
     private double value;
     @NotNull
+    @ManyToOne
     private Sensor sensor;
 
     public SensorRecord() {

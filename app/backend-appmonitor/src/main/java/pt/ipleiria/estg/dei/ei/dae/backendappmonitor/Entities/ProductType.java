@@ -22,18 +22,18 @@ public class ProductType extends Versionable{
     @NotNull
     private boolean mandatoryPackage;
     @NotNull
+    @ManyToMany
     private List<SensorType> mandatorySensors;
-    @NotNull
-    private Volume volume;
+    @OneToMany(mappedBy = "product")
+    private List<ProductRecord> productRecords;
 
     public ProductType() {
     }
 
-    public ProductType(String name, boolean mandatoryPackage, List<SensorType> mandatorySensors, Volume volume) {
+    public ProductType(String name, boolean mandatoryPackage, List<SensorType> mandatorySensors) {
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
         this.mandatorySensors = mandatorySensors;
-        this.volume = volume;
     }
 
     public long getId() {
@@ -66,13 +66,5 @@ public class ProductType extends Versionable{
 
     public void removeMandatorySensor(SensorType sensor) {
         mandatorySensors.remove(sensor);
-    }
-
-    public Volume getVolume() {
-        return volume;
-    }
-
-    public void setVolume(Volume volume) {
-        this.volume = volume;
     }
 }

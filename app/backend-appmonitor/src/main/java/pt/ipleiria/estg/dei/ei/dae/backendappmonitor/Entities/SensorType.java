@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class SensorType extends Versionable{
+public class SensorType extends Versionable {
     /*
     Id é criado pelo sistema
     name-String
@@ -25,10 +25,16 @@ public class SensorType extends Versionable{
     @NotNull
     private String unit;
     @NotNull
+    @ManyToMany
+    @JoinTable(name = "sensorType_productType",
+            joinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "productType_id", referencedColumnName = "id"))
     private List<ProductType> products;
     @NotNull
+    @OneToMany(mappedBy = "sensorType")
     private List<Sensor> sensors;
     @NotNull
+    @ManyToMany
     private List<PackageType> packageTypes;
 
     public SensorType() {

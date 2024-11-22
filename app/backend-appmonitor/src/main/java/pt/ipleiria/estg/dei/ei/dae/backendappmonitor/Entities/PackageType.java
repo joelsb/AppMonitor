@@ -20,17 +20,21 @@ public class PackageType extends Versionable{
     @NotNull
     private String name;
     @NotNull
+    @ManyToMany
+    @JoinTable(name = "packageType_sensorType",
+            joinColumns = @JoinColumn(name = "packageType_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"))
     private List<SensorType> mandatorySensors;
-    @NotNull
-    private Volume volume;
+    @OneToMany(mappedBy = "pack")
+    private List<Volume> volumes;
 
     public PackageType() {
     }
 
-    public PackageType(String name, Volume volume) {
+    public PackageType(String name) {
         this.name = name;
         this.mandatorySensors = new ArrayList<>();
-        this.volume = volume;
+        this.volumes = new ArrayList<>();
     }
 
     public long getId() {
@@ -57,12 +61,16 @@ public class PackageType extends Versionable{
         mandatorySensors.remove(sensor);
     }
 
-    public Volume getVolume() {
-        return volume;
+    public List<Volume> getVolume() {
+        return new ArrayList<>(volumes);
     }
 
-    public void setVolume(Volume volume) {
-        this.volume = volume;
+    public void addVolume(Volume volume) {
+        volumes.add(volume);
+    }
+
+    public void removeVolume(Volume volume) {
+        volumes.remove(volume);
     }
 
 }
