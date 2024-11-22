@@ -22,7 +22,7 @@ FRONT END SENSORES
 -PATCH->POST
 -Porque vamos adicionar mais um valor (mais 1 objeto á lista)
 
-GET api/orders 
+GET api/orders do empregado
 -tem de devolver o customerUsername
 
 SEMPRE que criarmos uma entidade, criamos logo com tudo o que é necessário
