@@ -1,9 +1,12 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 public class Customer extends User {
     @NotNull
     private List<Order> orders;

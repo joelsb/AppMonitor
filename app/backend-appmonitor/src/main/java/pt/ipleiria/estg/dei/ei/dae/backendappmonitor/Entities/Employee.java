@@ -1,7 +1,9 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 
+@Entity
 public class Employee extends User{
     @NotNull
     private String warehouse;

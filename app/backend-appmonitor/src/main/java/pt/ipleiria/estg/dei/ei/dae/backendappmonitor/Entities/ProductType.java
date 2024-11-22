@@ -3,6 +3,9 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.List;
+
+@Entity
 public class ProductType extends Versionable{
     /*
     id é criado pelo sistema

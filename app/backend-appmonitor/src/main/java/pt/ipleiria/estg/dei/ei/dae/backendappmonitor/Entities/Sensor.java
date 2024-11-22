@@ -1,11 +1,13 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Sensor extends Versionable{
     /*
     Id é inserido pelo empregado no momento da criação
@@ -73,7 +75,7 @@ public class Sensor extends Versionable{
     }
 
     public boolean isWorking() {
-        return getLastRecord().isWorking();
+        return getLastRecord() != null;
     }
 
 

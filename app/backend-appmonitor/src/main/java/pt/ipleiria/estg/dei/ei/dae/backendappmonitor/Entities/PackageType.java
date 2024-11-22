@@ -3,6 +3,10 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 public class PackageType extends Versionable{
     /*
     Id é criado pelo sistema
@@ -23,9 +27,9 @@ public class PackageType extends Versionable{
     public PackageType() {
     }
 
-    public PackageType(String name, List<SensorType> mandatorySensors, Volume volume) {
+    public PackageType(String name, Volume volume) {
         this.name = name;
-        this.mandatorySensors = mandatorySensors;
+        this.mandatorySensors = new ArrayList<>();
         this.volume = volume;
     }
 

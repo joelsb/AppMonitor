@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
+@Entity
 public class SensorRecord extends Versionable{
     /*
     Id é criado pelo sistema
@@ -59,4 +60,5 @@ public class SensorRecord extends Versionable{
     public void setSensor(Sensor sensor) {
         this.sensor = sensor;
     }
+
 }

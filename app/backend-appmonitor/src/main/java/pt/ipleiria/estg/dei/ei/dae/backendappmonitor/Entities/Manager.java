@@ -1,7 +1,9 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 
+@Entity
 public class Manager extends User{
     @NotNull
     private String office;

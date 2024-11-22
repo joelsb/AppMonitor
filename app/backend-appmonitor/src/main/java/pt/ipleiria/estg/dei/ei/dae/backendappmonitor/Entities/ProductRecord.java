@@ -2,6 +2,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
 import jakarta.persistence.*;
 
+@Entity
 public class ProductRecord extends Versionable{
     /*
     Id é criado pelo sistema

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class SensorType extends Versionable{
     /*
     Id é criado pelo sistema
