@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@NamedQueries(
+        {
+                @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.createdDate"),
+                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate")
+        }
+)
+
 @Entity
 public class Order extends Versionable {
     @Id
@@ -26,7 +33,7 @@ public class Order extends Versionable {
     public Order() {
     }
 
-    public Order(long id, Date createdDate, Date deliveredDate, Customer customer, List<Volume> volumes) {
+    public Order(long id, Date createdDate, Date deliveredDate, Customer customer) {
         this.id = id;
         this.createdDate = createdDate;
         this.deliveredDate = deliveredDate;
@@ -42,11 +49,11 @@ public class Order extends Versionable {
         this.id = id;
     }
 
-    public Date getCreationDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreatedDate(Date creationDate) {
         this.createdDate = creationDate;
     }
 
@@ -70,7 +77,11 @@ public class Order extends Versionable {
         return new ArrayList<>(volumes);
     }
 
-    public void setVolumes(List<Volume> volumes) {
-        this.volumes = volumes;
+    public void addVolume(Volume volume) {
+        volumes.add(volume);
+    }
+
+    public void removeVolume(Volume volume) {
+        volumes.remove(volume);
     }
 }

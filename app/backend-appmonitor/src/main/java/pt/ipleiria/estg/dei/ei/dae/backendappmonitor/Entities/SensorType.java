@@ -36,17 +36,21 @@ public class SensorType extends Versionable {
     @NotNull
     @ManyToMany
     private List<PackageType> packageTypes;
+    private double ceiling;
+    private double floor;
 
     public SensorType() {
     }
 
 
-    public SensorType(String name, String unit) {
+    public SensorType(String name, String unit, double ceiling, double floor) {
         this.name = name;
         this.unit = unit;
         this.products = new ArrayList<>();
         this.sensors = new ArrayList<>();
         this.packageTypes = new ArrayList<>();
+        this.ceiling = ceiling;
+        this.floor = floor;
     }
 
     public long getId() {
@@ -105,4 +109,19 @@ public class SensorType extends Versionable {
         packageTypes.remove(packageType);
     }
 
+    public double getCeiling() {
+        return ceiling;
+    }
+
+    public void setCeiling(double ceiling) {
+        this.ceiling = ceiling;
+    }
+
+    public double getFloor() {
+        return floor;
+    }
+
+    public void setFloor(double floor) {
+        this.floor = floor;
+    }
 }

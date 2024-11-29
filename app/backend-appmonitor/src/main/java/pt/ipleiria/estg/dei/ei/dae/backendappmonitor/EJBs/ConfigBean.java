@@ -12,16 +12,24 @@ import java.util.logging.Logger;
 
 public class ConfigBean {
     @EJB
-    private UserBean userBean;
+    private CustomerBean customerBean;
+    @EJB
+    private ManagerBean managerBean;
+    @EJB
+    private EmployeeBean employeeBean;
+
 
     private static final Logger logger = Logger.getLogger("ejbs.ConfigBean");
 
     @PostConstruct
     public void populateDB() {
-
-
         try {
-            userBean.create("joel123", "123", "Joel", "joel@mail.com");
+            customerBean.create("Joel", "123", "Joel", "joelsb@mail.com");
+            customerBean.create("Tiago", "123", "Tiago", "tiago@mail.com");
+            employeeBean.create("Jose", "123", "Jose", "jose@mail.com", "warehouse1");
+            managerBean.create("Ana", "123", "Ana", "ana@mail.com", "office1");
+
+
 
         }
         catch (Exception e) {

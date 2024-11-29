@@ -24,9 +24,4 @@ public class UserBean {
         // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
         return entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
     }
-
-    public void create(String username, String password, String name, String email) {
-        var user = new User(username, password, name, email);
-        entityManager.persist(user);
-    }
 }
