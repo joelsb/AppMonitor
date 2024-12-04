@@ -7,6 +7,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "sensorTypes")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "getAllSensorTypes",
+                        query = "SELECT st FROM SensorType st ORDER BY st.name"
+                ),
+                @NamedQuery(
+                        name = "getSensorTypeByName",
+                        query = "SELECT st FROM SensorType st WHERE st.name = :name"
+                )
+        }
+)
+
 @Entity
 public class SensorType extends Versionable implements Serializable {
     /*
@@ -30,7 +44,7 @@ public class SensorType extends Versionable implements Serializable {
     @JoinTable(name = "sensorType_productType",
             joinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "productType_id", referencedColumnName = "id"))
-    private List<ProductType> products;
+    private List<ProductType> productTypes;
     @NotNull
     @OneToMany(mappedBy = "sensorType")
     private List<Sensor> sensors;
@@ -47,7 +61,7 @@ public class SensorType extends Versionable implements Serializable {
     public SensorType(String name, String unit, double ceiling, double floor) {
         this.name = name;
         this.unit = unit;
-        this.products = new ArrayList<>();
+        this.productTypes = new ArrayList<>();
         this.sensors = new ArrayList<>();
         this.packageTypes = new ArrayList<>();
         this.ceiling = ceiling;
@@ -74,16 +88,16 @@ public class SensorType extends Versionable implements Serializable {
         this.unit = unit;
     }
 
-    public List<ProductType> getProducts() {
-        return new ArrayList<>(products);
+    public List<ProductType> getProductTypes() {
+        return new ArrayList<>(productTypes);
     }
 
-    public void addProduct(ProductType product) {
-        products.add(product);
+    public void addProductType(ProductType productType) {
+        productTypes.add(productType);
     }
 
-    public void removeProduct(ProductType product) {
-        products.remove(product);
+    public void removeProductType(ProductType productType) {
+        productTypes.remove(productType);
     }
 
     public List<Sensor> getSensors() {

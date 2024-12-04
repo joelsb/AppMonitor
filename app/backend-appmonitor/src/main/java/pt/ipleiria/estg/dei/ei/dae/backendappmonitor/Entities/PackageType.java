@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "packageTypes")
 @Entity
 public class PackageType extends Versionable implements Serializable {
     /*

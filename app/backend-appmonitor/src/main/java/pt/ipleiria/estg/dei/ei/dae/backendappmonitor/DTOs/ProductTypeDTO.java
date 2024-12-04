@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import jakarta.json.bind.annotation.*;
 import jakarta.json.bind.annotation.JsonbTransient;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 
@@ -16,10 +17,18 @@ public class ProductTypeDTO {
     productRecords: List<ProductRecord>
      */
 
+    @JsonbProperty("id") // Will serialize first
     private long id;
+
+    @JsonbProperty("name") // Will serialize second
     private String name;
+
+    @JsonbProperty("mandatoryPackage") // Will serialize third
     private boolean mandatoryPackage;
+
+    @JsonbProperty("mandatorySensors") // Will serialize fourth
     private List<SensorTypeDTO> mandatorySensors;
+
     private boolean excludeMandatorySensors; // Flag to control serialization
 
     public ProductTypeDTO() {
@@ -30,6 +39,7 @@ public class ProductTypeDTO {
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
         this.mandatorySensors = new ArrayList<>();
+        this.excludeMandatorySensors = false;
     }
 
     public static ProductTypeDTO from(ProductType productType) {
@@ -68,7 +78,6 @@ public class ProductTypeDTO {
         this.mandatoryPackage = mandatoryPackage;
     }
 
-    @JsonbTransient // Prevent serialization of the raw 'mandatorySensors' field
     public List<SensorTypeDTO> getMandatorySensors() {
         return excludeMandatorySensors ? null : new ArrayList<>(mandatorySensors);
     }
@@ -80,6 +89,4 @@ public class ProductTypeDTO {
     public void setExcludeMandatorySensors(boolean excludeMandatorySensors) {
         this.excludeMandatorySensors = excludeMandatorySensors;
     }
-
-
 }

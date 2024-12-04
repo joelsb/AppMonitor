@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
 import java.util.List;
@@ -20,6 +22,12 @@ public class ProductTypeBean {
             throw new MyEntityNotFoundException("ProductType (" + id + ") not found");
         }
         return productType;
+    }
+
+    public ProductType findByName(String name) {
+        return entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
+                .setParameter("name", name)
+                .getSingleResult();
     }
 
     public List<ProductType> findAll() {
@@ -56,5 +64,35 @@ public class ProductTypeBean {
         return productType;
     }
 
+    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+        var productType = this.find(id);
+        var sensorType = entityManager.find(SensorType.class, sensorTypeId);
+        if (sensorType == null) {
+            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found");
+        }
+        if(productType.getMandatorySensors().contains(sensorType)){
+            throw new MyEntityExistsException("SensorType (" + sensorTypeId + ") already exists in ProductType (" + id + ")");
+        }
+        productType.addMandatorySensor(sensorType);
+        if(!sensorType.getProductTypes().contains(productType)){
+            sensorType.addProductType(productType);
+        }
+    }
 
+    public ProductType removeMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException {
+        var productType = this.find(id);
+        var sensorType = entityManager.find(SensorType.class, sensorTypeId);
+        if (sensorType == null) {
+            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found");
+        }
+        if(!productType.getMandatorySensors().contains(sensorType)){
+            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found in ProductType (" + id + ")");
+        }
+        productType.removeMandatorySensor(sensorType);
+        if(!sensorType.getProductTypes().contains(productType)){
+            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found in ProductType (" + id + ")");
+        }
+        sensorType.removeProductType(productType);
+        return productType;
+    }
 }

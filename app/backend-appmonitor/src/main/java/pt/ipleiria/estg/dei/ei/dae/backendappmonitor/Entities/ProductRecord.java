@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 
+@Table(name = "productRecords")
 @Entity
 public class ProductRecord extends Versionable implements Serializable {
     /*

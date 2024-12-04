@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "sensors")
 @Entity
 public class Sensor extends Versionable implements Serializable {
     /*

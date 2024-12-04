@@ -41,7 +41,7 @@ public class SensorTypeDTO {
         );
     }
 
-    public List<SensorTypeDTO> from(List<SensorType> sensorTypes) {
+    public static List<SensorTypeDTO> from(List<SensorType> sensorTypes) {
         return sensorTypes.stream().map(SensorTypeDTO::from).collect(Collectors.toList());
     }
 

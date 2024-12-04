@@ -19,6 +19,8 @@ public class ConfigBean {
     private EmployeeBean employeeBean;
     @EJB
     private ProductTypeBean productTypeBean;
+    @EJB
+    private SensorTypeBean sensorTypeBean;
 
 
     private static final Logger logger = Logger.getLogger("ejbs.ConfigBean");
@@ -35,6 +37,17 @@ public class ConfigBean {
             //Product-Type creation
             productTypeBean.create("Televisao LCD Samsung", false);
             productTypeBean.create("Gelado OLA - Corneto morango", true);
+
+            //Sensor-Type creation
+            sensorTypeBean.create("Temperature", "ºC", 30, 10);
+            sensorTypeBean.create("Humidity", "%", 80, 20);
+
+            //add a mandatory sensor to a product-type
+            //add the mandatory sensor Temperature to the product-type Televisao LCD Samsung
+            productTypeBean.addMandatorySensor(1L, 1L);
+            //add the mandatory sensors Humidity and Temperature to the product-type Gelado OLA - Corneto morango
+            productTypeBean.addMandatorySensor(2L, 1L);
+            productTypeBean.addMandatorySensor(2L, 2L);
 
         }
         catch (Exception e) {

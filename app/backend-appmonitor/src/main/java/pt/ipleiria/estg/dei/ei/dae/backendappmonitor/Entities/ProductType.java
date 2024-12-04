@@ -7,11 +7,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "productTypes")
 @NamedQueries(
         {
                 @NamedQuery(
                         name = "getAllProductTypes",
                         query = "SELECT pt FROM ProductType pt ORDER BY pt.name"
+                ),
+                @NamedQuery(
+                        name = "getProductTypeByName",
+                        query = "SELECT pt FROM ProductType pt WHERE pt.name = :name"
                 )
         }
 )

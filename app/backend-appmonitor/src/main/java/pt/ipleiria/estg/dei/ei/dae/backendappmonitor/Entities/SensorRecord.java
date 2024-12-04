@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
+@Table(name = "sensorRecords")
 @Entity
 public class SensorRecord extends Versionable implements Serializable {
     /*

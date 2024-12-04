@@ -52,7 +52,6 @@ public class CustomerDTO extends UserDTO{
         return customers.stream().map(CustomerDTO::from).collect(Collectors.toList());
     }
 
-    @JsonbTransient // Prevent serialization of the raw 'orders' field
     public List<OrderDTO> getOrders() {
         return excludeOrders ? null : new ArrayList<>(orders);
     }
