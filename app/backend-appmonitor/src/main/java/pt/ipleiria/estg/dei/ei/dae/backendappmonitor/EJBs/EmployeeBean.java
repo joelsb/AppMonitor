@@ -8,10 +8,25 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Employee;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
+import java.util.List;
+
 @Stateless
 public class EmployeeBean extends UserBean {
     @PersistenceContext
     private EntityManager entityManager;
+
+    public Employee find(String username) {
+        var employee = entityManager.find(Employee.class, username);
+        if (employee == null) {
+            throw new RuntimeException("Employee (" + username + ") not found");
+        }
+        return employee;
+    }
+
+    public List<Employee> findAll(String username) throws MyEntityNotFoundException {
+        // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
+        return entityManager.createNamedQuery("getAllEmployees", Employee.class).getResultList();
+    }
 
     public Employee create(String username, String password, String name, String email, String warehouse) throws MyEntityExistsException {
         if(entityManager.find(Employee.class, username) != null) {

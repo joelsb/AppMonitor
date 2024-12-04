@@ -1,0 +1,267 @@
+############ EMPLOYEE RESPONSABILITIES
+
+### GET ALL CUSTOMERS
+GET http://localhost:8080/appmonitor/api/customers
+Accept: application/json
+
+### GET A SINGLE CUSTOMER
+GET http://localhost:8080/appmonitor/api/customers/Joel
+Accept: application/json
+
+### GET ALL PRODUCTS-TYPES
+GET http://localhost:8080/appmonitor/api/product-types
+Accept: application/json
+
+### GET A SINGLE PRODUCT-TYPE
+GET http://localhost:8080/appmonitor/api/product-types/1
+Accept: application/json
+
+
+
+
+
+
+
+### GET A SINGLE ADMINISTRATOR
+GET http://localhost:8080/academics/api/administrator/admin1
+Accept: application/json
+
+### CREATE A NEW ADMINISTRATOR
+POST http://localhost:8080/academics/api/administrator
+Content-Type: application/json
+
+{
+  "username": "admin3",
+    "password": "123",
+    "name": "Admin 3",
+    "email": "admin3@mail.com"
+}
+
+### UPDATE AN ADMINISTRATOR
+PUT http://localhost:8080/academics/api/administrator/admin3
+Content-Type: application/json
+
+{
+  "username": "admin3",
+    "password": "123",
+    "name": "Admin 3 UPDATED",
+    "email": "admin3@mail.pt"
+}
+
+### DELETE AN ADMINISTRATOR
+DELETE http://localhost:8080/academics/api/administrator/admin3
+
+
+
+############ COUSER SERVICE
+
+### GET ALL COURSES
+GET http://localhost:8080/academics/api/course
+Accept: application/json
+
+### GET A SINGLE COURSE
+GET http://localhost:8080/academics/api/course/1
+Accept: application/json
+
+### GET COURSE SUBJECTS
+GET http://localhost:8080/academics/api/course/1/subjects
+Accept: application/json
+
+### GET COURSE STUDENTS
+GET http://localhost:8080/academics/api/course/2/students
+Accept: application/json
+
+### CREATE A NEW COURSE
+POST http://localhost:8080/academics/api/course
+Content-Type: application/json
+
+{
+  "name": "Marketing",
+  "code": 4
+}
+
+### UPDATE A COURSE
+PUT http://localhost:8080/academics/api/course/4
+Content-Type: application/json
+
+{
+  "name": "Marketing UPDATED",
+  "code": 4
+}
+
+### DELETE A COURSE
+DELETE http://localhost:8080/academics/api/course/4
+
+
+
+############ STUDENT SERVICE
+
+### GET ALL STUDENTS
+GET http://localhost:8080/academics/api/student
+Accept: application/json
+
+### GET STUDENT COURSE
+GET http://localhost:8080/academics/api/student/2191618/course
+Accept: application/json
+
+### GET A SINGLE STUDENT
+GET http://localhost:8080/academics/api/student/2191618
+Accept: application/json
+
+### GET STUDENT SUBJECTS
+GET http://localhost:8080/academics/api/student/2191618/subjects
+Accept: application/json
+
+### CREATE A NEW STUDENT
+POST http://localhost:8080/academics/api/student
+Content-Type: application/json
+
+{
+  "username": "2191621",
+  "password": "123",
+  "name": "John Doe",
+  "email": "johndoe@mail.pt",
+  "courseCode": 2
+}
+
+### UPDATE A STUDENT
+PUT http://localhost:8080/academics/api/student/2191622
+Content-Type: application/json
+
+{
+  "username": "2191622",
+  "password": "123",
+  "name": "John Doe UPDATED",
+  "email": "johndoe@mail.pt",
+  "courseCode": 2
+}
+
+### DELETE A STUDENT
+DELETE http://localhost:8080/academics/api/student/2191621
+
+
+
+############ SUBJECT SERVICE
+
+### GET ALL SUBJECTS
+GET http://localhost:8080/academics/api/subject
+Accept: application/json
+
+### GET A SINGLE SUBJECT
+GET http://localhost:8080/academics/api/subject/14
+Accept: application/json
+
+### GET SUBJECT STUDENTS
+GET http://localhost:8080/academics/api/subject/20/students
+Accept: application/json
+
+### GET SUBJECT TEACHERS
+GET http://localhost:8080/academics/api/subject/20/teachers
+Accept: application/json
+
+### ENROLL A STUDENT IN A SUBJECT
+POST http://localhost:8080/academics/api/subject/22/enroll/2191618
+
+
+### UNROLL A STUDENT FROM A SUBJECT
+DELETE http://localhost:8080/academics/api/subject/22/unroll/2191618
+
+
+### CREATE A NEW SUBJECT
+POST http://localhost:8080/academics/api/subject
+Content-Type: application/json
+
+{
+  "name": "Projeto Informático",
+  "code": 14,
+  "schoolYear": "2024/2024",
+  "courseCode": 1,
+  "courseYear": 1
+}
+
+### UPDATE A SUBJECT
+PUT http://localhost:8080/academics/api/subject/22
+Content-Type: application/json
+#subjectBean.create(10, "Análise Matemática", "2024/2025", 1, 1);
+
+{
+  "name": "Programação I SI UPDATED",
+  "code": 22,
+  "schoolYear": "2024/2025",
+  "courseCode": 2,
+  "courseYear": 1
+}
+
+### DELETE A SUBJECT
+DELETE http://localhost:8080/academics/api/subject/14
+
+
+
+############ TEACHER SERVICE
+
+### GET ALL TEACHERS
+GET http://localhost:8080/academics/api/teacher
+Accept: application/json
+
+### GET A SINGLE TEACHER
+GET http://localhost:8080/academics/api/teacher/teacher1
+Accept: application/json
+
+### GET TEACHER SUBJECTS
+GET http://localhost:8080/academics/api/teacher/teacher1/subjects
+Accept: application/json
+
+### ASSOCIATE A TEACHER TO A SUBJECT
+POST http://localhost:8080/academics/api/teacher/teacher1/associate/20
+
+### DISSOCIATE A TEACHER FROM A SUBJECT
+DELETE http://localhost:8080/academics/api/teacher/teacher1/dissociate/20
+
+### CREATE A NEW TEACHER
+POST http://localhost:8080/academics/api/teacher
+Content-Type: application/json
+
+{
+  "username": "teacher3",
+  "password": "123",
+  "name": "Teacher 3",
+  "email": "teacher3@mail.com",
+  "office": "T.01.S3"
+}
+
+### UPDATE A TEACHER
+PUT http://localhost:8080/academics/api/teacher/teacher3
+Content-Type: application/json
+
+{
+  "username": "teacher3",
+  "password": "123",
+  "name": "Teacher 3 UPDATED",
+  "email": "teacher1@mail.pt",
+  "office": "T.01.S3"
+}
+
+### DELETE A TEACHER
+DELETE http://localhost:8080/academics/api/teacher/teacher1
+
+
+
+############ USER SERVICE
+
+### GET ALL USERS
+GET http://localhost:8080/academics/api/user
+Accept: application/json
+
+### GET A SINGLE USER
+GET http://localhost:8080/academics/api/user/2191618
+Accept: application/json
+
+
+
+
+
+
+
+
+
+

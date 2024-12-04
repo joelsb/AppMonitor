@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class ProductTypeDTO {
     private String name;
     private boolean mandatoryPackage;
     private List<SensorTypeDTO> mandatorySensors;
-    private List<ProductRecordDTO> productRecords;
+    private boolean excludeMandatorySensors; // Flag to control serialization
 
     public ProductTypeDTO() {
     }
@@ -29,7 +30,6 @@ public class ProductTypeDTO {
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
         this.mandatorySensors = new ArrayList<>();
-        this.productRecords = new ArrayList<>();
     }
 
     public static ProductTypeDTO from(ProductType productType) {
@@ -40,7 +40,7 @@ public class ProductTypeDTO {
         );
     }
 
-    public List<ProductTypeDTO> from(List<ProductType> productTypes) {
+    public static List<ProductTypeDTO> from(List<ProductType> productTypes) {
         return productTypes.stream().map(ProductTypeDTO::from).collect(Collectors.toList());
     }
 
@@ -68,19 +68,18 @@ public class ProductTypeDTO {
         this.mandatoryPackage = mandatoryPackage;
     }
 
+    @JsonbTransient // Prevent serialization of the raw 'mandatorySensors' field
     public List<SensorTypeDTO> getMandatorySensors() {
-        return mandatorySensors;
+        return excludeMandatorySensors ? null : new ArrayList<>(mandatorySensors);
     }
 
     public void setMandatorySensors(List<SensorTypeDTO> mandatorySensors) {
         this.mandatorySensors = mandatorySensors;
     }
 
-    public List<ProductRecordDTO> getProductRecords() {
-        return productRecords;
+    public void setExcludeMandatorySensors(boolean excludeMandatorySensors) {
+        this.excludeMandatorySensors = excludeMandatorySensors;
     }
 
-    public void setProductRecords(List<ProductRecordDTO> productRecords) {
-        this.productRecords = productRecords;
-    }
+
 }

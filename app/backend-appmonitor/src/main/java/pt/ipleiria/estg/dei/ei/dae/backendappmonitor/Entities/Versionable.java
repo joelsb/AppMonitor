@@ -6,7 +6,7 @@ import jakarta.persistence.Version;
 import java.io.Serializable;
 
 @MappedSuperclass
-public class Versionable implements Serializable {
+public class Versionable {
     @Version
     private int version;
 }

@@ -14,9 +14,9 @@ import java.util.List;
                 @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate")
         }
 )
-
+@Table(name = "orders")
 @Entity
-public class Order extends Versionable {
+public class Order extends Versionable implements Serializable {
     @Id
     private long id;
     @NotNull

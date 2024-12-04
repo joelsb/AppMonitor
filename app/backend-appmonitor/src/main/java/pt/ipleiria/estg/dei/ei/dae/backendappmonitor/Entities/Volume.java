@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Volume extends Versionable {
+public class Volume extends Versionable implements Serializable {
     @Id
     private long id;
     @NotNull

@@ -2,8 +2,10 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
-public class ProductRecord extends Versionable{
+public class ProductRecord extends Versionable implements Serializable {
     /*
     Id é criado pelo sistema
     id-long

@@ -17,13 +17,13 @@ public class SensorTypeDTO {
     private long id;
     private String name;
     private String unit;
-    private double ceiling;
-    private double floor;
+    private Double ceiling;
+    private Double floor;
 
     public SensorTypeDTO() {
     }
 
-    public SensorTypeDTO(long id, String name, String unit, double ceiling, double floor) {
+    public SensorTypeDTO(long id, String name, String unit, Double ceiling, Double floor) {
         this.id = id;
         this.name = name;
         this.unit = unit;
@@ -35,9 +35,9 @@ public class SensorTypeDTO {
         return new SensorTypeDTO(
                 sensorType.getId(),
                 sensorType.getName(),
-                sensorType.getUnit(),
-                sensorType.getCeiling(),
-                sensorType.getFloor()
+                null,
+                null,
+                null
         );
     }
 
@@ -69,15 +69,15 @@ public class SensorTypeDTO {
         this.unit = unit;
     }
 
-    public double getCeiling() {
+    public Double getCeiling() {
         return ceiling;
     }
 
-    public void setCeiling(double ceiling) {
+    public void setCeiling(Double ceiling) {
         this.ceiling = ceiling;
     }
 
-    public double getFloor() {
+    public Double getFloor() {
         return floor;
     }
 

@@ -39,6 +39,12 @@ public class OrderDTO {
         return orders.stream().map(OrderDTO::from).collect(Collectors.toList());
     }
 
+    public static long getId(Order order) {
+        return order.getId();
+    }
+
+
+
     public long getId() {
         return id;
     }

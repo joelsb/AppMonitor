@@ -3,11 +3,12 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Sensor extends Versionable{
+public class Sensor extends Versionable implements Serializable {
     /*
     Id é inserido pelo empregado no momento da criação
     sensorType-SensorType

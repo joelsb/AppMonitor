@@ -3,11 +3,12 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class PackageType extends Versionable{
+public class PackageType extends Versionable implements Serializable {
     /*
     Id é criado pelo sistema
     name-String
