@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Path("/product-types")
 @Consumes("application/json")
 @Produces("application/json")
-public class ProductTypes {
+public class ProductTypeService {
 
     @EJB
     private ProductTypeBean productTypeBean;

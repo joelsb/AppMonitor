@@ -11,7 +11,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 @Path("orders")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
-public class OrdersService {
+public class OrderService {
     @EJB
     private OrderBean orderBean;
 

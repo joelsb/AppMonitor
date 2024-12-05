@@ -16,6 +16,13 @@ Accept: application/json
 GET http://localhost:8080/appmonitor/api/product-types/1
 Accept: application/json
 
+### GET ALL PACKAGE-TYPES
+GET http://localhost:8080/appmonitor/api/package-types
+Accept: application/json
+
+### GET A SINGLE PACKAGE-TYPE
+GET http://localhost:8080/appmonitor/api/package-types/1
+Accept: application/json
 
 
 
