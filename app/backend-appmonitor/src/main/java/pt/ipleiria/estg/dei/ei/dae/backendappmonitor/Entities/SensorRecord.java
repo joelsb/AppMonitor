@@ -3,10 +3,12 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.Date;
 
+@Table(name = "sensorRecords")
 @Entity
-public class SensorRecord extends Versionable{
+public class SensorRecord extends Versionable implements Serializable {
     /*
     Id é criado pelo sistema
     time-Date

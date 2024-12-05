@@ -1,20 +1,26 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedQueries({
+        //JPQL query to get all users
+        @NamedQuery(name = "getAllCustomers", query = "SELECT c FROM Customer c ORDER BY c.username"),
+        @NamedQuery(name = "getCustomerByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email")
+})
+
 @Entity
-public class Customer extends User {
+public class Customer extends User implements Serializable {
     @NotNull
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
 
     public Customer() {
+        this.orders = new ArrayList<>();
     }
 
     public Customer(String username, String password, String name, String email) {
@@ -24,6 +30,14 @@ public class Customer extends User {
 
     public List<Order> getOrders() {
         return new ArrayList<>(orders);
+    }
+
+    public List<Long> getOrdersIds() {
+        List<Long> ordersIds = new ArrayList<>();
+        for (Order order : orders) {
+            ordersIds.add(order.getId());
+        }
+        return ordersIds;
     }
 
     public void addOrder(Order order) {

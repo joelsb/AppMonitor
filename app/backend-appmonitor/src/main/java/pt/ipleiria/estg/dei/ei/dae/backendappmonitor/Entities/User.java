@@ -18,7 +18,7 @@ import java.io.Serializable;
 })
 // “single table per class hierarchy” strategy
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class User  extends Versionable{
+public class User  extends Versionable implements Serializable {
 
     @Id
     @Column(unique = true, nullable = false)
@@ -36,11 +36,9 @@ public class User  extends Versionable{
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotNull
-    private boolean isActive;
 
     public User() {
-        this.isActive = true;
+
     }
 
     public User(String username, String password, String name, String email) {
@@ -48,7 +46,7 @@ public class User  extends Versionable{
         this.password = password;
         this.name = name;
         this.email = email;
-        this.isActive = true;
+
     }
 
     public String getUsername() {
@@ -78,11 +76,5 @@ public class User  extends Versionable{
 
     public void setEmail(@NotNull @Email String email) {
         this.email = email;
-    }
-    public boolean isActive() {
-        return isActive;
-    }
-    public void setActive(@NotNull boolean active) {
-        isActive = active;
     }
 }

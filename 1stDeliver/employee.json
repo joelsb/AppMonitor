@@ -1,7 +1,7 @@
 EMPLOYEE ENDPOINTS
 
 
-- Um empregado faz login no site
+1- Um empregado faz login no site
 utilizando o protocolo HTTP, verbo POST,
 para o sitio: /appmonitor/api/auth/login
 
@@ -19,7 +19,7 @@ Resposta devolvida para este recurso segue o formato JSON:
 
 
 
-- Um empregado consulta os seus dados pessoais,
+2- Um empregado consulta os seus dados pessoais,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/employees/{employeeUsername}
 
@@ -33,7 +33,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 }
 
 
-- Um empregado consulta os clientes da empresa para associar a uma encomenda,
+3- Um empregado consulta os clientes da empresa para associar a uma encomenda,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/customers
 
@@ -58,9 +58,9 @@ Resposta devolvida por este recurso segue o formato JSON:
 ]
 
 
-- Um empregado consulta os tipos de produtos disponiveis da empresa
+4- Um empregado consulta os tipos de produtos disponiveis da empresa
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/products
+para o sitio: /appmonitor/api/product-types
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -97,7 +97,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 ]
 
 
-- Um empregado consulta as embalagens disponiveis da empresa 
+5- Um empregado consulta as embalagens disponiveis da empresa 
 (que ainda não foram associadas a um volume), 
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/package-types
@@ -160,7 +160,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 ]
 
 
-- Um empregado consulta os tipos de sensores disponiveis na empresa
+6- Um empregado consulta os tipos de sensores disponiveis na empresa
 para poder criar um novo sensor,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/sensor-types
@@ -182,7 +182,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     }
 ]
 
-- Um empregado consulta as encomendas disponiveis para associar a um volume,
+7- Um empregado consulta as encomendas disponiveis para associar a um volume,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/orders/available
 
@@ -205,7 +205,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     }
 ]
 
--Um empregado cria uma encomenda com um volume associado,
+8-Um empregado cria uma encomenda com um volume associado,
 utilizando o protocolo HTTP, verbo POST,
 para o sitio: /appmonitor/api/orders
 
@@ -243,7 +243,7 @@ Resposta enviada para este recurso segue o formato JSON:
 }
 
 
-- Um empregado cria um novo volume associado a uma encomenda
+9- Um empregado cria um novo volume associado a uma encomenda
 que já existe,
 utilizando o protocolo HTTP, verbo POST,
 para o sitio: /appmonitor/api/volumes
@@ -308,9 +308,9 @@ Resposta devolvida por este recurso segue o formato JSON:
 }
 
 
-- Um empregado verifica quais os sensores obrigatorios daquele produto,
+10- Um empregado verifica quais os sensores obrigatorios daquele produto,
 utilizando o protocolo HTTP, verbo GET,
-para o sitio: /appmonitor/api/products/{productId}/mandatory-sensors
+para o sitio: /appmonitor/api/product-types/{productId}/mandatory-sensors
 
 Resposta devolvida por este recurso segue o formato JSON: 
 
@@ -321,7 +321,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     }
 ]
 
-- Um empregado verifica quais os sensores obrigatorios daquela embalagem,
+11- Um empregado verifica quais os sensores obrigatorios daquela embalagem,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/package-types/{packageId}/mandatory-sensors
 
@@ -336,7 +336,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 
 
-- Um empregado diz que o volume foi entregue
+12- Um empregado diz que o volume foi entregue
 utilizando o protocolo HTTP, verbo PACTH,
 utilizando o sitio: /appmonitor/api/volumes/{volumeId}/delivered
 
@@ -348,7 +348,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     "deliveredDate": "2024-11-31T00:00:00",
 }
 
-- Um empregado diz que a encomenda já foi entregue
+12- Um empregado diz que a encomenda já foi entregue
 utilizando o protocolo HTTP, verbo PATCH,
 utilizando o sitio: /appmonitor/api/orders/{orderId}/delivered
 
@@ -356,13 +356,13 @@ Resposta devolvida por este recurso segue o formato JSON:
 
 {
     "id": 600,
+    "createdDate": "2024-10-30T21:00:00",
     "deliveredDate": "2024-11-01T16:00:00",
-    "delivered": true
 }
 
 
-- Um sensor envia um valor para o sistema,
-utilizando o protocolo HTTP, verbo PATCH,
+14- Um sensor envia um valor para o sistema,
+utilizando o protocolo HTTP, verbo PUT,
 para o sitio: /appmonitor/api/sensors/{sensorId}/add-value
 
 Resposta enviada para este recurso segue o formato JSON: 

@@ -1,10 +1,20 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
+import java.io.Serializable;
+
+@NamedQueries(
+        {
+                //JPQL query to get all users
+                @NamedQuery(name = "getAllManagers", query = "SELECT m FROM Manager m ORDER BY m.username"),
+                @NamedQuery(name = "getManagerByEmail", query = "SELECT m FROM Manager m WHERE m.email = :email")
+        }
+)
 
 @Entity
-public class Manager extends User{
+public class Manager extends User implements Serializable {
     @NotNull
     private String office;
 

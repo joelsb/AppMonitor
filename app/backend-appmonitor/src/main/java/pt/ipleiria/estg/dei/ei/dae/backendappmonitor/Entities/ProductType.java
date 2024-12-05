@@ -3,10 +3,26 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "productTypes")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "getAllProductTypes",
+                        query = "SELECT pt FROM ProductType pt ORDER BY pt.name"
+                ),
+                @NamedQuery(
+                        name = "getProductTypeByName",
+                        query = "SELECT pt FROM ProductType pt WHERE pt.name = :name"
+                )
+        }
+)
+
 @Entity
-public class ProductType extends Versionable{
+public class ProductType extends Versionable implements Serializable {
     /*
     id é criado pelo sistema
     name-String
@@ -30,10 +46,11 @@ public class ProductType extends Versionable{
     public ProductType() {
     }
 
-    public ProductType(String name, boolean mandatoryPackage, List<SensorType> mandatorySensors) {
+    public ProductType(String name, boolean mandatoryPackage) {
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
-        this.mandatorySensors = mandatorySensors;
+        this.mandatorySensors = new ArrayList<>();
+        this.productRecords = new ArrayList<>();
     }
 
     public long getId() {
@@ -57,7 +74,7 @@ public class ProductType extends Versionable{
     }
 
     public List<SensorType> getMandatorySensors() {
-        return mandatorySensors;
+        return new ArrayList<>(mandatorySensors);
     }
 
     public void addMandatorySensor(SensorType sensor) {
@@ -66,5 +83,17 @@ public class ProductType extends Versionable{
 
     public void removeMandatorySensor(SensorType sensor) {
         mandatorySensors.remove(sensor);
+    }
+
+    public List<ProductRecord> getProductRecords() {
+        return new ArrayList<>(productRecords);
+    }
+
+    public void addProductRecord(ProductRecord productRecord) {
+        productRecords.add(productRecord);
+    }
+
+    public void removeProductRecord(ProductRecord productRecord) {
+        productRecords.remove(productRecord);
     }
 }

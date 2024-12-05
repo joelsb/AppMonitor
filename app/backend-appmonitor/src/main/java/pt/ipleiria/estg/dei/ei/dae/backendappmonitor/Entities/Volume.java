@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Table(name = "volumes")
+@NamedQueries(
+        {
+                @NamedQuery(name = "getAllVolumes", query = "SELECT v FROM Volume v ORDER BY v.sentDate"),
+                @NamedQuery(name = "getVolumesByOrder", query = "SELECT v FROM Volume v WHERE v.order = :order ORDER BY v.sentDate")
+        }
+)
 @Entity
-public class Volume extends Versionable {
+public class Volume extends Versionable implements Serializable {
     @Id
     private long id;
     @NotNull

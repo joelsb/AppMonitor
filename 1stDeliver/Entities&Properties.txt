@@ -1,0 +1,51 @@
+Entidades e Propriedades
+
+ProductRecord
+id: long
+product: ProductType
+quantity: long
+volume: Volume
+
+ProductType
+id: long
+name: String
+mandatoryPackage: boolean
+mandatorySensors: List<SensorType>
+productRecords: List<ProductRecord>
+
+Volume
+id: long
+sentDate: Date
+deliveredDate: Date
+package: PackageType
+products: List<ProductRecord>
+sensors: List<Sensor>
+order: Order (não detalhado no diagrama)
+
+PackageType
+id: long
+name: String
+mandatorySensors: List<SensorType>
+volumes: List<Volume>
+
+Sensor
+id: long
+sensorType: SensorType
+volume: Volume
+history: List<HistoryRecord> (não detalhado no diagrama)
+
+SensorType
+id: long
+name: String
+unit: String
+products: List<ProductType>
+sensors: List<Sensor>
+packageTypes: List<PackageType>
+ceiling: double
+floor: double
+
+SensorRecord
+id: long
+time: Date
+value: double
+sensor: Sensor

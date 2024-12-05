@@ -77,8 +77,28 @@ Resposta devolvida por este recurso segue o formato JSON:
     }
 ]
 
+4- Um gestor consulta uma determinada encomenda,
+utilizando o protocolo HTTP, verbo GET,
+para o sitio: /appmonitor/api/orders/{orderId}
 
-4- Um cliente consulta os volumes de uma determinada encomenda,
+Resposta devolvida por este recurso segue o formato JSON: 
+
+{
+    "id": 602,
+    "createdDate": "2024-10-30T21:00:00",
+    "deliveredDate": "2024-11-01T16:00:00",
+    "volumes": [
+        {
+            "id": 4, 
+            "sentDate": "2024-10-30T21:00:00", // data de quando a encomenda foi criada
+            "deliveredDate": "2024-11-01T16:00:00" // data da encomenda entregue
+        },
+    ]
+}
+
+
+
+5- Um cliente consulta os volumes de uma determinada encomenda,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/orders/{orderId}/volumes
 
@@ -94,7 +114,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 ]
 
 
-5- Um cliente consulta os sensores associados a um determinado volume,
+6- Um cliente consulta os sensores associados a um determinado volume,
 utilizando o protocolo HTTP, verbo GET,
 para o sitio: /appmonitor/api/volumes/{volumeId}/sensors
 
@@ -130,7 +150,7 @@ Resposta devolvida por este recurso segue o formato JSON:
     }
 ]
 
-6- Um cliente consulta o histórico de um determinado sensor, 
+7- Um cliente consulta o histórico de um determinado sensor, 
 utilizando o protocolo HTTP, verbo GET, 
 para o sítio: /appmonitor/api/sensors/{sensorId}
 
@@ -159,7 +179,7 @@ Resposta devolvida por este recurso segue o formato JSON:
 }
 
 
-7- Um cliente consulta os produtos de um determinado volume
+8- Um cliente consulta os produtos de um determinado volume
 utilizando o protocolo HTTP, verbo GET
 para o sítio: /appmonitor/api/volumes/{volumeId}/products
 
