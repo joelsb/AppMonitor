@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "productTypes")
+@Table(name = "productTypes",
+        uniqueConstraints = {@UniqueConstraint(columnNames = "name")}
+)
 @NamedQueries(
         {
                 @NamedQuery(

@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
+import jakarta.inject.Named;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -7,7 +8,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "packageTypes")
+@Table(name = "packageTypes",
+        uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
+@NamedQueries({
+        @NamedQuery(name = "getAllPackageTypes",
+                query = "SELECT pt FROM PackageType pt ORDER BY pt.name"),
+        @NamedQuery(name = "getPackageTypeByName",
+                query = "SELECT pt FROM PackageType pt WHERE pt.name = :name")
+})
+
 @Entity
 public class PackageType extends Versionable implements Serializable {
     /*

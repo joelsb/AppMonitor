@@ -21,6 +21,8 @@ public class ConfigBean {
     private ProductTypeBean productTypeBean;
     @EJB
     private SensorTypeBean sensorTypeBean;
+    @EJB
+    private PackageTypeBean packageTypeBean;
 
 
     private static final Logger logger = Logger.getLogger("ejbs.ConfigBean");
@@ -48,6 +50,17 @@ public class ConfigBean {
             //add the mandatory sensors Humidity and Temperature to the product-type Gelado OLA - Corneto morango
             productTypeBean.addMandatorySensor(2L, 1L);
             productTypeBean.addMandatorySensor(2L, 2L);
+
+            //package-type creation
+            packageTypeBean.create("Caixa Isotermica S");
+            packageTypeBean.create("Caixa Isotermica M");
+            packageTypeBean.create("Caixa Isotermica L");
+            packageTypeBean.create("Caixa Isotermica XL");
+            packageTypeBean.create("Caixa Cartao S");
+            packageTypeBean.create("Caixa Cartao M");
+            packageTypeBean.create("Caixa Cartao L");
+            packageTypeBean.create("Caixa Cartao XL");
+
 
         }
         catch (Exception e) {
