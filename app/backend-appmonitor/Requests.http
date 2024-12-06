@@ -24,6 +24,57 @@ Accept: application/json
 GET http://localhost:8080/appmonitor/api/package-types/1
 Accept: application/json
 
+### GET ALL SENSOR-TYPES
+GET http://localhost:8080/appmonitor/api/sensor-types
+Accept: application/json
+
+### GET A SINGLE SENSOR-TYPE
+GET http://localhost:8080/appmonitor/api/sensor-types/1
+Accept: application/json
+
+### GET MANDATORY SENSORS OF A PRODUCT-TYPE
+GET http://localhost:8080/appmonitor/api/product-types/1/mandatory-sensors
+
+#### GET MANDATORY SENSORS OF A PACKAGE-TYPE
+GET http://localhost:8080/appmonitor/api/package-types/1/mandatory-sensors
+
+### POST A NEW ORDER
+POST http://localhost:8080/appmonitor/api/orders
+Content-Type: application/json
+
+{
+  "id": 26,
+  "customerUsername": "Joel",
+  "createdDate": "2024-11-20T21:00:00",
+  "volume": {
+    "id": 9999,
+    "sentDate": "2024-11-21T21:00:00",
+    "packageTypeId": 2,
+    "products": [
+      {
+        "productId": 2,
+        "quantity": 1
+      },
+      {
+        "productId": 2,
+        "quantity": 3
+      }
+    ],
+    "sensors": [
+      {
+        "id": 1,
+        "sensorTypeId": 1
+      },
+      {
+        "id": 2,
+        "sensorTypeId": 2
+      }
+    ]
+  }
+}
+
+
+
 
 
 

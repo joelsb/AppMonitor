@@ -61,6 +61,10 @@ public class ConfigBean {
             packageTypeBean.create("Caixa Cartao L");
             packageTypeBean.create("Caixa Cartao XL");
 
+            //add a mandatory sensor to a package-type
+            packageTypeBean.addMandatorySensor(1L, 1L);
+            packageTypeBean.addMandatorySensor(1L, 2L);
+
 
         }
         catch (Exception e) {

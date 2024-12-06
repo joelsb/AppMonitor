@@ -1,6 +1,5 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
-import jakarta.inject.Named;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -12,9 +11,9 @@ import java.util.List;
         uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 @NamedQueries({
         @NamedQuery(name = "getAllPackageTypes",
-                query = "SELECT pt FROM PackageType pt ORDER BY pt.name"),
+                query = "SELECT pt FROM PackageType pt ORDER BY pt.id, pt.name"),
         @NamedQuery(name = "getPackageTypeByName",
-                query = "SELECT pt FROM PackageType pt WHERE pt.name = :name")
+                query = "SELECT pt FROM PackageType pt WHERE pt.name = :name ORDER BY pt.id, pt.name")
 })
 
 @Entity
@@ -36,7 +35,7 @@ public class PackageType extends Versionable implements Serializable {
             joinColumns = @JoinColumn(name = "packageType_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"))
     private List<SensorType> mandatorySensors;
-    @OneToMany(mappedBy = "pack")
+    @OneToMany(mappedBy = "packageType")
     private List<Volume> volumes;
 
     public PackageType() {
@@ -61,7 +60,7 @@ public class PackageType extends Versionable implements Serializable {
     }
 
     public List<SensorType> getMandatorySensors() {
-        return mandatorySensors;
+        return new ArrayList<>(mandatorySensors);
     }
 
     public void addMandatorySensor(SensorType sensor) {

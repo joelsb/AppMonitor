@@ -44,7 +44,7 @@ public class VolumeDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
-                volume.getPack().getId(),
+                volume.getPackageType().getId(),
                 volume.getOrder().getId()
         );
     }

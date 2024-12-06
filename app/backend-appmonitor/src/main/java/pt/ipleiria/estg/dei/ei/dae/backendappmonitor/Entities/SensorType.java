@@ -12,11 +12,11 @@ import java.util.List;
         {
                 @NamedQuery(
                         name = "getAllSensorTypes",
-                        query = "SELECT st FROM SensorType st ORDER BY st.name"
+                        query = "SELECT st FROM SensorType st ORDER BY st.id, st.name"
                 ),
                 @NamedQuery(
                         name = "getSensorTypeByName",
-                        query = "SELECT st FROM SensorType st WHERE st.name = :name"
+                        query = "SELECT st FROM SensorType st WHERE st.name = :name ORDER BY st.id, st.name"
                 )
         }
 )

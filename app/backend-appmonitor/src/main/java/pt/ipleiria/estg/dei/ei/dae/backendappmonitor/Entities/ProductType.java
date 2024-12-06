@@ -14,11 +14,11 @@ import java.util.List;
         {
                 @NamedQuery(
                         name = "getAllProductTypes",
-                        query = "SELECT pt FROM ProductType pt ORDER BY pt.name"
+                        query = "SELECT pt FROM ProductType pt ORDER BY pt.id, pt.name"
                 ),
                 @NamedQuery(
                         name = "getProductTypeByName",
-                        query = "SELECT pt FROM ProductType pt WHERE pt.name = :name"
+                        query = "SELECT pt FROM ProductType pt WHERE pt.name = :name ORDER BY pt.id, pt.name"
                 )
         }
 )

@@ -51,4 +51,12 @@ public class ProductTypeService {
         productTypeDTO.setExcludeMandatorySensors(mandatorySensors.isEmpty());
         return Response.ok(productTypeDTO).build();
     }
+
+    @GET
+    @Path("/{id}/mandatory-sensors")
+    public Response getMandatorySensors(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var productType = productTypeBean.findWithMandatorySensors(id);
+        var mandatorySensors = productType.getMandatorySensors();
+        return Response.ok(SensorTypeDTO.from(mandatorySensors)).build();
+    }
 }

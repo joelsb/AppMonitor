@@ -10,8 +10,8 @@ import java.util.List;
 
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.createdDate"),
-                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate")
+                @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.id, o.createdDate"),
+                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.id, o.createdDate")
         }
 )
 @Table(name = "orders")
@@ -26,7 +26,7 @@ public class Order extends Versionable implements Serializable {
     @ManyToOne
     private Customer customer;
     @NotNull
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Volume> volumes;
 
 

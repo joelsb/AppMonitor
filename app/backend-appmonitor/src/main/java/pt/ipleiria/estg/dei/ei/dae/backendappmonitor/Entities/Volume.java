@@ -11,8 +11,8 @@ import java.util.List;
 @Table(name = "volumes")
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllVolumes", query = "SELECT v FROM Volume v ORDER BY v.sentDate"),
-                @NamedQuery(name = "getVolumesByOrder", query = "SELECT v FROM Volume v WHERE v.order = :order ORDER BY v.sentDate")
+                @NamedQuery(name = "getAllVolumes", query = "SELECT v FROM Volume v ORDER BY v.id, v.sentDate"),
+                @NamedQuery(name = "getVolumesByOrder", query = "SELECT v FROM Volume v WHERE v.order = :order ORDER BY v.id, v.sentDate")
         }
 )
 @Entity
@@ -23,12 +23,12 @@ public class Volume extends Versionable implements Serializable {
     private Date sentDate;
     private Date deliveredDate;
     @ManyToOne
-    private PackageType pack;
+    private PackageType packageType;
     @NotNull
-    @OneToMany(mappedBy = "volume")
+    @OneToMany(mappedBy = "volume", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductRecord> products;
     @NotNull
-    @OneToMany(mappedBy = "volume")
+    @OneToMany(mappedBy = "volume", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Sensor> sensors;
     @NotNull
     @ManyToOne
@@ -37,13 +37,13 @@ public class Volume extends Versionable implements Serializable {
     public Volume() {
     }
 
-    public Volume(long id, Date sentDate, PackageType pack, List<ProductRecord> products, List<Sensor> sensors, Order order) {
+    public Volume(long id, Date sentDate, PackageType packageType, Order order) {
         this.id = id;
         this.sentDate = sentDate;
         this.deliveredDate = null;
-        this.pack = pack;
-        this.products = products;
-        this.sensors = sensors;
+        this.packageType = packageType;
+        this.products = new ArrayList<>();
+        this.sensors = new ArrayList<>();
         this.order = order;
     }
 
@@ -67,12 +67,12 @@ public class Volume extends Versionable implements Serializable {
         this.deliveredDate = deliveredDate;
     }
 
-    public PackageType getPack() {
-        return pack;
+    public PackageType getPackageType() {
+        return packageType;
     }
 
-    public void setPack(PackageType pack) {
-        this.pack = pack;
+    public void setPackageType(PackageType pack) {
+        this.packageType = pack;
     }
 
     public List<ProductRecord> getProducts() {

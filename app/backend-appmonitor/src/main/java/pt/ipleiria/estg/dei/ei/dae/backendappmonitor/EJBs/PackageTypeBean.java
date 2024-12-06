@@ -2,7 +2,9 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
@@ -23,6 +25,19 @@ public class PackageTypeBean {
 
     public List<PackageType> findAll() {
         return entityManager.createNamedQuery("getAllPackageTypes", PackageType.class).getResultList();
+    }
+
+    public PackageType findWithMandatorySensors(Long id) throws MyEntityNotFoundException {
+        var packageType = this.find(id);
+
+        Hibernate.initialize(packageType.getMandatorySensors());
+        return packageType;
+    }
+
+    public List<PackageType> findAllWithMandatorySensors() {
+        var packageTypes = this.findAll();
+        packageTypes.forEach(packageType -> Hibernate.initialize(packageType.getMandatorySensors()));
+        return packageTypes;
     }
 
     public PackageType create(String name) throws MyEntityExistsException {
@@ -46,6 +61,38 @@ public class PackageTypeBean {
         }
         packageType.setName(name);
         return packageType;
+    }
+
+    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+        var packageType = this.find(id);
+        var sensorType = entityManager.find(SensorType.class, sensorTypeId);
+        if(sensorType == null) {
+            throw new MyEntityNotFoundException("Sensor (" + sensorTypeId + ") not found");
+        }
+        if(packageType.getMandatorySensors().contains(sensorType)) {
+            throw new MyEntityExistsException("Sensor (" + sensorTypeId + ") already exists in PackageType (" + id + ")");
+        }
+        packageType.addMandatorySensor(sensorType);
+        if(sensorType.getPackageTypes().contains(packageType)) {
+            throw new MyEntityExistsException("PackageType (" + id + ") already exists in Sensor (" + sensorTypeId + ")");
+        }
+        sensorType.addPackageType(packageType);
+    }
+
+    public void removeMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException {
+        var packageType = this.find(id);
+        var sensorType = entityManager.find(SensorType.class, sensorTypeId);
+        if(sensorType == null) {
+            throw new MyEntityNotFoundException("Sensor (" + sensorTypeId + ") not found");
+        }
+        if(!packageType.getMandatorySensors().contains(sensorType)) {
+            throw new MyEntityNotFoundException("Sensor (" + sensorTypeId + ") not found in PackageType (" + id + ")");
+        }
+        packageType.removeMandatorySensor(sensorType);
+        if(!sensorType.getPackageTypes().contains(packageType)) {
+            throw new MyEntityNotFoundException("PackageType (" + id + ") not found in Sensor (" + sensorTypeId + ")");
+        }
+        sensorType.removePackageType(packageType);
     }
 
 

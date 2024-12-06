@@ -32,7 +32,7 @@ public class SensorTypeBean {
     }
 
     public SensorType update(Long id, String name, String unit, double ceiling, double floor) {
-        var sensorType = entityManager.find(SensorType.class, id);
+        var sensorType = this.find(id);
         sensorType.setName(name);
         sensorType.setUnit(unit);
         sensorType.setCeiling(ceiling);

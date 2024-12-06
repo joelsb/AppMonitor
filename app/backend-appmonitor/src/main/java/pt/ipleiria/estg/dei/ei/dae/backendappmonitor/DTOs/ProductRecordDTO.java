@@ -14,16 +14,16 @@ public class ProductRecordDTO {
      */
 
     public long id;
-    public long productTypeId;
-    public long quantity;
+    public long productId;
+    public int quantity;
     public long volumeId;
 
     public ProductRecordDTO() {
     }
 
-    public ProductRecordDTO(long id, long productTypeId, long quantity, long volumeId) {
+    public ProductRecordDTO(long id, long productId, int quantity, long volumeId) {
         this.id = id;
-        this.productTypeId = productTypeId;
+        this.productId = productId;
         this.quantity = quantity;
         this.volumeId = volumeId;
     }
@@ -49,19 +49,19 @@ public class ProductRecordDTO {
         this.id = id;
     }
 
-    public long getProductTypeId() {
-        return productTypeId;
+    public long getProductId() {
+        return productId;
     }
 
-    public void setProductTypeId(long productTypeId) {
-        this.productTypeId = productTypeId;
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 
-    public long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

@@ -26,7 +26,7 @@ public class Sensor extends Versionable implements Serializable {
     private Volume volume;
     @NotNull
     @OneToMany(mappedBy = "sensor")
-    private List<SensorRecord> history;
+    private List<SensorRecord> history= new ArrayList<>();
 
     public Sensor() {
     }
@@ -35,7 +35,6 @@ public class Sensor extends Versionable implements Serializable {
         this.id = id;
         this.sensorType = sensorType;
         this.volume = volume;
-        this.history = new ArrayList<>();
     }
 
     public long getId() {
