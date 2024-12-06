@@ -9,9 +9,12 @@ import org.hibernate.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.CustomerDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.OrderDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.CustomerBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.OrderBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class CustomerService {
     @EJB
     private CustomerBean customerBean;
+    private OrderBean orderBean;
 
 //    @GET
 //    @Path("/")
@@ -56,6 +60,18 @@ public class CustomerService {
         }).collect(Collectors.toList());
         return Response.ok(customersDTO).build();
     }
+
+    @GET
+    @Path("/orders/{id}/volumes")
+    public Response getCustomerOrderVolumes(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var order = orderBean.find(id);
+        var orderDTO = OrderDTO.from(order);
+        var volumes = order.getVolumes();
+        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeDTO.from(volumes));
+        return Response.ok(orderDTO).build();
+    }
+
+
 
 
 }

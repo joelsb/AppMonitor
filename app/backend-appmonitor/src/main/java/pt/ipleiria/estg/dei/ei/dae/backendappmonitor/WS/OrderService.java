@@ -7,6 +7,8 @@ import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.OrderDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.OrderBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+
 
 @Path("orders")
 @Produces({MediaType.APPLICATION_JSON})
@@ -23,6 +25,20 @@ public class OrderService {
 
 
         return Response.ok(OrderDTO.from((Order) orderBean.findAll())).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response getCustomerOrder(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var order = orderBean.find(id);
+        var orderDTO = OrderDTO.from(order);
+        return Response.ok(orderDTO).build();
+    }
+
+    @GET
+    @Path("/available")
+    public Response getAvailableOrders() {
+        return Response.ok(OrderDTO.from(orderBean.findAvailableOrders())).build();
     }
 
 

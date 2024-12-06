@@ -66,6 +66,16 @@ public class OrderBean {
         return order;
     }
 
+    public List<Order> findAvailableOrders() {
+        List<Order> orders = null;
+        for (Order order : findAll()) {
+            if (order.getDeliveredDate() == null) {
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
+
     public List<Order> findAll() {
         return entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
     }
