@@ -25,11 +25,11 @@ public class Volume extends Versionable implements Serializable {
     @ManyToOne
     private PackageType packageType;
     @NotNull
-    @OneToMany(mappedBy = "volume", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ProductRecord> products;
+    @OneToMany(mappedBy = "volume")
+    private List<ProductRecord> products = new ArrayList<>();
     @NotNull
-    @OneToMany(mappedBy = "volume", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Sensor> sensors;
+    @OneToMany(mappedBy = "volume")
+    private List<Sensor> sensors = new ArrayList<>();
     @NotNull
     @ManyToOne
     private Order order;
@@ -42,8 +42,6 @@ public class Volume extends Versionable implements Serializable {
         this.sentDate = sentDate;
         this.deliveredDate = null;
         this.packageType = packageType;
-        this.products = new ArrayList<>();
-        this.sensors = new ArrayList<>();
         this.order = order;
     }
 

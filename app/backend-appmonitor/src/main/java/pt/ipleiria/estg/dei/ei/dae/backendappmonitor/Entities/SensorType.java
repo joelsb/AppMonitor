@@ -44,13 +44,13 @@ public class SensorType extends Versionable implements Serializable {
     @JoinTable(name = "sensorType_productType",
             joinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "productType_id", referencedColumnName = "id"))
-    private List<ProductType> productTypes;
+    private List<ProductType> productTypes = new ArrayList<>();
     @NotNull
     @OneToMany(mappedBy = "sensorType")
-    private List<Sensor> sensors;
+    private List<Sensor> sensors = new ArrayList<>();
     @NotNull
     @ManyToMany
-    private List<PackageType> packageTypes;
+    private List<PackageType> packageTypes = new ArrayList<>();
     private double ceiling;
     private double floor;
 
@@ -61,9 +61,6 @@ public class SensorType extends Versionable implements Serializable {
     public SensorType(String name, String unit, double ceiling, double floor) {
         this.name = name;
         this.unit = unit;
-        this.productTypes = new ArrayList<>();
-        this.sensors = new ArrayList<>();
-        this.packageTypes = new ArrayList<>();
         this.ceiling = ceiling;
         this.floor = floor;
     }

@@ -13,15 +13,15 @@ public class ProductRecordDTO {
     volume: Volume
      */
 
-    public long id;
+    public Long id;
     public long productId;
     public int quantity;
-    public long volumeId;
+    public Long volumeId;
 
     public ProductRecordDTO() {
     }
 
-    public ProductRecordDTO(long id, long productId, int quantity, long volumeId) {
+    public ProductRecordDTO(Long id, long productId, int quantity, Long volumeId) {
         this.id = id;
         this.productId = productId;
         this.quantity = quantity;
@@ -30,10 +30,10 @@ public class ProductRecordDTO {
 
     public static ProductRecordDTO from(ProductRecord productRecord) {
         return new ProductRecordDTO(
-                productRecord.getId(),
+                null,
                 productRecord.getProduct().getId(),
                 productRecord.getQuantity(),
-                productRecord.getVolume().getId()
+                null
         );
     }
 
@@ -41,11 +41,11 @@ public class ProductRecordDTO {
         return productRecords.stream().map(ProductRecordDTO::from).collect(Collectors.toList());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -65,11 +65,11 @@ public class ProductRecordDTO {
         this.quantity = quantity;
     }
 
-    public long getVolumeId() {
+    public Long getVolumeId() {
         return volumeId;
     }
 
-    public void setVolumeId(long volumeId) {
+    public void setVolumeId(Long volumeId) {
         this.volumeId = volumeId;
     }
 }

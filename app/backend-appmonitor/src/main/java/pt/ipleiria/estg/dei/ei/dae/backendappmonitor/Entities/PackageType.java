@@ -34,17 +34,15 @@ public class PackageType extends Versionable implements Serializable {
     @JoinTable(name = "packageType_sensorType",
             joinColumns = @JoinColumn(name = "packageType_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"))
-    private List<SensorType> mandatorySensors;
+    private List<SensorType> mandatorySensors = new ArrayList<>();
     @OneToMany(mappedBy = "packageType")
-    private List<Volume> volumes;
+    private List<Volume> volumes = new ArrayList<>();
 
     public PackageType() {
     }
 
     public PackageType(String name) {
         this.name = name;
-        this.mandatorySensors = new ArrayList<>();
-        this.volumes = new ArrayList<>();
     }
 
     public long getId() {

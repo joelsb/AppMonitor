@@ -26,8 +26,8 @@ public class Order extends Versionable implements Serializable {
     @ManyToOne
     private Customer customer;
     @NotNull
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Volume> volumes;
+    @OneToMany(mappedBy = "order")
+    private List<Volume> volumes = new ArrayList<>();
 
 
     public Order() {
@@ -38,7 +38,6 @@ public class Order extends Versionable implements Serializable {
         this.createdDate = createdDate;
         this.deliveredDate = deliveredDate;
         this.customer = customer;
-        this.volumes = new ArrayList<>();
     }
 
     public long getId() {

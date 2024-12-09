@@ -26,7 +26,7 @@ public class OrderBean {
 
     public Order find(long id) throws MyEntityNotFoundException {
         var order = entityManager.find(Order.class, id);
-        if(order == null) {
+        if (order == null) {
             throw new MyEntityNotFoundException("Order (" + id + ") not found");
         }
         return order;
@@ -37,64 +37,72 @@ public class OrderBean {
     }
 
     public Order create(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
-        //Deal when order already exists
-        var order = entityManager.find(Order.class, orderCreateDTO.getId());
-        if(order!=null) {
+        // Check if the order already exists
+        var existingOrder = entityManager.find(Order.class, orderCreateDTO.getId());
+        if (existingOrder != null) {
             throw new MyEntityExistsException("Order (" + orderCreateDTO.getId() + ") already exists");
         }
+
         var orderId = orderCreateDTO.getId();
         var customerUsername = orderCreateDTO.getCustomerUsername();
         var createdDate = orderCreateDTO.getCreatedDate();
         var volumeDTO = orderCreateDTO.getVolume();
 
-        //Deal when order does not exist
+
+        //TODO: FALTA SEPARAR A CRIAÇAÔ DOS OBJECTOS DA VALIDAÇAO
+
+        // Find the customer
         var customer = entityManager.find(Customer.class, customerUsername);
-        order = new Order(
-                orderId, createdDate, null,customer);
+        if (customer == null) {
+            throw new MyEntityNotFoundException("Customer with username " + customerUsername + " not found");
+        }
+
+        // Create the order (without persisting)
+        var order = new Order(orderId, createdDate, null, customer);
         customer.addOrder(order);
 
-        //call the function create at VolumeBean
-        var volumeCreateDTO = new VolumeCreateDTO(
-                volumeDTO.getId(),
-                volumeDTO.getSentDate(),
-                volumeDTO.getPackageTypeId(),
-                orderId
-        );
-        volumeCreateDTO.setProducts(volumeDTO.getProducts());
-        volumeCreateDTO.setSensors(volumeDTO.getSensors());
+        var packageTypeId = volumeDTO.getPackageTypeId();
+        var packageType = entityManager.find(PackageType.class, packageTypeId);
+        if (packageType == null) {
+            throw new MyEntityNotFoundException("PackageType with id " + packageTypeId + " not found");
+        }
 
-        var volume = volumeBean.create(volumeCreateDTO, order);
+        // Create the volume
+        if (entityManager.find(Volume.class, volumeDTO.getId()) != null) {
+            throw new MyEntityExistsException("Volume with id " + volumeDTO.getId() + " already exists");
+        }
+        var volume = new Volume(volumeDTO.getId(), volumeDTO.getSentDate(), packageType, order);
+        packageType.addVolume(volume);
         order.addVolume(volume);
 
-//        //Create the Product Records
-//        //for each product in getProducts, create a new Product Record
-//        for (ProductRecordDTO productDTO : volumeDTO.getProducts()) {
-//            var product = entityManager.find(ProductType.class, productDTO.getProductId());
-//            if (product == null) {
-//                throw new MyEntityNotFoundException("ProductType not found for id: " + productDTO.getProductId());
-//            }
-//            var productRecord = new ProductRecord(product, productDTO.getQuantity(), volume);
-//            //Product_id em ProductRecord esta a null
-//
-//            volume.addProduct(productRecord);
-//        }
-//
-//        //Create the sensors
-//        for (SensorDTO sensorDTO : volumeDTO.getSensors()) {
-//            var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
-//            if (sensorType == null) {
-//                throw new MyEntityNotFoundException("SensorType not found for id: " + sensorDTO.getSensorTypeId());
-//            }
-//            var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
-//            volume.addSensor(sensor);
-//        }
+        // Create sensors
+        for (SensorDTO sensorDTO : volumeDTO.getSensors()) {
+            var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
+            if (sensorType == null) {
+                throw new MyEntityNotFoundException("SensorType not found for id: " + sensorDTO.getSensorTypeId());
+            }
+            if(entityManager.find(Sensor.class, sensorDTO.getId()) != null){
+                throw new MyEntityExistsException("Sensor with id " + sensorDTO.getId() + " already exists");
+            }
+            var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
+            volume.addSensor(sensor);
+        }
 
+        // Create product records
+        for (ProductRecordDTO productDTO : volumeDTO.getProducts()) {
+            var product = entityManager.find(ProductType.class, productDTO.getProductId());
+            if (product == null) {
+                throw new MyEntityNotFoundException("ProductType not found for id: " + productDTO.getProductId());
+            }
+            var productRecord = new ProductRecord(product, productDTO.getQuantity(), volume);
+            volume.addProduct(productRecord);
+        }
         //persist everything
         entityManager.persist(order);
-//        entityManager.persist(volume);
 
         return order;
     }
+
 
     public Order updateDeliveredDate(long id, Date deliveredDate) throws MyEntityNotFoundException {
         var order = this.find(id);
@@ -106,11 +114,10 @@ public class OrderBean {
         var order = this.find(id);
         for (long volumeId : volumesIds) {
             var volume = entityManager.find(Volume.class, volumeId);
-            if(volume == null) {
+            if (volume == null) {
                 throw new MyEntityNotFoundException("Volume (" + volumeId + ") not found");
-            }
-            else {
-                if(order.getVolumes().contains(volume)){
+            } else {
+                if (order.getVolumes().contains(volume)) {
                     throw new MyEntityNotFoundException("Volume (" + volumeId + ") already in order (" + id + ")");
                 }
                 order.addVolume(volume);
@@ -121,10 +128,18 @@ public class OrderBean {
     }
 
 
-
     public Order findWithVolumes(long id) throws MyEntityNotFoundException {
         var order = this.find(id);
         Hibernate.initialize(order.getVolumes());
+        return order;
+    }
+
+    public Order findWithVolumesProductsSensors(long id) throws MyEntityNotFoundException {
+        var order = this.findWithVolumes(id);
+        for (Volume volume : order.getVolumes()) {
+            Hibernate.initialize(volume.getProducts());
+            Hibernate.initialize(volume.getSensors());
+        }
         return order;
     }
 }

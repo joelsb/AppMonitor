@@ -47,7 +47,7 @@ Content-Type: application/json
   "customerUsername": "Joel",
   "createdDate": "2024-11-20T21:00:00",
   "volume": {
-    "id": 9999,
+    "id": 101,
     "sentDate": "2024-11-21T21:00:00",
     "packageTypeId": 2,
     "products": [
@@ -62,16 +62,57 @@ Content-Type: application/json
     ],
     "sensors": [
       {
-        "id": 1,
+        "id": 5,
         "sensorTypeId": 1
       },
       {
-        "id": 2,
+        "id": 6,
         "sensorTypeId": 2
       }
     ]
   }
 }
+
+
+### POST A NEW VOLUME
+POST http://localhost:8080/appmonitor/api/volumes
+Content-Type: application/json
+
+{
+  "id": 104,
+  "sentDate": "2021-06-01T00:00:00",
+  "orderId": 26,
+  "packageTypeId": 1,
+  "products": [
+    {
+      "productId": 1,
+      "quatity": 1
+    },
+    {
+      "productId": 2,
+      "quatity": 3
+    }
+  ],
+  "sensors": [
+    {
+      "id": 5,
+      "sensorTypeId": 1
+    },
+    {
+      "id": 6,
+      "sensorTypeId": 2
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
 
 
 

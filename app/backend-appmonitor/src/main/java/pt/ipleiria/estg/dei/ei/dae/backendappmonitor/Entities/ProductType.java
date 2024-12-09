@@ -41,9 +41,9 @@ public class ProductType extends Versionable implements Serializable {
     private boolean mandatoryPackage;
     @NotNull
     @ManyToMany
-    private List<SensorType> mandatorySensors;
+    private List<SensorType> mandatorySensors = new ArrayList<>();
     @OneToMany(mappedBy = "product")
-    private List<ProductRecord> productRecords;
+    private List<ProductRecord> productRecords = new ArrayList<>();
 
     public ProductType() {
     }
@@ -51,8 +51,6 @@ public class ProductType extends Versionable implements Serializable {
     public ProductType(String name, boolean mandatoryPackage) {
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
-        this.mandatorySensors = new ArrayList<>();
-        this.productRecords = new ArrayList<>();
     }
 
     public long getId() {
