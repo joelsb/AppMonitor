@@ -48,7 +48,7 @@ public class VolumeBean {
         return volumes;
     }
 
-    public Volume addVolumeToOrder(VolumeCreateDTO volumeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+    public void addVolumeToOrder(VolumeCreateDTO volumeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException {
         var orderId = volumeCreateDTO.getOrderId();
         var order = entityManager.find(Order.class, orderId);
         if(order == null) {
@@ -56,71 +56,70 @@ public class VolumeBean {
         }
         var volume = this.create(volumeCreateDTO, order);
         order.addVolume(volume);
-        entityManager.persist(volume);
-        return volume;
     }
 
 
     public Volume create(VolumeCreateDTO volumeCreateDTO, Order order) throws MyEntityNotFoundException, MyEntityExistsException {
-        /*
-        long id, Date sentDate, PackageType packageType, Order order
-         */
-        // Find the package type
-        //Validate everything first
-        var packageTypeId = volumeCreateDTO.getPackageTypeId();
-        var packageType = entityManager.find(PackageType.class, packageTypeId);
-        if (packageType == null) {
-            throw new MyEntityNotFoundException("PackageType with id " + packageTypeId + " not found");
-        }
+        //TODO: Falta utilizar os beans aqui tbm, reutilizar codigo
 
-        // Create the volume
-        if (entityManager.find(Volume.class, volumeCreateDTO.getId()) != null) {
-            throw new MyEntityExistsException("Volume with id " + volumeCreateDTO.getId() + " already exists");
-        }
+        //Validate the volume
+        validateVolumeCreation(volumeCreateDTO);
 
-        // Validate sensors
-        for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
-            var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
-            if (sensorType == null) {
-                throw new MyEntityNotFoundException("SensorType not found for id: " + sensorDTO.getSensorTypeId());
-            }
-            if(entityManager.find(Sensor.class, sensorDTO.getId()) != null){
-                throw new MyEntityExistsException("Sensor with id " + sensorDTO.getId() + " already exists");
-            }
-        }
-
-        // Validate product records
-        for (ProductRecordDTO productDTO : volumeCreateDTO.getProducts()) {
-            var product = entityManager.find(ProductType.class, productDTO.getProductId());
-            if (product == null) {
-                throw new MyEntityNotFoundException("ProductType not found for id: " + productDTO.getProductId());
-            }
-        }
-
-        //create everything else
+        var packageType = entityManager.find(PackageType.class, volumeCreateDTO.getPackageTypeId());
         var volume = new Volume(volumeCreateDTO.getId(), volumeCreateDTO.getSentDate(), packageType, order);
         packageType.addVolume(volume);
         order.addVolume(volume);
 
-        // Create sensors
+        entityManager.persist(volume);
+
         for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
             var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
             var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
-            entityManager.persist(sensor);
             volume.addSensor(sensor);
+
+            // Persist each sensor
+            entityManager.persist(sensor);
         }
 
-        // Create product records
         for (ProductRecordDTO productDTO : volumeCreateDTO.getProducts()) {
             var product = entityManager.find(ProductType.class, productDTO.getProductId());
             var productRecord = new ProductRecord(product, productDTO.getQuantity(), volume);
-            entityManager.persist(productRecord);
             volume.addProduct(productRecord);
+
+            // Persist each product record
+            entityManager.persist(productRecord);
         }
-        //persist everything else
-        entityManager.persist(volume);
 
         return volume;
     }
+
+    public void validateVolumeCreation(VolumeCreateDTO volumeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+        //validate the Volume creation
+
+        var packageType = entityManager.find(PackageType.class, volumeCreateDTO.getPackageTypeId());
+        if (packageType == null) {
+            throw new MyEntityNotFoundException("PackageType with id " + volumeCreateDTO.getPackageTypeId() + " not found");
+        }
+
+        if (entityManager.find(Volume.class, volumeCreateDTO.getId()) != null) {
+            throw new MyEntityExistsException("Volume with id " + volumeCreateDTO.getId() + " already exists");
+        }
+
+        for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
+            if (entityManager.find(SensorType.class, sensorDTO.getSensorTypeId()) == null) {
+                throw new MyEntityNotFoundException("SensorType not found for id: " + sensorDTO.getSensorTypeId());
+            }
+            if (entityManager.find(Sensor.class, sensorDTO.getId()) != null) {
+                throw new MyEntityExistsException("Sensor with id " + sensorDTO.getId() + " already exists");
+            }
+        }
+
+        for (ProductRecordDTO productDTO : volumeCreateDTO.getProducts()) {
+            if (entityManager.find(ProductType.class, productDTO.getProductId()) == null) {
+                throw new MyEntityNotFoundException("ProductType not found for id: " + productDTO.getProductId());
+            }
+        }
+    }
+
 
 }

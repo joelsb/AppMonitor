@@ -37,70 +37,82 @@ public class OrderBean {
     }
 
     public Order create(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
-        // Check if the order already exists
-        var existingOrder = entityManager.find(Order.class, orderCreateDTO.getId());
-        if (existingOrder != null) {
-            throw new MyEntityExistsException("Order (" + orderCreateDTO.getId() + ") already exists");
-        }
+        //TODO: Falta utilizar os beans aqui tbm, reutilizar codigo
 
-        var orderId = orderCreateDTO.getId();
-        var customerUsername = orderCreateDTO.getCustomerUsername();
-        var createdDate = orderCreateDTO.getCreatedDate();
-        var volumeDTO = orderCreateDTO.getVolume();
+        // Validate input and dependencies
 
+        validateOrderCreation(orderCreateDTO);
 
-        //TODO: FALTA SEPARAR A CRIAÇAÔ DOS OBJECTOS DA VALIDAÇAO
-
-        // Find the customer
-        var customer = entityManager.find(Customer.class, customerUsername);
-        if (customer == null) {
-            throw new MyEntityNotFoundException("Customer with username " + customerUsername + " not found");
-        }
-
-        // Create the order (without persisting)
-        var order = new Order(orderId, createdDate, null, customer);
+        // Create entities
+        var customer = entityManager.find(Customer.class, orderCreateDTO.getCustomerUsername());
+        var order = new Order(orderCreateDTO.getId(), orderCreateDTO.getCreatedDate(), null, customer);
         customer.addOrder(order);
 
-        var packageTypeId = volumeDTO.getPackageTypeId();
-        var packageType = entityManager.find(PackageType.class, packageTypeId);
-        if (packageType == null) {
-            throw new MyEntityNotFoundException("PackageType with id " + packageTypeId + " not found");
-        }
+        entityManager.persist(order);
 
-        // Create the volume
-        if (entityManager.find(Volume.class, volumeDTO.getId()) != null) {
-            throw new MyEntityExistsException("Volume with id " + volumeDTO.getId() + " already exists");
-        }
+        var volumeDTO = orderCreateDTO.getVolume();
+        var packageType = entityManager.find(PackageType.class, volumeDTO.getPackageTypeId());
         var volume = new Volume(volumeDTO.getId(), volumeDTO.getSentDate(), packageType, order);
         packageType.addVolume(volume);
         order.addVolume(volume);
 
-        // Create sensors
+        entityManager.persist(volume);
+
         for (SensorDTO sensorDTO : volumeDTO.getSensors()) {
             var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
-            if (sensorType == null) {
-                throw new MyEntityNotFoundException("SensorType not found for id: " + sensorDTO.getSensorTypeId());
-            }
-            if(entityManager.find(Sensor.class, sensorDTO.getId()) != null){
-                throw new MyEntityExistsException("Sensor with id " + sensorDTO.getId() + " already exists");
-            }
             var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
             volume.addSensor(sensor);
+
+            // Persist each sensor
+            entityManager.persist(sensor);
         }
 
-        // Create product records
         for (ProductRecordDTO productDTO : volumeDTO.getProducts()) {
             var product = entityManager.find(ProductType.class, productDTO.getProductId());
-            if (product == null) {
-                throw new MyEntityNotFoundException("ProductType not found for id: " + productDTO.getProductId());
-            }
             var productRecord = new ProductRecord(product, productDTO.getQuantity(), volume);
             volume.addProduct(productRecord);
+
+            // Persist each product record
+            entityManager.persist(productRecord);
         }
-        //persist everything
-        entityManager.persist(order);
 
         return order;
+    }
+
+    private void validateOrderCreation(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
+        if (entityManager.find(Order.class, orderCreateDTO.getId()) != null) {
+            throw new MyEntityExistsException("Order (" + orderCreateDTO.getId() + ") already exists");
+        }
+
+        var customer = entityManager.find(Customer.class, orderCreateDTO.getCustomerUsername());
+        if (customer == null) {
+            throw new MyEntityNotFoundException("Customer with username " + orderCreateDTO.getCustomerUsername() + " not found");
+        }
+
+        var volumeDTO = orderCreateDTO.getVolume();
+        var packageType = entityManager.find(PackageType.class, volumeDTO.getPackageTypeId());
+        if (packageType == null) {
+            throw new MyEntityNotFoundException("PackageType with id " + volumeDTO.getPackageTypeId() + " not found");
+        }
+
+        if (entityManager.find(Volume.class, volumeDTO.getId()) != null) {
+            throw new MyEntityExistsException("Volume with id " + volumeDTO.getId() + " already exists");
+        }
+
+        for (SensorDTO sensorDTO : volumeDTO.getSensors()) {
+            if (entityManager.find(SensorType.class, sensorDTO.getSensorTypeId()) == null) {
+                throw new MyEntityNotFoundException("SensorType not found for id: " + sensorDTO.getSensorTypeId());
+            }
+            if (entityManager.find(Sensor.class, sensorDTO.getId()) != null) {
+                throw new MyEntityExistsException("Sensor with id " + sensorDTO.getId() + " already exists");
+            }
+        }
+
+        for (ProductRecordDTO productDTO : volumeDTO.getProducts()) {
+            if (entityManager.find(ProductType.class, productDTO.getProductId()) == null) {
+                throw new MyEntityNotFoundException("ProductType not found for id: " + productDTO.getProductId());
+            }
+        }
     }
 
 
