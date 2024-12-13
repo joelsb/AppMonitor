@@ -10,6 +10,9 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
+
+import java.util.Date;
+
 import java.util.List;
 
 @Stateless
@@ -56,6 +59,19 @@ public class VolumeBean {
         }
         var volume = this.create(volumeCreateDTO, order);
         order.addVolume(volume);
+        entityManager.persist(volume);
+        return volume;
+    }
+
+    public Volume setDelivered(long id) throws MyEntityNotFoundException {
+        var volume = entityManager.find(Volume.class, id);
+        if(volume == null) {
+            throw new MyEntityNotFoundException("Volume with id " + id + " not found");
+        }
+        //data de hoje
+        Date date = Date.from(new Date().toInstant());
+
+        volume.setDeliveredDate(date);
         entityManager.persist(volume);
         return volume;
     }
@@ -117,6 +133,9 @@ public class VolumeBean {
             entityManager.persist(productRecord);
             volume.addProduct(productRecord);
         }
+
+
+
         //persist everything else
         entityManager.persist(volume);
 

@@ -41,5 +41,12 @@ public class VolumeService {
         return Response.ok(volumeDTO).build();
     }
 
+    @POST
+    @Path("{id}/delivered")
+    public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException {
+        volumeBean.setDelivered(id);
+        return Response.ok().build();
+    }
+
 
 }
