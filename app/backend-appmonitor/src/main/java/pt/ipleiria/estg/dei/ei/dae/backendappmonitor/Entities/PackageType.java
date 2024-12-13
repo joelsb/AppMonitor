@@ -7,7 +7,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "packageTypes")
+@Table(name = "packageTypes",
+        uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
+@NamedQueries({
+        @NamedQuery(name = "getAllPackageTypes",
+                query = "SELECT pt FROM PackageType pt ORDER BY pt.id, pt.name"),
+        @NamedQuery(name = "getPackageTypeByName",
+                query = "SELECT pt FROM PackageType pt WHERE pt.name = :name ORDER BY pt.id, pt.name")
+})
+
 @Entity
 public class PackageType extends Versionable implements Serializable {
     /*
@@ -26,17 +34,15 @@ public class PackageType extends Versionable implements Serializable {
     @JoinTable(name = "packageType_sensorType",
             joinColumns = @JoinColumn(name = "packageType_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "sensorType_id", referencedColumnName = "id"))
-    private List<SensorType> mandatorySensors;
-    @OneToMany(mappedBy = "pack")
-    private List<Volume> volumes;
+    private List<SensorType> mandatorySensors = new ArrayList<>();
+    @OneToMany(mappedBy = "packageType")
+    private List<Volume> volumes = new ArrayList<>();
 
     public PackageType() {
     }
 
     public PackageType(String name) {
         this.name = name;
-        this.mandatorySensors = new ArrayList<>();
-        this.volumes = new ArrayList<>();
     }
 
     public long getId() {
@@ -52,7 +58,7 @@ public class PackageType extends Versionable implements Serializable {
     }
 
     public List<SensorType> getMandatorySensors() {
-        return mandatorySensors;
+        return new ArrayList<>(mandatorySensors);
     }
 
     public void addMandatorySensor(SensorType sensor) {

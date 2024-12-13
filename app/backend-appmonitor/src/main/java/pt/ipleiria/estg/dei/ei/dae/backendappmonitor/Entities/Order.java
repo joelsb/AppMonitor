@@ -10,8 +10,8 @@ import java.util.List;
 
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.createdDate"),
-                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate")
+                @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.id, o.createdDate"),
+                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.id, o.createdDate")
         }
 )
 @Table(name = "orders")
@@ -27,7 +27,7 @@ public class Order extends Versionable implements Serializable {
     private Customer customer;
     @NotNull
     @OneToMany(mappedBy = "order")
-    private List<Volume> volumes;
+    private List<Volume> volumes = new ArrayList<>();
 
 
     public Order() {
@@ -38,7 +38,6 @@ public class Order extends Versionable implements Serializable {
         this.createdDate = createdDate;
         this.deliveredDate = deliveredDate;
         this.customer = customer;
-        this.volumes = new ArrayList<>();
     }
 
     public long getId() {

@@ -7,50 +7,65 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VolumeDTO {
+public class VolumeCreateDTO {
     /*
-    Atributes
-    id: long
-    sentDate: Date
-    deliveredDate: Date
-    package: PackageType
-    products: List<ProductRecord>
-    sensors: List<Sensor>
-    order: Order (não detalhado no diagrama)
+    Message received:
+    "id": 12,
+    "sentDate": "2021-06-01T00:00:00",
+    "orderId": 26,
+    "packageId": 9900,
+    "products":
+    [
+        {
+            "productId": 1,
+            "quatity": 1
+        },
+        {
+            "productId": 2,
+            "quatity": 3
+        }
+    ],
+    "sensors": [
+        {
+            "id": 1,
+            "sensorTypeId": 1
+        },
+        {
+            "id": 2,
+            "sensorTypeId": 2
+        }
+    ]
      */
     private long id;
     private Date sentDate;
     private Date deliveredDate;
+    private Long orderId;
     private long packageTypeId;
-    private List<ProductRecordDTO> products;
-    private List<SensorDTO> sensors;
-    private long orderId;
+    private List<ProductRecordDTO> products = new ArrayList<>();
+    private List<SensorDTO> sensors = new ArrayList<>();
 
-    public VolumeDTO() {
+    public VolumeCreateDTO() {
     }
 
-    public VolumeDTO(long id, Date sentDate, Date deliveredDate, long packageTypeId, long orderId) {
+    public VolumeCreateDTO(long id, Date sentDate, Date deliveredDate,long packageTypeId, Long orderId) {
         this.id = id;
         this.sentDate = sentDate;
         this.deliveredDate = deliveredDate;
-        this.packageTypeId = packageTypeId;
-        this.products = new ArrayList<>();
-        this.sensors = new ArrayList<>();
         this.orderId = orderId;
+        this.packageTypeId = packageTypeId;
     }
 
-    public static VolumeDTO from(Volume volume) {
-        return new VolumeDTO(
+    public static VolumeCreateDTO from(Volume volume) {
+        return new VolumeCreateDTO(
                 volume.getId(),
                 volume.getSentDate(),
-                volume.getDeliveredDate(),
+                null,
                 volume.getPackageType().getId(),
-                volume.getOrder().getId()
-        );
+                null);
     }
 
-    public static List<VolumeDTO> from(List<Volume> volumes) {
-        return volumes.stream().map(VolumeDTO::from).collect(Collectors.toList());
+    public static List<VolumeCreateDTO> from(List<Volume> volumes) {
+        return volumes.stream().map(VolumeCreateDTO::from).collect(Collectors.toList());
     }
 
     public long getId() {
@@ -77,6 +92,14 @@ public class VolumeDTO {
         this.deliveredDate = deliveredDate;
     }
 
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
     public long getPackageTypeId() {
         return packageTypeId;
     }
@@ -86,7 +109,7 @@ public class VolumeDTO {
     }
 
     public List<ProductRecordDTO> getProducts() {
-        return products;
+        return new ArrayList<>(products);
     }
 
     public void setProducts(List<ProductRecordDTO> products) {
@@ -94,18 +117,10 @@ public class VolumeDTO {
     }
 
     public List<SensorDTO> getSensors() {
-        return sensors;
+        return new ArrayList<>(sensors);
     }
 
     public void setSensors(List<SensorDTO> sensors) {
         this.sensors = sensors;
-    }
-
-    public long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
     }
 }

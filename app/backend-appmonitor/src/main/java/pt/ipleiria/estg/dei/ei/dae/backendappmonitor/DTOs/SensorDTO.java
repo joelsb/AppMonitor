@@ -16,28 +16,28 @@ public class SensorDTO {
 
     private long id;
     private long sensorTypeId;
-    private long volumeId;
-    private List<SensorRecordDTO> history;
+    private Long volumeId;
+    private List<SensorRecordDTO> history = new ArrayList<>();
+    private boolean excludeHistory = true;
 
     public SensorDTO() {
     }
 
-    public SensorDTO(long id, long sensorTypeId, long volumeId) {
+    public SensorDTO(long id, long sensorTypeId, Long volumeId) {
         this.id = id;
         this.sensorTypeId = sensorTypeId;
         this.volumeId = volumeId;
-        this.history = new ArrayList<>();
     }
 
     public static SensorDTO from(Sensor sensor) {
         return new SensorDTO(
                 sensor.getId(),
                 sensor.getSensorType().getId(),
-                sensor.getVolume().getId()
+                null
         );
     }
 
-    public List<SensorDTO> from(List<Sensor> sensors) {
+    public static List<SensorDTO> from(List<Sensor> sensors) {
         return sensors.stream().map(SensorDTO::from).collect(Collectors.toList());
     }
 
@@ -57,16 +57,16 @@ public class SensorDTO {
         this.sensorTypeId = sensorTypeId;
     }
 
-    public long getVolumeId() {
+    public Long getVolumeId() {
         return volumeId;
     }
 
-    public void setVolumeId(long volumeId) {
+    public void setVolumeId(Long volumeId) {
         this.volumeId = volumeId;
     }
 
     public List<SensorRecordDTO> getHistory() {
-        return new ArrayList<>(history);
+        return excludeHistory ? null : new ArrayList<>(history);
     }
 
     public void setHistory(List<SensorRecordDTO> history) {
