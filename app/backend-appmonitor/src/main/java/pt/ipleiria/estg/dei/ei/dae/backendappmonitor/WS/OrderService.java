@@ -47,7 +47,6 @@ public class OrderService {
         return Response.ok(orderDTO).build();
     }
 
-
     @GET
     @Path("/available")
     public Response getAvailableOrders() {
