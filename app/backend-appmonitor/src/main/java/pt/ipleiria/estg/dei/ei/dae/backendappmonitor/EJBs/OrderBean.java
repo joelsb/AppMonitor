@@ -18,23 +18,15 @@ public class OrderBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Order create(long id, Date createdDate, String customerUsername, List<Volume> volumes) throws MyEntityExistsException, MyEntityNotFoundException {
-        //Deal when order already exists
-        var order = entityManager.find(Order.class, id);
-        if(order != null) {
-            order=addVolumes(id, volumes);
-        }
-        //Deal when order does not exist
-        else {
+    public Order create(Date createdDate, String customerUsername) throws MyEntityExistsException, MyEntityNotFoundException {
+
+
             var customer = entityManager.find(Customer.class, customerUsername);
-            order = new Order(
-                    id, createdDate, null,customer);
+            var order = new Order(createdDate,customer);
             customer.addOrder(order);
             //TODO: CREATE VOLUMES AND ASSOCIATE THEM TO THE ORDER
             entityManager.persist(order);
             return order;
-        }
-        return order;
     }
 
     public Order updateDeliveredDate(long id, Date deliveredDate) throws MyEntityNotFoundException {
@@ -46,12 +38,12 @@ public class OrderBean {
         return order;
     }
 
-    public Order addVolumes(long id, List<Volume> volumes) throws MyEntityNotFoundException {
+    public Order addVolume(long id, Volume volume) throws MyEntityNotFoundException {
         var order = entityManager.find(Order.class, id);
         if(order == null) {
             throw new MyEntityNotFoundException("Order (" + id + ") not found");
         }
-        for (Volume volume : volumes) {
+        else{
             order.addVolume(volume);
             volume.setOrder(order);
         }
@@ -77,6 +69,7 @@ public class OrderBean {
     }
 
     public List<Order> findAll() {
+
         return entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
     }
 }

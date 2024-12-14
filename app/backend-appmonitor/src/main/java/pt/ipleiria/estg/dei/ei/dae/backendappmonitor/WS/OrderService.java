@@ -23,7 +23,6 @@ public class OrderService {
     public Response getAllOrders(@HeaderParam("Authorization") String token) {
         //Deal with the token
 
-
         return Response.ok(OrderDTO.from((Order) orderBean.findAll())).build();
     }
 

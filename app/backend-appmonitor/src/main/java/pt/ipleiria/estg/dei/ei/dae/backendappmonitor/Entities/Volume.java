@@ -18,6 +18,7 @@ import java.util.List;
 @Entity
 public class Volume extends Versionable implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     private Date sentDate;
@@ -37,8 +38,7 @@ public class Volume extends Versionable implements Serializable {
     public Volume() {
     }
 
-    public Volume(long id, Date sentDate, PackageType pack, List<ProductRecord> products, List<Sensor> sensors, Order order) {
-        this.id = id;
+    public Volume(Date sentDate, PackageType pack, List<ProductRecord> products, List<Sensor> sensors, Order order) {
         this.sentDate = sentDate;
         this.deliveredDate = null;
         this.pack = pack;

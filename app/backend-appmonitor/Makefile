@@ -6,6 +6,7 @@ ifneq (,$(wildcard ./.env))
     APPLICATION_NAME ?= appmonitor
 endif
 
+
 up:
 	docker compose up -d
 

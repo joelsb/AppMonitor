@@ -5,11 +5,17 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductRecord;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
+
+import java.util.Date;
+
+import java.util.List;
 import java.util.logging.Logger;
 
-@Singleton
 @Startup
-
+@Singleton
 public class ConfigBean {
     @EJB
     private CustomerBean customerBean;
@@ -21,6 +27,16 @@ public class ConfigBean {
     private ProductTypeBean productTypeBean;
     @EJB
     private SensorTypeBean sensorTypeBean;
+    @EJB
+    private OrderBean orderBean;
+    @EJB
+    private SensorBean sensorBean;
+    @EJB
+    private VolumeBean volumeBean;
+    @EJB
+    private PackageTypeBean packageTypeBean;
+    @EJB
+    private ProductRecordBean productRecordBean;
 
 
     private static final Logger logger = Logger.getLogger("ejbs.ConfigBean");
@@ -28,19 +44,21 @@ public class ConfigBean {
     @PostConstruct
     public void populateDB() {
         try {
+            System.out.println("Populating DB");
             //Users creation
             customerBean.create("Joel", "123", "Joel", "joelsb@mail.com");
-            customerBean.create("Tiago", "123", "Tiago", "tiago@mail.com");
+            var customer = customerBean.create("Tiago", "123", "Tiago", "tiago@mail.com");
             employeeBean.create("Jose", "123", "Jose", "jose@mail.com", "warehouse1");
             managerBean.create("Ana", "123", "Ana", "ana@mail.com", "office1");
 
             //Product-Type creation
             productTypeBean.create("Televisao LCD Samsung", false);
-            productTypeBean.create("Gelado OLA - Corneto morango", true);
+            var productType = productTypeBean.create("Gelado OLA - Corneto morango", true);
 
             //Sensor-Type creation
             sensorTypeBean.create("Temperature", "ºC", 30, 10);
-            sensorTypeBean.create("Humidity", "%", 80, 20);
+            var sensortype = sensorTypeBean.create("Humidity", "%", 80, 20);
+
 
             //add a mandatory sensor to a product-type
             //add the mandatory sensor Temperature to the product-type Televisao LCD Samsung
@@ -48,6 +66,10 @@ public class ConfigBean {
             //add the mandatory sensors Humidity and Temperature to the product-type Gelado OLA - Corneto morango
             productTypeBean.addMandatorySensor(2L, 1L);
             productTypeBean.addMandatorySensor(2L, 2L);
+
+            //Order creation
+            Date date = new Date();
+            var order = orderBean.create( date,"Tiago");
 
         }
         catch (Exception e) {

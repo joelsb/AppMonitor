@@ -13,6 +13,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFound
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public class SensorService {
+
     @EJB
     private SensorBean sensorBean;
 
