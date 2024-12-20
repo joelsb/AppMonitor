@@ -56,8 +56,8 @@ public class ConfigBean {
             var productType = productTypeBean.create("Gelado OLA - Corneto morango", true);
 
             //Sensor-Type creation
-            sensorTypeBean.create("Temperature", "ºC", 30, 10);
-            var sensortype = sensorTypeBean.create("Humidity", "%", 80, 20);
+            var sensorTemperature = sensorTypeBean.create("Temperature", "ºC", 30, 10);
+            var sensorHumidity = sensorTypeBean.create("Humidity", "%", 80, 20);
 
 
             //add a mandatory sensor to a product-type
@@ -78,10 +78,16 @@ public class ConfigBean {
 
 
             //Volume creation
-            var volume = volumeBean.create(date,pack,null, null, null);
-            var products = productRecordBean.create(productType, 1,null);
-            volume.addProduct(products);
-            order.addVolume(volume);
+            var product1 = productRecordBean.create(productType, 1,null);
+            var product2 = productRecordBean.create(productType, 1,null);
+            var products = List.of(product1, product2);
+
+            var sensor1 = sensorBean.create(sensorHumidity.getId(), null);
+            var sensor2 = sensorBean.create(sensorTemperature.getId(), null);
+            var sensors = List.of(sensor1, sensor2);
+
+
+            var volume = volumeBean.create(date,pack,products, sensors, order);
 
         }
         catch (Exception e) {

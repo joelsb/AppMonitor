@@ -29,9 +29,17 @@ public class OrderService {
     @GET
     @Path("/{id}")
     public Response getCustomerOrder(@PathParam("id") long id) throws MyEntityNotFoundException {
-        var order = orderBean.find(id);
+        //For client
+
+        //Verify role of client
+
+
+        //For Manager
+        var order = orderBean.findWithVolumes(id);
         var orderDTO = OrderDTO.from(order);
+        orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
         return Response.ok(orderDTO).build();
+
     }
 
     @GET
@@ -43,8 +51,8 @@ public class OrderService {
     @GET
     @Path("/{id}/volumes")
     public Response getVolumes(@PathParam("id") long id) throws MyEntityNotFoundException {
-        var volumes = orderBean.findVolumes(id);
-        var volumeDTO = VolumeDTO.from(volumes);
+        var order = orderBean.findWithVolumes(id);
+        var volumeDTO = VolumeDTO.from(order.getVolumes());
         return Response.ok(volumeDTO).build();
     }
 

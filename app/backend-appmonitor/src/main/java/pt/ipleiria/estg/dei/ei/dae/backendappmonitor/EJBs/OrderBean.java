@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
@@ -71,6 +72,12 @@ public class OrderBean {
         return entityManager.createNamedQuery("getVolumesByOrder", Volume.class)
                 .setParameter("order", order)
                 .getResultList();
+    }
+
+    public Order findWithVolumes(long id)throws MyEntityNotFoundException{
+        var order = this.find(id);
+        Hibernate.initialize(order.getVolumes());
+        return order;
     }
 
     public List<Order> findAll() {

@@ -22,7 +22,7 @@ public class Sensor extends Versionable implements Serializable {
     @NotNull
     @ManyToOne
     private SensorType sensorType;
-    @NotNull
+
     @ManyToOne
     private Volume volume;
     @NotNull

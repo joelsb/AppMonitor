@@ -21,15 +21,17 @@ public class VolumeDTO {
     private long id;
     private Date sentDate;
     private Date deliveredDate;
-    private long packageTypeId;
+    private Long packageTypeId;
     private List<ProductRecordDTO> products;
     private List<SensorDTO> sensors;
-    private long orderId;
+    private Long orderId;
+    private boolean excludeProducts = true;
+    private boolean excludeSensors = true;
 
     public VolumeDTO() {
     }
 
-    public VolumeDTO(long id, Date sentDate, Date deliveredDate, long packageTypeId, long orderId) {
+    public VolumeDTO(long id, Date sentDate, Date deliveredDate, Long packageTypeId, Long orderId) {
         this.id = id;
         this.sentDate = sentDate;
         this.deliveredDate = deliveredDate;
@@ -47,6 +49,20 @@ public class VolumeDTO {
                 volume.getPack().getId(),
                 volume.getOrder().getId()
         );
+    }
+
+    public static VolumeDTO fromManager(Volume volume){
+        return new VolumeDTO(
+                volume.getId(),
+                volume.getSentDate(),
+                volume.getDeliveredDate(),
+                null,
+                null
+        );
+    }
+
+    public static List<VolumeDTO> fromManager(List<Volume> volumes){
+        return volumes.stream().map(VolumeDTO::fromManager).collect(Collectors.toList());
     }
 
     public static List<VolumeDTO> from(List<Volume> volumes) {
@@ -77,35 +93,44 @@ public class VolumeDTO {
         this.deliveredDate = deliveredDate;
     }
 
-    public long getPackageTypeId() {
+    public Long getPackageTypeId() {
         return packageTypeId;
     }
 
-    public void setPackageTypeId(long packageTypeId) {
+    public void setPackageTypeId(Long packageTypeId) {
         this.packageTypeId = packageTypeId;
     }
 
     public List<ProductRecordDTO> getProducts() {
-        return products;
+        return excludeProducts ? null : new ArrayList<>(products) ;
     }
 
     public void setProducts(List<ProductRecordDTO> products) {
+
         this.products = products;
     }
 
     public List<SensorDTO> getSensors() {
-        return sensors;
+        return excludeSensors ? null : new ArrayList<>(sensors);
     }
 
     public void setSensors(List<SensorDTO> sensors) {
         this.sensors = sensors;
     }
 
-    public long getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public void setExcludeProducts(boolean excludeProducts) {
+        this.excludeProducts = excludeProducts;
+    }
+
+    public void setExcludeSensors(boolean excludeSensors) {
+        this.excludeSensors = excludeSensors;
     }
 }

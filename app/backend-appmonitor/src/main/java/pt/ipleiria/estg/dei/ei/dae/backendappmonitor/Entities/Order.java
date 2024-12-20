@@ -31,7 +31,7 @@ public class Order extends Versionable implements Serializable {
     @ManyToOne
     private Customer customer;
     @NotNull
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order")
     private List<Volume> volumes;
 
 

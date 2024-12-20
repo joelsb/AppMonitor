@@ -21,6 +21,17 @@ public class VolumeBean {
 
     public Volume create(Date sentDate , PackageType pack, List<ProductRecord> products,List<Sensor> sensors, Order order) {
         var volume = new Volume(sentDate ,pack,  products, sensors, order);
+        pack.addVolume(volume);
+        order.addVolume(volume);
+        //Precorrer a lista products e set o volume ao product
+        for (ProductRecord product : products) {
+            product.setVolume(volume);
+        }
+        //Precorrer a lista sensors e set o volume ao sensor
+        for (Sensor sensor : sensors) {
+            sensor.setVolume(volume);
+        }
+        
         entityManager.persist(volume);
         return volume;
     }
