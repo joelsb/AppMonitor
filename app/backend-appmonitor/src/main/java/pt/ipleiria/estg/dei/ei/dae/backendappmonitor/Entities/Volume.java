@@ -12,7 +12,7 @@ import java.util.List;
 @NamedQueries(
         {
                 @NamedQuery(name = "getAllVolumes", query = "SELECT v FROM Volume v ORDER BY v.sentDate"),
-                @NamedQuery(name = "getVolumesByOrder", query = "SELECT v FROM Volume v WHERE v.order = :order ORDER BY v.sentDate")
+                @NamedQuery(name = "getVolumesByOrder", query = "SELECT v FROM Volume v WHERE v.order = :order ORDER BY v.sentDate"),
         }
 )
 @Entity
@@ -23,15 +23,16 @@ public class Volume extends Versionable implements Serializable {
     @NotNull
     private Date sentDate;
     private Date deliveredDate;
+
     @ManyToOne
     private PackageType pack;
-    @NotNull
-    @OneToMany(mappedBy = "volume")
+
+    @OneToMany(mappedBy = "volume", fetch = FetchType.EAGER)
     private List<ProductRecord> products;
-    @NotNull
-    @OneToMany(mappedBy = "volume")
+
+    @OneToMany(mappedBy = "volume", fetch = FetchType.EAGER)
     private List<Sensor> sensors;
-    @NotNull
+
     @ManyToOne
     private Order order;
 
@@ -42,8 +43,8 @@ public class Volume extends Versionable implements Serializable {
         this.sentDate = sentDate;
         this.deliveredDate = null;
         this.pack = pack;
-        this.products = products;
-        this.sensors = sensors;
+        this.products = products != null ? new ArrayList<>(products) : new ArrayList<>();
+        this.sensors = sensors != null ? new ArrayList<>(sensors) : new ArrayList<>();
         this.order = order;
     }
 

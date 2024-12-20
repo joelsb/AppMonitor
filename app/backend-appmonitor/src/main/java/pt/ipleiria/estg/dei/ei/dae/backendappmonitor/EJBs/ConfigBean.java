@@ -67,9 +67,21 @@ public class ConfigBean {
             productTypeBean.addMandatorySensor(2L, 1L);
             productTypeBean.addMandatorySensor(2L, 2L);
 
+            //Package-Type creation
+            var pack = packageTypeBean.create("Box");
+
             //Order creation
             Date date = new Date();
-            var order = orderBean.create( date,"Tiago");
+            var order = orderBean.create(date,"Tiago");
+
+
+
+
+            //Volume creation
+            var volume = volumeBean.create(date,pack,null, null, null);
+            var products = productRecordBean.create(productType, 1,null);
+            volume.addProduct(products);
+            order.addVolume(volume);
 
         }
         catch (Exception e) {

@@ -14,7 +14,8 @@ import java.util.List;
 @NamedQueries(
         {
                 @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.createdDate"),
-                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate")
+                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate"),
+                @NamedQuery(name = "getAvailableOrders", query = "SELECT o FROM Order o WHERE o.deliveredDate = null ORDER BY o.createdDate"),
         }
 )
 
@@ -30,7 +31,7 @@ public class Order extends Versionable implements Serializable {
     @ManyToOne
     private Customer customer;
     @NotNull
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<Volume> volumes;
 
 

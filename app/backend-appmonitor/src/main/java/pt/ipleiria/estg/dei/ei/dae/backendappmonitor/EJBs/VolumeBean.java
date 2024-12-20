@@ -20,7 +20,7 @@ public class VolumeBean {
     private EntityManager entityManager;
 
     public Volume create(Date sentDate , PackageType pack, List<ProductRecord> products,List<Sensor> sensors, Order order) {
-        Volume volume = new Volume(sentDate ,pack,  products, sensors, order);
+        var volume = new Volume(sentDate ,pack,  products, sensors, order);
         entityManager.persist(volume);
         return volume;
     }

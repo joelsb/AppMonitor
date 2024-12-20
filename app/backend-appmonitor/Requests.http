@@ -25,12 +25,23 @@ GET http://localhost:8080/appmonitor/api/package-types/1
 Accept: application/json
 
 ### GET ALL ORDERS
-GET http://localhost:8080/appmonitor/api/orders
+GET http://localhost:8080/appmonitor/api/orders/
+Accept: application/json
+
+### GET SINGLE ORDERS
+GET http://localhost:8080/appmonitor/api/orders/1
 Accept: application/json
 
 ### GET ALL AVAILABLE ORDERS
-GET http://localhost:8080/appmonitor/api/orders/1
+GET http://localhost:8080/appmonitor/api/orders/available
 Accept: application/json
+
+### GET VOLUMES OF ORDER
+GET http://localhost:8080/appmonitor/api/orders/1/volumes
+Accept: application/json
+
+
+
 
 ### GET ALL sensors
 GET http://localhost:8080/appmonitor/api/sensors/1/

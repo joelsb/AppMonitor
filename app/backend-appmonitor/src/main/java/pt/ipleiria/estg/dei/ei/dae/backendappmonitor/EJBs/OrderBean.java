@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
@@ -59,17 +60,20 @@ public class OrderBean {
     }
 
     public List<Order> findAvailableOrders() {
-        List<Order> orders = null;
-        for (Order order : findAll()) {
-            if (order.getDeliveredDate() == null) {
-                orders.add(order);
-            }
+        return entityManager.createNamedQuery("getAvailableOrders", Order.class).getResultList();
+    }
+
+    public List<Volume> findVolumes(long id) throws MyEntityNotFoundException {
+        var order = entityManager.find(Order.class, id);
+        if (order == null) {
+            throw new MyEntityNotFoundException("Order (" + id + ") not found");
         }
-        return orders;
+        return entityManager.createNamedQuery("getVolumesByOrder", Volume.class)
+                .setParameter("order", order)
+                .getResultList();
     }
 
     public List<Order> findAll() {
-
         return entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
     }
 }
