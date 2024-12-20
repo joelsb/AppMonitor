@@ -13,7 +13,7 @@ public class OrderDTO {
     private Date createdDate;
     private Date  deliveredDate;
     private String customerUsername;
-    private List<VolumeDTO> volumes;
+    private List<VolumeCreateDTO> volumes;
 
     public OrderDTO() {
     }
@@ -77,11 +77,11 @@ public class OrderDTO {
         this.customerUsername = customerUsername;
     }
 
-    public List<VolumeDTO> getVolumes() {
+    public List<VolumeCreateDTO> getVolumes() {
         return new ArrayList<>(volumes);
     }
 
-    public void setVolumes(List<VolumeDTO> volumes) {
+    public void setVolumes(List<VolumeCreateDTO> volumes) {
         this.volumes = volumes;
     }
 }

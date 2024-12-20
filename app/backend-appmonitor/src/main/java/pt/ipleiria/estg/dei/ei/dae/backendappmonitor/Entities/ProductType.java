@@ -7,16 +7,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "productTypes")
+@Table(name = "productTypes",
+        uniqueConstraints = {@UniqueConstraint(columnNames = "name")}
+)
 @NamedQueries(
         {
                 @NamedQuery(
                         name = "getAllProductTypes",
-                        query = "SELECT pt FROM ProductType pt ORDER BY pt.name"
+                        query = "SELECT pt FROM ProductType pt ORDER BY pt.id, pt.name"
                 ),
                 @NamedQuery(
                         name = "getProductTypeByName",
-                        query = "SELECT pt FROM ProductType pt WHERE pt.name = :name"
+                        query = "SELECT pt FROM ProductType pt WHERE pt.name = :name ORDER BY pt.id, pt.name"
                 )
         }
 )
@@ -39,9 +41,9 @@ public class ProductType extends Versionable implements Serializable {
     private boolean mandatoryPackage;
     @NotNull
     @ManyToMany
-    private List<SensorType> mandatorySensors;
+    private List<SensorType> mandatorySensors = new ArrayList<>();
     @OneToMany(mappedBy = "product")
-    private List<ProductRecord> productRecords;
+    private List<ProductRecord> productRecords = new ArrayList<>();
 
     public ProductType() {
     }
@@ -49,8 +51,6 @@ public class ProductType extends Versionable implements Serializable {
     public ProductType(String name, boolean mandatoryPackage) {
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
-        this.mandatorySensors = new ArrayList<>();
-        this.productRecords = new ArrayList<>();
     }
 
     public long getId() {

@@ -39,6 +39,7 @@ public class ConfigBean {
     private ProductRecordBean productRecordBean;
 
 
+
     private static final Logger logger = Logger.getLogger("ejbs.ConfigBean");
 
     @PostConstruct
@@ -88,6 +89,22 @@ public class ConfigBean {
 
 
             var volume = volumeBean.create(date,pack,products, sensors, order);
+
+
+            //package-type creation
+            packageTypeBean.create("Caixa Isotermica S");
+            packageTypeBean.create("Caixa Isotermica M");
+            packageTypeBean.create("Caixa Isotermica L");
+            packageTypeBean.create("Caixa Isotermica XL");
+            packageTypeBean.create("Caixa Cartao S");
+            packageTypeBean.create("Caixa Cartao M");
+            packageTypeBean.create("Caixa Cartao L");
+            packageTypeBean.create("Caixa Cartao XL");
+
+            //add a mandatory sensor to a package-type
+            packageTypeBean.addMandatorySensor(1L, 1L);
+            packageTypeBean.addMandatorySensor(1L, 2L);
+
 
         }
         catch (Exception e) {

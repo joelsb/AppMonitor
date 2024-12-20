@@ -20,8 +20,9 @@ public class SensorService {
     @GET
     @Path("/{id}")
     public Response getSensorData(@PathParam("id") long id) throws MyEntityNotFoundException {
-        var history = sensorBean.find(id).getHistory();
+        var history = sensorBean.findWithHistory(id);
         var sensorDTO = SensorDTO.from(sensorBean.find(id));
+        sensorDTO.setHistory(HistoryDTO.from(history));
         return Response.ok().build();
     }
 }

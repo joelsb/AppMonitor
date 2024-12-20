@@ -1,7 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
 import jakarta.json.bind.annotation.*;
-import jakarta.json.bind.annotation.JsonbTransient;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 
 import java.util.ArrayList;

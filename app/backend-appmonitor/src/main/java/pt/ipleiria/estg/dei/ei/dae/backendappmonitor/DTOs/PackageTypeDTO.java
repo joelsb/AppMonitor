@@ -8,9 +8,16 @@ import java.util.stream.Collectors;
 
 public class PackageTypeDTO {
     /*
-    id: long
-    name: String
-    mandatorySensors: List<SensorType>
+    {
+        "id": 9700,
+        "name": "Plastico com Bolhas Pequeno",
+        "mandatorySensors": [
+            {
+                "id": 3,
+                "name": "Movement",
+            }
+        ]
+    }
      */
 
     private long id;
@@ -33,7 +40,7 @@ public class PackageTypeDTO {
         );
     }
 
-    public List<PackageTypeDTO> from(List<PackageType> packageTypes) {
+    public static List<PackageTypeDTO> from(List<PackageType> packageTypes) {
         return packageTypes.stream().map(PackageTypeDTO::from).collect(Collectors.toList());
     }
 

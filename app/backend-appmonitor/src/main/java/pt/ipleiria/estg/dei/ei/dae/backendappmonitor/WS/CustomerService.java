@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import org.hibernate.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.CustomerDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.OrderDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.CustomerBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.OrderBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeDTO;
@@ -67,7 +68,7 @@ public class CustomerService {
         var order = orderBean.find(id);
         var orderDTO = OrderDTO.from(order);
         var volumes = order.getVolumes();
-        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeDTO.from(volumes));
+        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeCreateDTO.from(volumes));
         return Response.ok(orderDTO).build();
     }
 

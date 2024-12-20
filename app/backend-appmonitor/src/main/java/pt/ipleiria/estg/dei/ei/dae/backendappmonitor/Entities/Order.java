@@ -32,7 +32,7 @@ public class Order extends Versionable implements Serializable {
     private Customer customer;
     @NotNull
     @OneToMany(mappedBy = "order")
-    private List<Volume> volumes;
+    private List<Volume> volumes = new ArrayList<>();
 
 
     public Order() {
@@ -42,7 +42,6 @@ public class Order extends Versionable implements Serializable {
         this.createdDate = createdDate;
         this.deliveredDate = null;
         this.customer = customer;
-        this.volumes = new ArrayList<>();
     }
 
     public long getId() {

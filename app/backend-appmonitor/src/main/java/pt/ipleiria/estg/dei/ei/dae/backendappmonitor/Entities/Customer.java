@@ -17,15 +17,13 @@ import java.util.List;
 public class Customer extends User implements Serializable {
     @NotNull
     @OneToMany(mappedBy = "customer")
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     public Customer() {
-        this.orders = new ArrayList<>();
     }
 
     public Customer(String username, String password, String name, String email) {
         super(username, password, name, email);
-        this.orders = new ArrayList<>();
     }
 
     public List<Order> getOrders() {

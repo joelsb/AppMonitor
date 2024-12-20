@@ -13,27 +13,27 @@ public class ProductRecordDTO {
     volume: Volume
      */
 
-    public long id;
-    public long productTypeId;
-    public long quantity;
-    public long volumeId;
+    public Long id;
+    public long productId;
+    public int quantity;
+    public Long volumeId;
 
     public ProductRecordDTO() {
     }
 
-    public ProductRecordDTO(long id, long productTypeId, long quantity, long volumeId) {
+    public ProductRecordDTO(Long id, long productId, int quantity, Long volumeId) {
         this.id = id;
-        this.productTypeId = productTypeId;
+        this.productId = productId;
         this.quantity = quantity;
         this.volumeId = volumeId;
     }
 
     public static ProductRecordDTO from(ProductRecord productRecord) {
         return new ProductRecordDTO(
-                productRecord.getId(),
+                null,
                 productRecord.getProduct().getId(),
                 productRecord.getQuantity(),
-                productRecord.getVolume().getId()
+                null
         );
     }
 
@@ -41,35 +41,35 @@ public class ProductRecordDTO {
         return productRecords.stream().map(ProductRecordDTO::from).collect(Collectors.toList());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getProductTypeId() {
-        return productTypeId;
+    public long getProductId() {
+        return productId;
     }
 
-    public void setProductTypeId(long productTypeId) {
-        this.productTypeId = productTypeId;
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 
-    public long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public long getVolumeId() {
+    public Long getVolumeId() {
         return volumeId;
     }
 
-    public void setVolumeId(long volumeId) {
+    public void setVolumeId(Long volumeId) {
         this.volumeId = volumeId;
     }
 }
