@@ -37,6 +37,8 @@ public class ConfigBean {
     private PackageTypeBean packageTypeBean;
     @EJB
     private ProductRecordBean productRecordBean;
+    @EJB
+    private SensorRecordBean sensorRecordBean;
 
 
 
@@ -86,8 +88,8 @@ public class ConfigBean {
             var sensor1 = sensorBean.create(sensorHumidity.getId(), null);
             var sensor2 = sensorBean.create(sensorTemperature.getId(), null);
             var sensors = List.of(sensor1, sensor2);
-
-
+            var sensorRecord1 = sensorRecordBean.create(date, 10,sensor1);
+            var sensorRecord2 = sensorRecordBean.create(date, 20,sensor2);
             var volume = volumeBean.create(date,pack,products, sensors, order);
 
 

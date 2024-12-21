@@ -28,13 +28,27 @@ Accept: application/json
 GET http://localhost:8080/appmonitor/api/orders/
 Accept: application/json
 
+### GET ALL AVAILABLE ORDERS
+GET http://localhost:8080/appmonitor/api/orders/available
+Accept: application/json
+
+### PATCH DELIVERED VOLUME
+PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
+Content-Type: application/json
+
+
+### GET SENSOR HISTORY
+GET http://localhost:8080/appmonitor/api/sensors/1
+Accept: application/json
+
+
+
+
 ### GET SINGLE ORDERS
 GET http://localhost:8080/appmonitor/api/orders/1
 Accept: application/json
 
-### GET ALL AVAILABLE ORDERS
-GET http://localhost:8080/appmonitor/api/orders/available
-Accept: application/json
+
 
 ### GET VOLUMES OF ORDER
 GET http://localhost:8080/appmonitor/api/orders/1/volumes

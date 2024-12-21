@@ -61,7 +61,11 @@ public class OrderBean {
     }
 
     public List<Order> findAvailableOrders() {
-        return entityManager.createNamedQuery("getAvailableOrders", Order.class).getResultList();
+        var orders = entityManager.createNamedQuery("getAvailableOrders", Order.class).getResultList();
+        for (Order order : orders) {
+            Hibernate.initialize(order.getVolumes());
+        }
+        return orders;
     }
 
     public List<Volume> findVolumes(long id) throws MyEntityNotFoundException {
@@ -75,7 +79,11 @@ public class OrderBean {
     }
 
     public List<Order> findAll() {
-        return entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
+        var orders = entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
+        for (Order order : orders) {
+            Hibernate.initialize(order.getVolumes());
+        }
+        return orders;
     }
 
     public Order create(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
@@ -87,14 +95,14 @@ public class OrderBean {
 
         // Create entities
         var customer = entityManager.find(Customer.class, orderCreateDTO.getCustomerUsername());
-        var order = new Order(orderCreateDTO.getId(), orderCreateDTO.getCreatedDate(), null, customer);
+        var order = new Order(orderCreateDTO.getCreatedDate(), customer);
         customer.addOrder(order);
 
         entityManager.persist(order);
 
         var volumeDTO = orderCreateDTO.getVolume();
-        var packageType = entityManager.find(PackageType.class, volumeDTO.getPackageTypeId());
-        var volume = new Volume(volumeDTO.getId(), volumeDTO.getSentDate(), packageType, order);
+        var packageType = entityManager.find(PackageType.class, volumeDTO.getPackageTypeName());
+        var volume = new Volume(volumeDTO.getSentDate(), packageType, order);
         packageType.addVolume(volume);
         order.addVolume(volume);
 
@@ -102,7 +110,7 @@ public class OrderBean {
 
         for (SensorDTO sensorDTO : volumeDTO.getSensors()) {
             var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
-            var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
+            var sensor = new Sensor(sensorType, volume);
             volume.addSensor(sensor);
 
             // Persist each sensor

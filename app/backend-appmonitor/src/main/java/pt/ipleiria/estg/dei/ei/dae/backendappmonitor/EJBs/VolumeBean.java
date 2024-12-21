@@ -32,7 +32,7 @@ public class VolumeBean {
     private EntityManager entityManager;
 
     public Volume create(Date sentDate , PackageType pack, List<ProductRecord> products,List<Sensor> sensors, Order order) {
-        var volume = new Volume(sentDate ,pack,  products, sensors, order);
+        var volume = new Volume(sentDate,pack,order);
         pack.addVolume(volume);
         order.addVolume(volume);
         //Precorrer a lista products e set o volume ao product
@@ -128,7 +128,7 @@ public class VolumeBean {
         validateVolumeCreation(volumeCreateDTO);
 
         var packageType = entityManager.find(PackageType.class, volumeCreateDTO.getPackageTypeId());
-        var volume = new Volume(volumeCreateDTO.getId(), volumeCreateDTO.getSentDate(), packageType, order);
+        var volume = new Volume(volumeCreateDTO.getSentDate(), packageType, order);
         packageType.addVolume(volume);
         order.addVolume(volume);
 
@@ -136,7 +136,7 @@ public class VolumeBean {
 
         for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
             var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
-            var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
+            var sensor = new Sensor( sensorType, volume);
             volume.addSensor(sensor);
 
             // Persist each sensor

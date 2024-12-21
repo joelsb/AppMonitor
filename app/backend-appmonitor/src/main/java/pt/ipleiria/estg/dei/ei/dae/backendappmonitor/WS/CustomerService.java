@@ -68,7 +68,7 @@ public class CustomerService {
         var order = orderBean.find(id);
         var orderDTO = OrderDTO.from(order);
         var volumes = order.getVolumes();
-        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeCreateDTO.from(volumes));
+        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeDTO.from(volumes));
         return Response.ok(orderDTO).build();
     }
 

@@ -21,6 +21,7 @@ public class VolumeDTO {
     private long id;
     private Date sentDate;
     private Date deliveredDate;
+    private String packageTypeName;
     private Long packageTypeId;
     private List<ProductRecordDTO> products;
     private List<SensorDTO> sensors;
@@ -31,7 +32,7 @@ public class VolumeDTO {
     public VolumeDTO() {
     }
 
-    public VolumeDTO(long id, Date sentDate, Date deliveredDate, Long packageTypeId, Long orderId) {
+    public VolumeDTO(long id, Date sentDate, Date deliveredDate, Long packageTypeId, Long orderId, String packageTypeName) {
         this.id = id;
         this.sentDate = sentDate;
         this.deliveredDate = deliveredDate;
@@ -39,6 +40,7 @@ public class VolumeDTO {
         this.products = new ArrayList<>();
         this.sensors = new ArrayList<>();
         this.orderId = orderId;
+        this.packageTypeName = packageTypeName;
     }
 
     public static VolumeDTO from(Volume volume) {
@@ -46,8 +48,9 @@ public class VolumeDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
-                volume.getPackageType().getId(),
-                volume.getOrder().getId()
+                null,
+                null,
+                volume.getPackageType().getName()
         );
     }
 
@@ -57,8 +60,23 @@ public class VolumeDTO {
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
                 null,
+                null,
                 null
         );
+    }
+    public static VolumeDTO fromEmployee(Volume volume){
+        return new VolumeDTO(
+                volume.getId(),
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public static List<VolumeDTO> fromEmployee(List<Volume> volumes){
+        return volumes.stream().map(VolumeDTO::fromEmployee).collect(Collectors.toList());
     }
 
     public static List<VolumeDTO> fromManager(List<Volume> volumes){
@@ -91,6 +109,14 @@ public class VolumeDTO {
 
     public void setDeliveredDate(Date deliveredDate) {
         this.deliveredDate = deliveredDate;
+    }
+
+    public String getPackageTypeName() {
+        return packageTypeName;
+    }
+
+    public void setPackageTypeName(String packageTypeName) {
+        this.packageTypeName = packageTypeName;
     }
 
     public Long getPackageTypeId() {
@@ -133,4 +159,5 @@ public class VolumeDTO {
     public void setExcludeSensors(boolean excludeSensors) {
         this.excludeSensors = excludeSensors;
     }
+
 }
