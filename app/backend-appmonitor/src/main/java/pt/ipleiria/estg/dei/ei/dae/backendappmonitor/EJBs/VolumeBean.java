@@ -1,5 +1,16 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductRecord;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Sensor;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import java.util.Date;
 import jakarta.ejb.*;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
@@ -12,13 +23,48 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFound
 
 
 import java.util.Date;
-
 import java.util.List;
 
 @Stateless
 public class VolumeBean {
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    public Volume create(Date sentDate , PackageType pack, List<ProductRecord> products,List<Sensor> sensors, Order order) {
+        var volume = new Volume(sentDate,pack,order);
+        pack.addVolume(volume);
+        order.addVolume(volume);
+        //Precorrer a lista products e set o volume ao product
+        for (ProductRecord product : products) {
+            product.setVolume(volume);
+        }
+        //Precorrer a lista sensors e set o volume ao sensor
+        for (Sensor sensor : sensors) {
+            sensor.setVolume(volume);
+        }
+        
+        entityManager.persist(volume);
+        return volume;
+    }
+    public Volume addSensor(long id, Sensor sensor) throws MyEntityNotFoundException {
+        var volume = entityManager.find(Volume.class, id);
+        if(volume == null) {
+            throw new MyEntityNotFoundException("Volume (" + id + ") not found");
+        }
+        volume.addSensor(sensor);
+        sensor.setVolume(volume);
+        return volume;
+    }
+    public Volume addProduct(long id, ProductRecord productRecord) throws MyEntityNotFoundException {
+        var volume = entityManager.find(Volume.class, id);
+        if(volume == null) {
+            throw new MyEntityNotFoundException("Volume (" + id + ") not found");
+        }
+        volume.addProduct(productRecord);
+        productRecord.setVolume(volume);
+        return volume;
+    }
 
     public Volume find(long id) throws MyEntityNotFoundException {
         var volume = entityManager.find(Volume.class, id);
@@ -82,7 +128,7 @@ public class VolumeBean {
         validateVolumeCreation(volumeCreateDTO);
 
         var packageType = entityManager.find(PackageType.class, volumeCreateDTO.getPackageTypeId());
-        var volume = new Volume(volumeCreateDTO.getId(), volumeCreateDTO.getSentDate(), packageType, order);
+        var volume = new Volume(volumeCreateDTO.getSentDate(), packageType, order);
         packageType.addVolume(volume);
         order.addVolume(volume);
 
@@ -90,7 +136,7 @@ public class VolumeBean {
 
         for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
             var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
-            var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
+            var sensor = new Sensor( sensorType, volume);
             volume.addSensor(sensor);
 
             // Persist each sensor

@@ -13,7 +13,7 @@ public class OrderDTO {
     private Date createdDate;
     private Date  deliveredDate;
     private String customerUsername;
-    private List<VolumeCreateDTO> volumes;
+    private List<VolumeDTO> volumes;
 
     public OrderDTO() {
     }
@@ -31,8 +31,22 @@ public class OrderDTO {
                 order.getId(),
                 order.getCreatedDate(),
                 order.getDeliveredDate(),
+                null
+        );
+    }
+
+    public static OrderDTO fromManager(Order order) {
+        return new OrderDTO(
+                order.getId(),
+                order.getCreatedDate(),
+                order.getDeliveredDate(),
                 order.getCustomer().getUsername()
         );
+    }
+
+
+    public static List<OrderDTO> fromManager(List<Order> orders) {
+        return orders.stream().map(OrderDTO::from).collect(Collectors.toList());
     }
 
     public static List<OrderDTO> from(List<Order> orders) {
@@ -77,11 +91,11 @@ public class OrderDTO {
         this.customerUsername = customerUsername;
     }
 
-    public List<VolumeCreateDTO> getVolumes() {
+    public List<VolumeDTO> getVolumes() {
         return new ArrayList<>(volumes);
     }
 
-    public void setVolumes(List<VolumeCreateDTO> volumes) {
+    public void setVolumes(List<VolumeDTO> volumes) {
         this.volumes = volumes;
     }
 }

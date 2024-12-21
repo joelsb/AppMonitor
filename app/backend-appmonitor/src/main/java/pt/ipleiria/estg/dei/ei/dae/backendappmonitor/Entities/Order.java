@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
+import jakarta.ejb.EJB;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -8,16 +9,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "orders")
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.id, o.createdDate"),
-                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.id, o.createdDate")
+                @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.createdDate"),
+                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate"),
+                @NamedQuery(name = "getAvailableOrders", query = "SELECT o FROM Order o WHERE o.deliveredDate = null ORDER BY o.createdDate"),
         }
 )
-@Table(name = "orders")
-@Entity
+
+
 public class Order extends Versionable implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     private Date createdDate;
@@ -33,10 +38,9 @@ public class Order extends Versionable implements Serializable {
     public Order() {
     }
 
-    public Order(long id, Date createdDate, Date deliveredDate, Customer customer) {
-        this.id = id;
+    public Order( Date createdDate, Customer customer) {
         this.createdDate = createdDate;
-        this.deliveredDate = deliveredDate;
+        this.deliveredDate = null;
         this.customer = customer;
     }
 

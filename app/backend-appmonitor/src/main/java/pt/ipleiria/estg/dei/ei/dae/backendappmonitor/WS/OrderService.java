@@ -22,10 +22,38 @@ public class OrderService {
     @GET
     @Path("/")
     //Receive the Token in the header
-    public Response getAllOrders(@HeaderParam("Authorization") String token) {
+    public Response getAllOrders(/*@HeaderParam("Authorization") String token*/) {
         //Deal with the token
-        return Response.ok(OrderDTO.from((Order) orderBean.findAll())).build();
+        var orders = orderBean.findAll();
+        var ordersDTO = OrderDTO.from(orders);
+
+        for (Order order : orders) {
+            for (OrderDTO orderDTO : ordersDTO) {
+                orderDTO.setVolumes(VolumeDTO.from(order.getVolumes()));
+            }
+        }
+        return Response.ok(ordersDTO).build();
     }
+
+    @GET
+    @Path("/{id}")
+    public Response getCustomerOrder(@PathParam("id") long id) throws MyEntityNotFoundException {
+        //For client
+        /*
+        var order = orderBean.findWithVolumes(id);
+        var orderDTO = OrderDTO.from(order);
+        orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
+        return Response.ok(orderDTO).build();*/
+        //Verify role of client
+
+
+        //For Manager
+        var order = orderBean.findWithVolumes(id);
+        var orderDTO = OrderDTO.fromManager(order);
+        orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
+        return Response.ok(orderDTO).build();
+    }
+
 
     @POST
     @Path("/")
@@ -33,7 +61,7 @@ public class OrderService {
         orderBean.create(orderCreateDTO);
         Order order = orderBean.findWithVolumesProductsSensors(orderCreateDTO.getId());
         var orderDTO = OrderDTO.from(order);
-        var volumesDTO = VolumeCreateDTO.from(order.getVolumes());
+        var volumesDTO = VolumeDTO.from(order.getVolumes());
         //Also send the products and sensors inside the volumes
         var productsDTO = order.getVolumes().stream().map(volume ->
                 ProductRecordDTO.from(volume.getProducts())).collect(Collectors.toList());
@@ -45,11 +73,38 @@ public class OrderService {
         });
         orderDTO.setVolumes(volumesDTO);
         return Response.ok(orderDTO).build();
+
     }
 
     @GET
     @Path("/available")
     public Response getAvailableOrders() {
-        return Response.ok(OrderDTO.from(orderBean.findAvailableOrders())).build();
+        var orders = orderBean.findAvailableOrders();
+        var ordersDTO = OrderDTO.from(orders);
+        for (Order order : orders) {
+            for (OrderDTO orderDTO : ordersDTO) {
+                orderDTO.setVolumes(VolumeDTO.fromEmployee(order.getVolumes()));
+            }
+        }
+        return Response.ok(ordersDTO).build();
     }
+
+    @GET
+    @Path("/{id}/volumes")
+    public Response getVolumes(@PathParam("id") long id) throws MyEntityNotFoundException {
+        //For Manager
+        /*
+        var order = orderBean.findWithVolumes(id);
+        var volumeDTO = VolumeDTO.fromManager(order.getVolumes());
+        return Response.ok(volumeDTO).build();
+        * */
+
+
+        //For client
+        var order = orderBean.findWithVolumes(id);
+        var volumeDTO = VolumeDTO.from(order.getVolumes());
+        return Response.ok(volumeDTO).build();
+    }
+
+
 }

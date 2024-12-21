@@ -14,15 +14,15 @@ public class SensorRecordDTO {
     sensor: Sensor
      */
 
-    private long id;
+    private Long id;
     private Date time;
     private double value;
-    private long sensorId;
+    private Long sensorId;
 
     public SensorRecordDTO() {
     }
 
-    public SensorRecordDTO(long id, Date time, double value, long sensorId) {
+    public SensorRecordDTO(Long id, Date time, double value, Long sensorId) {
         this.id = id;
         this.time = time;
         this.value = value;
@@ -37,15 +37,28 @@ public class SensorRecordDTO {
         );
     }
 
-    public List<SensorRecordDTO> from(List<SensorRecord> sensorRecords) {
+    public static SensorRecordDTO fromSensor(SensorRecord sensorRecord) {
+        return new SensorRecordDTO(
+                null,
+                sensorRecord.getTime(),
+                sensorRecord.getValue(),
+                null
+        );
+    }
+
+    public static List<SensorRecordDTO> fromSensor(List<SensorRecord> sensorRecords) {
+        return sensorRecords.stream().map(SensorRecordDTO::fromSensor).collect(Collectors.toList());
+    }
+
+    public static List<SensorRecordDTO> from(List<SensorRecord> sensorRecords) {
         return sensorRecords.stream().map(SensorRecordDTO::from).collect(Collectors.toList());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -65,11 +78,11 @@ public class SensorRecordDTO {
         this.value = value;
     }
 
-    public long getSensorId() {
+    public Long getSensorId() {
         return sensorId;
     }
 
-    public void setSensorId(long sensorId) {
+    public void setSensorId(Long sensorId) {
         this.sensorId = sensorId;
     }
 }
