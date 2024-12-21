@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "sensorTypes")
+@Table(name = "sensorTypes",
+        //Unique constraint to avoid duplicate usernames and emails
+        uniqueConstraints = { @UniqueConstraint(columnNames = "name") })
+
 @NamedQueries(
         {
                 @NamedQuery(

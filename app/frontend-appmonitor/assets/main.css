@@ -1,0 +1,186 @@
+
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #73787c;
+    --secondary-color2: #3a3f42;
+    --text-color: #333;
+    --background-color: #f8f9fa;
+    --border-color: #dee2e6;
+    --button-padding: 6px 14px;
+    --button-margin: 0 10px 0 0;
+    --table-margin: 20px 0 10px 0;
+    --font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    line-height: 1.6;
+}
+
+h2 {
+    color: var(--primary-color);
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+p,
+label {
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+a,
+.btn-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover,
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--table-margin);
+    background-color: white;
+    border: 1px solid var(--border-color);
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+input,
+button,
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin: 6px 0 6px 0;
+}
+
+button,
+.btn {
+    display: inline-block;
+    padding: var(--button-padding);
+    border-radius: 20px;
+    margin: var(--button-margin);
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    text-align: center;
+    line-height: normal;
+}
+
+button:hover,
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+}
+
+.btn-secondary2 {
+    background-color: var(--secondary-color2);
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* .form-group {
+    margin-bottom: 16px;
+} */
+
+.form-label {
+    margin: 6px 0 6px 0;
+}
+
+.message {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.btn-primary,
+.btn-secondary {
+    width: auto;
+}
+
+.error {
+    margin: 10px 0 0px 0;
+    color: red;
+    font-weight: bold;
+}
+
+.success {
+    margin: 10px 0 0px 0;
+    color: green;
+    font-weight: bold;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+}
+
+.btn-details {
+    background-color: #17a2b8;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.label-button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.form-buttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}

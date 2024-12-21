@@ -73,11 +73,11 @@ POST http://localhost:8080/appmonitor/api/orders
 Content-Type: application/json
 
 {
-  "id": 27,
-  "customerUsername": "Joel",
+  "id": 28,
+  "customerUsername": "Tiago",
   "createdDate": "2024-11-20T21:00:00",
   "volume": {
-    "id": 102,
+    "id": 103,
     "sentDate": "2024-11-21T21:00:00",
     "packageTypeId": 2,
     "products": [
@@ -92,11 +92,11 @@ Content-Type: application/json
     ],
     "sensors": [
       {
-        "id": 4,
+        "id": 1,
         "sensorTypeId": 1
       },
       {
-        "id": 3,
+        "id": 2,
         "sensorTypeId": 2
       }
     ]
@@ -134,14 +134,6 @@ Content-Type: application/json
     }
   ]
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -388,13 +380,4 @@ Accept: application/json
 ### GET A SINGLE USER
 GET http://localhost:8080/academics/api/user/2191618
 Accept: application/json
-
-
-
-
-
-
-
-
-
 
