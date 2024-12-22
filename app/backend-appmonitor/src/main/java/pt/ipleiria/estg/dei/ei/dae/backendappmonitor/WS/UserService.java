@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.UserDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.UserBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
 @Path("users")
 @Produces({MediaType.APPLICATION_JSON})
@@ -22,7 +23,7 @@ public class UserService {
 
     @GET
     @Path("{username}")
-    public Response getUser(@PathParam("username") String username) {
+    public Response getUser(@PathParam("username") String username) throws MyEntityNotFoundException {
         return Response.ok(UserDTO.fromUser(userBean.find(username))).build();
     }
 

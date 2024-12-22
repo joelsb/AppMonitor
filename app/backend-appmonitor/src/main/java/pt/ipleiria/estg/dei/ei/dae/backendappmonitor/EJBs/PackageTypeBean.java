@@ -23,7 +23,7 @@ public class PackageTypeBean {
     public PackageType find(Long id) throws MyEntityNotFoundException {
         var packageType = entityManager.find(PackageType.class, id);
         if(packageType == null) {
-            throw new MyEntityNotFoundException("PackageType (" + id + ") not found");
+            throw new MyEntityNotFoundException("PackageType with id: '" + id + "' not found");
         }
         return packageType;
     }
@@ -49,7 +49,7 @@ public class PackageTypeBean {
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
-            throw new MyEntityExistsException("PackageType (" + name + ") already exists");
+            throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
         var packageType = new PackageType(name);
         entityManager.persist(packageType);
@@ -62,7 +62,7 @@ public class PackageTypeBean {
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty() && !packageType.getName().equals(name)) {
-            throw new MyEntityExistsException("PackageType (" + name + ") already exists");
+            throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
         packageType.setName(name);
         return packageType;
@@ -72,14 +72,14 @@ public class PackageTypeBean {
         var packageType = this.find(id);
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if(sensorType == null) {
-            throw new MyEntityNotFoundException("Sensor (" + sensorTypeId + ") not found");
+            throw new MyEntityNotFoundException("Sensor with id: '" + sensorTypeId + "' not found");
         }
         if(packageType.getMandatorySensors().contains(sensorType)) {
-            throw new MyEntityExistsException("Sensor (" + sensorTypeId + ") already exists in PackageType (" + id + ")");
+            throw new MyEntityExistsException("Sensor with id: '" + sensorTypeId + "' already exists in PackageType with id: '" + id + "'");
         }
         packageType.addMandatorySensor(sensorType);
         if(sensorType.getPackageTypes().contains(packageType)) {
-            throw new MyEntityExistsException("PackageType (" + id + ") already exists in Sensor (" + sensorTypeId + ")");
+            throw new MyEntityExistsException("PackageType with id: '" + id + "' already exists in Sensor with id: '" + sensorTypeId + "'");
         }
         sensorType.addPackageType(packageType);
     }
@@ -88,14 +88,14 @@ public class PackageTypeBean {
         var packageType = this.find(id);
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if(sensorType == null) {
-            throw new MyEntityNotFoundException("Sensor (" + sensorTypeId + ") not found");
+            throw new MyEntityNotFoundException("Sensor with id: '" + sensorTypeId + "' not found");
         }
         if(!packageType.getMandatorySensors().contains(sensorType)) {
-            throw new MyEntityNotFoundException("Sensor (" + sensorTypeId + ") not found in PackageType (" + id + ")");
+            throw new MyEntityNotFoundException("Sensor with id: '" + sensorTypeId + "' not found in PackageType with id: '" + id + "'");
         }
         packageType.removeMandatorySensor(sensorType);
         if(!sensorType.getPackageTypes().contains(packageType)) {
-            throw new MyEntityNotFoundException("PackageType (" + id + ") not found in Sensor (" + sensorTypeId + ")");
+            throw new MyEntityNotFoundException("PackageType with id: '" + id + "' not found in Sensor with id: '" + sensorTypeId + "'");
         }
         sensorType.removePackageType(packageType);
     }

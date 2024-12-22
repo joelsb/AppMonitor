@@ -18,7 +18,7 @@ public class ManagerBean extends UserBean {
     public Manager find(String username) {
         var manager = entityManager.find(Manager.class, username);
         if (manager == null) {
-            throw new RuntimeException("Manager (" + username + ") not found");
+            throw new RuntimeException("Manager with username: '" + username + "' not found");
         }
         return manager;
     }
@@ -30,7 +30,7 @@ public class ManagerBean extends UserBean {
 
     public Manager create(String username, String password, String name, String email, String office) throws MyEntityExistsException {
         if(entityManager.find(Manager.class, username) != null) {
-            throw new MyEntityExistsException("Manager (" + username + ") already exists");
+            throw new MyEntityExistsException("Manager with username: '" + username + "' already exists");
         }
         var manager = new Manager(
                 username, password, name, email, office);
@@ -41,7 +41,7 @@ public class ManagerBean extends UserBean {
     public Manager update(String username, String name, String email, String office ) throws MyEntityNotFoundException {
         var manager = entityManager.find(Manager.class, username);
         if(manager == null) {
-            throw new MyEntityNotFoundException("Manager (" + username + ") not found");
+            throw new MyEntityNotFoundException("Manager with username: '" + username + "' not found");
         }
         manager.setName(name);
         manager.setEmail(email);
@@ -52,7 +52,7 @@ public class ManagerBean extends UserBean {
     public Manager updatePassword(String username, String password) throws MyEntityNotFoundException {
         var manager = entityManager.find(Manager.class, username);
         if(manager == null) {
-            throw new MyEntityNotFoundException("Manager (" + username + ") not found");
+            throw new MyEntityNotFoundException("Manager with username: '" + username + "' not found");
         }
         manager.setPassword(password);
         return manager;

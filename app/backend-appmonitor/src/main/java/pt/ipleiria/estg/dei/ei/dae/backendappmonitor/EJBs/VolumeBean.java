@@ -69,7 +69,7 @@ public class VolumeBean {
     public Volume find(long id) throws MyEntityNotFoundException {
         var volume = entityManager.find(Volume.class, id);
         if(volume == null) {
-            throw new MyEntityNotFoundException("Volume with id " + id + " not found");
+            throw new MyEntityNotFoundException("Volume with id: '" + id + "' not found");
         }
         return volume;
     }
@@ -81,7 +81,7 @@ public class VolumeBean {
     public Volume findWithSensorsProducts(long id) throws MyEntityNotFoundException {
         var volume = entityManager.find(Volume.class, id);
         if(volume == null) {
-            throw new MyEntityNotFoundException("Volume with id " + id + " not found");
+            throw new MyEntityNotFoundException("Volume with id: '" + id + "' not found");
         }
         Hibernate.initialize(volume.getSensors());
         Hibernate.initialize(volume.getProducts());
@@ -101,7 +101,7 @@ public class VolumeBean {
         var orderId = volumeCreateDTO.getOrderId();
         var order = entityManager.find(Order.class, orderId);
         if(order == null) {
-            throw new MyEntityNotFoundException("Order with id " + orderId + " not found");
+            throw new MyEntityNotFoundException("Order with id: '" + orderId + "' not found");
         }
         var volume = this.create(volumeCreateDTO, order);
         order.addVolume(volume);
@@ -110,7 +110,7 @@ public class VolumeBean {
     public Volume setDelivered(long id) throws MyEntityNotFoundException {
         var volume = entityManager.find(Volume.class, id);
         if(volume == null) {
-            throw new MyEntityNotFoundException("Volume with id " + id + " not found");
+            throw new MyEntityNotFoundException("Volume with id: '" + id + "' not found");
         }
         //data de hoje
         Date date = Date.from(new Date().toInstant());
@@ -162,25 +162,25 @@ public class VolumeBean {
 
         var packageType = entityManager.find(PackageType.class, volumeCreateDTO.getPackageTypeId());
         if (packageType == null) {
-            throw new MyEntityNotFoundException("PackageType with id " + volumeCreateDTO.getPackageTypeId() + " not found");
+            throw new MyEntityNotFoundException("PackageType with id: '" + volumeCreateDTO.getPackageTypeId() + "' not found");
         }
 
         if (entityManager.find(Volume.class, volumeCreateDTO.getId()) != null) {
-            throw new MyEntityExistsException("Volume with id " + volumeCreateDTO.getId() + " already exists");
+            throw new MyEntityExistsException("Volume with id: '" + volumeCreateDTO.getId() + "' already exists");
         }
 
         for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
             if (entityManager.find(SensorType.class, sensorDTO.getSensorTypeId()) == null) {
-                throw new MyEntityNotFoundException("SensorType not found for id: " + sensorDTO.getSensorTypeId());
+                throw new MyEntityNotFoundException("SensorType not found for id: '" + sensorDTO.getSensorTypeId() + "'");
             }
             if (entityManager.find(Sensor.class, sensorDTO.getId()) != null) {
-                throw new MyEntityExistsException("Sensor with id " + sensorDTO.getId() + " already exists");
+                throw new MyEntityExistsException("Sensor with id: '" + sensorDTO.getId() + "' already exists");
             }
         }
 
         for (ProductRecordDTO productDTO : volumeCreateDTO.getProducts()) {
             if (entityManager.find(ProductType.class, productDTO.getProductId()) == null) {
-                throw new MyEntityNotFoundException("ProductType not found for id: " + productDTO.getProductId());
+                throw new MyEntityNotFoundException("ProductType not found for id: '" + productDTO.getProductId() + "'");
             }
         }
     }

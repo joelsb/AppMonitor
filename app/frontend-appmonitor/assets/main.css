@@ -5,6 +5,9 @@
 @tailwind utilities;
 
 
+
+
+/*
 :root {
     --primary-color: #007bff;
     --secondary-color: #73787c;
@@ -128,7 +131,7 @@ button:hover,
     margin-bottom: 16px;
 } */
 
-.form-label {
+/* .form-label {
     margin: 6px 0 6px 0;
 }
 
@@ -183,4 +186,4 @@ button:hover,
     justify-content: space-between;
     align-items: center;
     width: 100%;
-}
+} */

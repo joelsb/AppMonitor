@@ -110,6 +110,7 @@ Content-Type: application/json
 
 {
   "id": 105,
+
   "sentDate": "2021-06-01T00:00:00",
   "orderId": 27,
   "packageTypeId": 1,
@@ -135,6 +136,21 @@ Content-Type: application/json
   ]
 }
 
+### GET ALL ORDERS
+GET http://localhost:8080/appmonitor/api/orders
+Accept: application/json
+
+### GET A SINGLE ORDER
+GET http://localhost:8080/appmonitor/api/orders/27
+Accept: application/json
+
+### GET ALL VOLUMES
+GET http://localhost:8080/appmonitor/api/volumes
+Accept: application/json
+
+### GET A SINGLE VOLUME
+GET http://localhost:8080/appmonitor/api/volumes/105
+Accept: application/json
 
 
 

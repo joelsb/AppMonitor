@@ -19,7 +19,7 @@ public class ProductTypeBean {
     public ProductType find(Long id) throws MyEntityNotFoundException {
         var productType = entityManager.find(ProductType.class, id);
         if (productType == null) {
-            throw new MyEntityNotFoundException("ProductType (" + id + ") not found");
+            throw new MyEntityNotFoundException("ProductType with id: '" + id + "' not found");
         }
         return productType;
     }
@@ -52,7 +52,7 @@ public class ProductTypeBean {
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
-            throw new MyEntityExistsException("ProductType (" + name + ") already exists");
+            throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
         }
         var productType = new ProductType(name, mandatoryPackage);
         entityManager.persist(productType);
@@ -64,7 +64,7 @@ public class ProductTypeBean {
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty() && !productType.getName().equals(name)) {
-            throw new MyEntityExistsException("ProductType (" + name + ") already exists");
+            throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
         }
         productType.setName(name);
         productType.setMandatoryPackage(mandatoryPackage);
@@ -75,10 +75,10 @@ public class ProductTypeBean {
         var productType = this.find(id);
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if (sensorType == null) {
-            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found");
+            throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found");
         }
         if(productType.getMandatorySensors().contains(sensorType)){
-            throw new MyEntityExistsException("SensorType (" + sensorTypeId + ") already exists in ProductType (" + id + ")");
+            throw new MyEntityExistsException("SensorType with id: '" + sensorTypeId + "' already exists in ProductType with id: '" + id + "'");
         }
         productType.addMandatorySensor(sensorType);
         if(!sensorType.getProductTypes().contains(productType)){
@@ -90,14 +90,14 @@ public class ProductTypeBean {
         var productType = this.find(id);
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if (sensorType == null) {
-            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found");
+            throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found");
         }
         if(!productType.getMandatorySensors().contains(sensorType)){
-            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found in ProductType (" + id + ")");
+            throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found in ProductType with id: '" + id + "'");
         }
         productType.removeMandatorySensor(sensorType);
         if(!sensorType.getProductTypes().contains(productType)){
-            throw new MyEntityNotFoundException("SensorType (" + sensorTypeId + ") not found in ProductType (" + id + ")");
+            throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found in ProductType  with id: '" + id + "'");
         }
         sensorType.removeProductType(productType);
         return productType;

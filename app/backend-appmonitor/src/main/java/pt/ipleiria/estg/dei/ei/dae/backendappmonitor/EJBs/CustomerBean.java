@@ -18,7 +18,7 @@ public class CustomerBean {
     public Customer find(String username) {
         var customer = entityManager.find(Customer.class, username);
         if (customer == null) {
-            throw new RuntimeException("User (" + username + ") not found");
+            throw new RuntimeException("User with username: '" + username + "' not found");
         }
         return customer;
     }
@@ -42,7 +42,7 @@ public class CustomerBean {
 
     public Customer create(String username, String password, String name, String email) throws MyEntityExistsException {
         if(entityManager.find(Customer.class, username) != null) {
-            throw new MyEntityExistsException("Customer (" + username + ") already exists");
+            throw new MyEntityExistsException("Customer with username: '" + username + "' already exists");
         }
         var customer = new Customer(
                 username, password, name, email);
@@ -53,7 +53,7 @@ public class CustomerBean {
     public Customer update(String username, String name, String email) throws MyEntityNotFoundException {
         var customer = entityManager.find(Customer.class, username);
         if (customer == null) {
-            throw new MyEntityNotFoundException("Customer (" + username + ") not found");
+            throw new MyEntityNotFoundException("Customer with username: '" + username + "' not found");
         }
         customer.setName(name);
         customer.setEmail(email);
@@ -63,7 +63,7 @@ public class CustomerBean {
     public Customer updatePassword(String username, String password) throws MyEntityNotFoundException {
         var customer = entityManager.find(Customer.class, username);
         if (customer == null) {
-            throw new MyEntityNotFoundException("Customer (" + username + ") not found");
+            throw new MyEntityNotFoundException("Customer with username: '" + username + "' not found");
         }
         customer.setPassword(password);
         return customer;
