@@ -17,11 +17,12 @@ public class Sensor extends Versionable implements Serializable {
     history-List<SensorRecord>
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     @ManyToOne
     private SensorType sensorType;
-    @NotNull
+
     @ManyToOne
     private Volume volume;
     @NotNull
@@ -31,8 +32,7 @@ public class Sensor extends Versionable implements Serializable {
     public Sensor() {
     }
 
-    public Sensor(long id, SensorType sensorType, Volume volume) {
-        this.id = id;
+    public Sensor( SensorType sensorType, Volume volume) {
         this.sensorType = sensorType;
         this.volume = volume;
     }

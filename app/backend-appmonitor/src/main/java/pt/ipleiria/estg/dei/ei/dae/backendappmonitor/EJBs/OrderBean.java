@@ -5,6 +5,10 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.OrderCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductRecordDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorDTO;
@@ -24,6 +28,30 @@ public class OrderBean {
     @EJB
     private VolumeBean volumeBean;
 
+    public Order create(Date createdDate, String customerUsername) throws MyEntityExistsException, MyEntityNotFoundException {
+
+
+            var customer = entityManager.find(Customer.class, customerUsername);
+            var order = new Order(createdDate,customer);
+            customer.addOrder(order);
+            //TODO: CREATE VOLUMES AND ASSOCIATE THEM TO THE ORDER
+            entityManager.persist(order);
+            return order;
+    }
+
+
+    public Order addVolume(long id, Volume volume) throws MyEntityNotFoundException {
+        var order = entityManager.find(Order.class, id);
+        if(order == null) {
+            throw new MyEntityNotFoundException("Order (" + id + ") not found");
+        }
+        else{
+            order.addVolume(volume);
+            volume.setOrder(order);
+        }
+        return order;
+    }
+
     public Order find(long id) throws MyEntityNotFoundException {
         var order = entityManager.find(Order.class, id);
         if (order == null) {
@@ -33,17 +61,29 @@ public class OrderBean {
     }
 
     public List<Order> findAvailableOrders() {
-        List<Order> orders = null;
-        for (Order order : findAll()) {
-            if (order.getDeliveredDate() == null) {
-                orders.add(order);
-            }
+        var orders = entityManager.createNamedQuery("getAvailableOrders", Order.class).getResultList();
+        for (Order order : orders) {
+            Hibernate.initialize(order.getVolumes());
         }
         return orders;
     }
 
+    public List<Volume> findVolumes(long id) throws MyEntityNotFoundException {
+        var order = entityManager.find(Order.class, id);
+        if (order == null) {
+            throw new MyEntityNotFoundException("Order (" + id + ") not found");
+        }
+        return entityManager.createNamedQuery("getVolumesByOrder", Volume.class)
+                .setParameter("order", order)
+                .getResultList();
+    }
+
     public List<Order> findAll() {
-        return entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
+        var orders = entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
+        for (Order order : orders) {
+            Hibernate.initialize(order.getVolumes());
+        }
+        return orders;
     }
 
     public Order create(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
@@ -55,14 +95,14 @@ public class OrderBean {
 
         // Create entities
         var customer = entityManager.find(Customer.class, orderCreateDTO.getCustomerUsername());
-        var order = new Order(orderCreateDTO.getId(), orderCreateDTO.getCreatedDate(), null, customer);
+        var order = new Order(orderCreateDTO.getCreatedDate(), customer);
         customer.addOrder(order);
 
         entityManager.persist(order);
 
         var volumeDTO = orderCreateDTO.getVolume();
-        var packageType = entityManager.find(PackageType.class, volumeDTO.getPackageTypeId());
-        var volume = new Volume(volumeDTO.getId(), volumeDTO.getSentDate(), packageType, order);
+        var packageType = entityManager.find(PackageType.class, volumeDTO.getPackageTypeName());
+        var volume = new Volume(volumeDTO.getSentDate(), packageType, order);
         packageType.addVolume(volume);
         order.addVolume(volume);
 
@@ -70,7 +110,7 @@ public class OrderBean {
 
         for (SensorDTO sensorDTO : volumeDTO.getSensors()) {
             var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
-            var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
+            var sensor = new Sensor(sensorType, volume);
             volume.addSensor(sensor);
 
             // Persist each sensor

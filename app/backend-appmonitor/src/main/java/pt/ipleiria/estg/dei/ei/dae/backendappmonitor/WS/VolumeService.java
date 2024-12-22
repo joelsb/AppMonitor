@@ -11,6 +11,8 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.VolumeBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
+import java.util.Date;
+
 @Path("volumes")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
@@ -41,11 +43,13 @@ public class VolumeService {
         return Response.ok(volumeDTO).build();
     }
 
-    @POST
+    @PATCH
     @Path("{id}/delivered")
     public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException {
         volumeBean.setDelivered(id);
-        return Response.ok().build();
+        var volume = volumeBean.find(id);
+        var volumeDTO = VolumeDTO.fromManager(volume);
+        return Response.ok(volumeDTO).build();
     }
 
 

@@ -2,29 +2,31 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.WS;
 
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorRecordDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorTypeDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.SensorBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Sensor;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
-@Path("/sensors")
-@Consumes("application/json")
-@Produces("application/json")
+@Path("sensors")
+@Produces({MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
 public class SensorService {
-//    @EJB
-//    private SensorBean sensorBean;
-//
-    @GET
-    @Path("/")
-    public Response getAllSensors() {
-//        SensorDTO.from(sensorBean.findAll())
-        return Response.ok().build();
-    }
-//
-//    @POST
-//    @Path("/{id}/add-value")
-//    public Response addValue(@PathParam("id") long id, SensorAddValueDTO sensorAddValueDTO) {
-//        sensorBean.addValue(id, sensorAddValueDTO.getValue());
-//        var sensor = sensorBean.findWithHistory(id);
-//        return Response.ok(SensorDTO.from(sensor)).build();
-//    }
 
+    @EJB
+    private SensorBean sensorBean;
+
+    @GET
+    @Path("/{id}")
+    public Response getSensorData(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var sensor = sensorBean.findWithHistoryAndSensorType(id);
+        var sensorDTO = SensorDTO.fromHistory(sensor);
+        sensorDTO.setHistory(SensorRecordDTO.fromSensor(sensor.getHistory()));
+        sensorDTO.setSensorType(SensorTypeDTO.from(sensor.getSensorType()));
+        return Response.ok(sensorDTO).build();
+    }
 }

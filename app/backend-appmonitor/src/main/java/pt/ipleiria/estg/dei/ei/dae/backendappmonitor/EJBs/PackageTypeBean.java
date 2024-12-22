@@ -1,5 +1,10 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+
+import jakarta.ejb.Stateless;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
@@ -7,8 +12,8 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
-
 import java.util.List;
+
 
 @Stateless
 public class PackageTypeBean {
@@ -94,6 +99,4 @@ public class PackageTypeBean {
         }
         sensorType.removePackageType(packageType);
     }
-
-
 }
