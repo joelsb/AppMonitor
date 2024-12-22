@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
 import java.util.List;
 
@@ -13,10 +14,10 @@ public class UserBean {
     private EntityManager entityManager;
 
 
-    public User find(String username) {
+    public User find(String username) throws MyEntityNotFoundException {
         var user = entityManager.find(User.class, username);
         if (user == null) {
-            throw new RuntimeException("User (" + username + ") not found");
+            throw new MyEntityNotFoundException("User with username: '" + username + "' not found");
         }
         return user;
     }

@@ -24,7 +24,7 @@ public class OrderService {
     //Receive the Token in the header
     public Response getAllOrders(@HeaderParam("Authorization") String token) {
         //Deal with the token
-        return Response.ok(OrderDTO.from((Order) orderBean.findAll())).build();
+        return Response.ok(OrderDTO.from(orderBean.findAll())).build();
     }
 
     @POST

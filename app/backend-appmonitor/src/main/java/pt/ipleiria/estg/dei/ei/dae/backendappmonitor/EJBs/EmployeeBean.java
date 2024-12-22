@@ -18,7 +18,7 @@ public class EmployeeBean extends UserBean {
     public Employee find(String username) {
         var employee = entityManager.find(Employee.class, username);
         if (employee == null) {
-            throw new RuntimeException("Employee (" + username + ") not found");
+            throw new RuntimeException("Employee with username: '" + username + "' not found");
         }
         return employee;
     }
@@ -30,7 +30,8 @@ public class EmployeeBean extends UserBean {
 
     public Employee create(String username, String password, String name, String email, String warehouse) throws MyEntityExistsException {
         if(entityManager.find(Employee.class, username) != null) {
-            throw new MyEntityExistsException("Employee (" + username + ") already exists");
+            // add '' between the username in throw new MyEntityExistsException
+            throw new MyEntityExistsException("Employee with username: '" + username + "' already exists");
         }
         var employee = new Employee(
                 username, password, name, email, warehouse);
@@ -41,7 +42,7 @@ public class EmployeeBean extends UserBean {
     public Employee update(String username, String name, String email, String Warehouse) throws MyEntityNotFoundException {
         var employee = entityManager.find(Employee.class, username);
         if (employee == null) {
-            throw new MyEntityNotFoundException("Employee (" + username + ") not found");
+            throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
         }
         employee.setName(name);
         employee.setEmail(email);
@@ -52,7 +53,7 @@ public class EmployeeBean extends UserBean {
     public Employee updatePassword(String username, String password) throws MyEntityNotFoundException {
         var employee = entityManager.find(Employee.class, username);
         if (employee == null) {
-            throw new MyEntityNotFoundException("Employee (" + username + ") not found");
+            throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
         }
         employee.setPassword(password);
         return employee;

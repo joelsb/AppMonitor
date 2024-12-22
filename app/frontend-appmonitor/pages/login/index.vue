@@ -54,7 +54,7 @@ const password = ref('');
 
 // Login method
 const login = () => {
-    if (!isFormValid.value) {
+    if (isFormValid.value) {
         console.log(`Logging in with username: ${username.value}`);
     }
     router.push('/homepage');
