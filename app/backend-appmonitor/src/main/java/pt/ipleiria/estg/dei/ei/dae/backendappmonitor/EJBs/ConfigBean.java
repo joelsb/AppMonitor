@@ -64,14 +64,6 @@ public class ConfigBean {
             var sensorHumidity = sensorTypeBean.create("Humidity", "%", 80, 20);
 
 
-            productTypeBean.create("Gelado OLA - Corneto morango", true);
-            productTypeBean.create("Maquina Aparafusadora", false);
-
-            //Sensor-Type creation
-            sensorTypeBean.create("Temperature", "ºC", 30, 10);
-            sensorTypeBean.create("Humidity", "%", 80, 20);
-            sensorTypeBean.create("Luminosity", "Lumens", 1000, 500);
-
 
             //add a mandatory sensor to a product-type
             //add the mandatory sensor Temperature to the product-type Televisao LCD Samsung

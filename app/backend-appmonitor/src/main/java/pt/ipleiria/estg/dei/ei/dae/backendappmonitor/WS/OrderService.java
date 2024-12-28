@@ -25,7 +25,7 @@ public class OrderService {
     public Response getAllOrders(/*@HeaderParam("Authorization") String token*/) {
         //Deal with the token
         var orders = orderBean.findAll();
-        var ordersDTO = OrderDTO.from(orders);
+        var ordersDTO = OrderDTO.fromManager(orders);
 
         for (Order order : orders) {
             for (OrderDTO orderDTO : ordersDTO) {
