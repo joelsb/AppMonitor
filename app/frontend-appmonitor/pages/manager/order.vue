@@ -2,6 +2,7 @@
     <div>
         <!-- NavBar -->
         <NavBar />
+        <OrderDetails v-if="selectedOrder" :order="selectedOrder" @close="closeDetails" />
 
         <!-- Order Table Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
@@ -34,7 +35,7 @@
                         <tr v-for="order in paginatedOrders" :key="order.id">
                             <td class="p-3">
                                 <button 
-                                    @click="goToOrder(order.id)" 
+                                    @click="viewOrderDetails(order.id)" 
                                     class="text-blue-600 hover:underline">
                                     {{ order.id }}
                                 </button>
@@ -68,12 +69,14 @@
             </div>
         </div>
     </div>
+   
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
 import NavBar from '@/components/NavBar.vue'; // Import NavBar component
+import OrderDetails from '@/components/OrderDetails.vue';
 
 import { useRouter } from 'vue-router';
 
@@ -90,6 +93,7 @@ const error = ref(null);
 const currentPage = ref(1);
 const pageSize = 10;
 
+
 // Computed Paginated Orders
 const paginatedOrders = computed(() => 
     orders.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
@@ -99,8 +103,18 @@ const paginatedOrders = computed(() =>
 const totalPages = computed(() => Math.ceil(orders.value.length / pageSize));
 
 
-// Navigate to a specific order page by ID
-const goToOrder = (orderId) => router.push(`/order/${orderId}`);
+
+
+const selectedOrder = ref(null);
+
+const viewOrderDetails = (orderId) => {
+    selectedOrder.value = orders.value.find(order => order.id === orderId);
+};
+
+const closeDetails = () => {
+    selectedOrder.value = null;
+};
+
 
 
 // Fetch Orders Function

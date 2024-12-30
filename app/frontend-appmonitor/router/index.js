@@ -5,7 +5,7 @@ const routes = [
     {
         path: '/order/:id',  // Definindo o parâmetro `id` na URL
         name: 'OrderDetails', // Nome da rota
-        component: OrderDetails,  // Componente para renderizar os detalhes da ordem
+        component: 'OrderDetails',// Componente para renderizar os detalhes da ordem
     },
     // Outras rotas...
 ];
