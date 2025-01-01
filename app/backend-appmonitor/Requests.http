@@ -1,4 +1,4 @@
-############ EMPLOYEE RESPONSABILITIES
+mak############ EMPLOYEE RESPONSABILITIES
 
 ### GET ALL CUSTOMERS
 GET http://localhost:8080/appmonitor/api/customers
@@ -46,6 +46,10 @@ Accept: application/json
 
 ### GET SINGLE ORDERS
 GET http://localhost:8080/appmonitor/api/orders/1
+Accept: application/json
+
+### GET SINGLE VOLUME
+GET http://localhost:8080/appmonitor/api/volumes/1
 Accept: application/json
 
 
@@ -149,7 +153,7 @@ GET http://localhost:8080/appmonitor/api/volumes
 Accept: application/json
 
 ### GET A SINGLE VOLUME
-GET http://localhost:8080/appmonitor/api/volumes/105
+GET http://localhost:8080/appmonitor/api/volumes/1
 Accept: application/json
 
 

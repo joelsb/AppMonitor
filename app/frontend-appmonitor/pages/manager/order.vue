@@ -2,7 +2,6 @@
     <div>
         <!-- NavBar -->
         <NavBar />
-        <OrderDetails v-if="selectedOrder" :order="selectedOrder" @close="closeDetails" />
 
         <!-- Order Table Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
@@ -29,6 +28,7 @@
                             <th class="p-3 font-semibold text-left">Customer Name</th>
                             <th class="p-3 font-semibold text-left">Order Created Date</th>
                             <th class="p-3 font-semibold text-left">Status</th>
+                            <th class="p-3 font-semibold text-left">Count of Volumes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,6 +45,7 @@
                             <td class="p-3">
                                 {{ order.deliveredDate ? 'Entregue' : 'Por entregar' }}
                             </td>
+                            <td class="p-3">{{ order.volumes.length }}</td>
 
                         </tr>
                     </tbody>
@@ -76,11 +77,9 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
 import NavBar from '@/components/NavBar.vue'; // Import NavBar component
-import OrderDetails from '@/components/OrderDetails.vue';
+import { useRouter } from 'vue-router'; // Import useRouter apenas uma vez
 
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
+const router = useRouter(); // Mantenha apenas uma declaração de 'router'
 
 // API Config
 const config = useRuntimeConfig();
@@ -93,7 +92,6 @@ const error = ref(null);
 const currentPage = ref(1);
 const pageSize = 10;
 
-
 // Computed Paginated Orders
 const paginatedOrders = computed(() => 
     orders.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
@@ -102,17 +100,10 @@ const paginatedOrders = computed(() =>
 // Total Pages
 const totalPages = computed(() => Math.ceil(orders.value.length / pageSize));
 
-
-
-
-const selectedOrder = ref(null);
-
+// Função para ver os detalhes do pedido e redirecionar
 const viewOrderDetails = (orderId) => {
-    selectedOrder.value = orders.value.find(order => order.id === orderId);
-};
-
-const closeDetails = () => {
-    selectedOrder.value = null;
+    console.log("Navigating to OrderDetails with id:", orderId);  // Verifique se o id está correto
+    router.push({ name: 'order-id', params: { id: orderId } });
 };
 
 
@@ -153,6 +144,7 @@ onMounted(() => {
     fetchOrders();
 });
 </script>
+
 
 <style scoped>
 .table-container {

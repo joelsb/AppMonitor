@@ -79,10 +79,7 @@ public class VolumeBean {
     }
 
     public Volume findWithSensorsProducts(long id) throws MyEntityNotFoundException {
-        var volume = entityManager.find(Volume.class, id);
-        if(volume == null) {
-            throw new MyEntityNotFoundException("Volume with id: '" + id + "' not found");
-        }
+        var volume = this.find(id);
         Hibernate.initialize(volume.getSensors());
         Hibernate.initialize(volume.getProducts());
         return volume;

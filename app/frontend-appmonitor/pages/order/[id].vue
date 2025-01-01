@@ -8,15 +8,29 @@
             <p><strong>Customer Name:</strong> {{ order.customerUsername }}</p>
             <p><strong>Created Date:</strong> {{ order.createdDate }}</p>
             <p><strong>Delivered Date:</strong> {{ order.deliveredDate || 'Not Delivered Yet' }}</p>
-            <!-- Outros detalhes -->
+            <ul>
+            <li v-for="(volume, index) in order.volumes" :key="index">
+                <p><strong>Volume {{ index + 1 }}:</strong></p>
+                <button  
+                                    @click="viewVolumeDetails(volume.id)" 
+                                    class="text-dark-600 hover:underline ml-4">
+                                    {{ volume.id }}
+                </button>
+                <p class="ml-4">SentDate: {{ volume.sentDate }}</p>
+                <p class="ml-4">Status: {{ volume.deliveredDate ? 'Entregue' : 'Por entregar' }} </p>
+                <p class="ml-4">PackageType: {{ volume.packageTypeName }}</p>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#imports';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const route = useRoute();
 const config = useRuntimeConfig();
@@ -25,6 +39,12 @@ const apiUrl = config.public.API_URL;
 const order = ref(null);
 const loading = ref(false);
 const error = ref(null);
+
+const viewVolumeDetails = (volumeId) => {
+    console.log("Navigating to VolumeDetails with id:", volumeId); 
+    router.push({ name: 'volume-id', params: { id: volumeId } }); // Certifique-se de que o nome da rota é 'volume-id'
+};
+
 
 const fetchOrderDetails = async () => {
     loading.value = true;
@@ -41,6 +61,7 @@ const fetchOrderDetails = async () => {
         loading.value = false;
     }
 };
+
 
 onMounted(() => {
     fetchOrderDetails();
