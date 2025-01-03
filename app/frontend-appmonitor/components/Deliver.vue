@@ -48,7 +48,7 @@
 
 
 <script setup>
-import { ref, computed, defineProps } from 'vue';
+import { ref, computed } from 'vue';
 
 // Props
 const { volumes, orders, deliveryType } = defineProps({

@@ -116,7 +116,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRuntimeConfig } from '#imports';
 
 const config = useRuntimeConfig();
