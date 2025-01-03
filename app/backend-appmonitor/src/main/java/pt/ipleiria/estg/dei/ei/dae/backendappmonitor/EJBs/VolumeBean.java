@@ -82,6 +82,9 @@ public class VolumeBean {
         var volume = this.find(id);
         Hibernate.initialize(volume.getSensors());
         Hibernate.initialize(volume.getProducts());
+        for (var sensor : volume.getSensors()) {
+            Hibernate.initialize(sensor.getHistory());
+        }
         return volume;
     }
 

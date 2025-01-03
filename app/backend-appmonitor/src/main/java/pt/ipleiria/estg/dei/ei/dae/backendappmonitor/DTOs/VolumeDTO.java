@@ -26,8 +26,6 @@ public class VolumeDTO {
     private List<ProductRecordDTO> products;
     private List<SensorDTO> sensors;
     private Long orderId;
-    private boolean excludeProducts = true;
-    private boolean excludeSensors = true;
 
     public VolumeDTO() {
     }
@@ -128,7 +126,7 @@ public class VolumeDTO {
     }
 
     public List<ProductRecordDTO> getProducts() {
-        return excludeProducts ? null : new ArrayList<>(products) ;
+        return  new ArrayList<>(products) ;
     }
 
     public void setProducts(List<ProductRecordDTO> products) {
@@ -137,7 +135,7 @@ public class VolumeDTO {
     }
 
     public List<SensorDTO> getSensors() {
-        return excludeSensors ? null : new ArrayList<>(sensors);
+        return  new ArrayList<>(sensors);
     }
 
     public void setSensors(List<SensorDTO> sensors) {
@@ -152,12 +150,5 @@ public class VolumeDTO {
         this.orderId = orderId;
     }
 
-    public void setExcludeProducts(boolean excludeProducts) {
-        this.excludeProducts = excludeProducts;
-    }
-
-    public void setExcludeSensors(boolean excludeSensors) {
-        this.excludeSensors = excludeSensors;
-    }
 
 }
