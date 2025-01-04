@@ -1,3 +1,5 @@
+
+
 <template>
     <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
         <!-- Header and Filters -->
@@ -13,6 +15,11 @@
                     <label for="notDelivered" class="ml-2 text-lg">{{ deliveryType }}s not Delivered</label>
                 </div>
             </div>
+        </div>
+
+        <!-- Error Message -->
+        <div v-if="errorMessage" class="mb-4 p-4 text-red-600 bg-red-100 border border-red-400 rounded">
+            {{ errorMessage }}
         </div>
 
         <!-- Table -->
@@ -36,7 +43,7 @@
                         <button class="bg-blue-500 text-white py-1 px-3 rounded" :class="{
                             'bg-blue-500 hover:bg-blue-600': !item.deliveredDate,
                             'bg-gray-400 cursor-not-allowed': item.deliveredDate
-                        }" :disabled="item.deliveredDate" @click="deliver(item)">
+                        }" :disabled="item.deliveredDate" @click="deliver(item.id)">
                             Deliver
                         </button>
                     </td>
@@ -45,10 +52,12 @@
         </table>
     </div>
 </template>
-
-
 <script setup>
 import { ref, computed, defineProps } from 'vue';
+import axios from 'axios';
+
+const config = useRuntimeConfig();
+const apiUrl = config.public.API_URL;
 
 // Props
 const { volumes, orders, deliveryType } = defineProps({
@@ -60,6 +69,9 @@ const { volumes, orders, deliveryType } = defineProps({
 // Filter state
 const filter = ref('all');  // "all" or "notDelivered"
 
+// Error state
+const errorMessage = ref(null);
+
 // Filtered items computed property
 const filteredItems = computed(() => {
     const items = deliveryType === 'Volume' ? volumes : orders;
@@ -67,9 +79,20 @@ const filteredItems = computed(() => {
 });
 
 // Deliver function
-const deliver = (item) => {
-    item.deliveredDate = new Date().toISOString();
-    // TODO: Implement API call to update delivery status
-};
-</script>
+async function deliver(itemId) {
+    const endpoint = deliveryType === 'Volume' ? 'volumes' : 'orders';
+    const url = `${apiUrl}/${endpoint}/${itemId}/delivered`;
 
+    try {
+        const response = await axios.patch(url);
+        console.info(`${deliveryType} entregue com sucesso:`, response.data);
+        errorMessage.value = null; // Limpa a mensagem de erro, se houver
+        return response.data;
+    } catch (error) {
+        const message = error.response?.data?.message || error.message || 'Erro desconhecido ao entregar.';
+        console.error(`Erro ao entregar o ${deliveryType.toLowerCase()}:`, message);
+        errorMessage.value = message; // Mostra a mensagem do console no erro na UI
+        throw error;
+    }
+}
+</script>

@@ -12,7 +12,7 @@
             <p class="ml"><strong>Package Type:</strong> {{ volume.packageTypeName }}</p>
             <ul>
             <li v-for="(product, index) in volume.products" :key="index">
-                <p class="ml-4"><strong>Product {{ product.productId }}:</strong></p>
+                <p class="ml-4"><strong>Product:</strong> {{ product.productName }}:</p>
                 <p class="ml-8">Quantidade: {{ product.quantity }}</p>
             </li>
             </ul>

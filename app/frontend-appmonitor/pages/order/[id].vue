@@ -7,15 +7,10 @@
             <p><strong>Order ID:</strong> {{ order.id }}</p>
             <p><strong>Customer Name:</strong> {{ order.customerUsername }}</p>
             <p><strong>Created Date:</strong> {{ order.createdDate }}</p>
-            <p><strong>Delivered Date:</strong> {{ order.deliveredDate || 'Not Delivered Yet' }}</p>
+            <p><strong>Delivered Date:</strong> {{ order.deliveredDate || 'Por entregar' }}</p>
             <ul>
             <li v-for="(volume, index) in order.volumes" :key="index">
-                <p><strong>Volume {{ index + 1 }}:</strong></p>
-                <button  
-                                    @click="viewVolumeDetails(volume.id)" 
-                                    class="text-dark-600 hover:underline ml-4">
-                                    {{ volume.id }}
-                </button>
+                <button @click="viewVolumeDetails(volume.id)"  ><p><strong>Volume {{ index + 1 }}:</strong></p></button>
                 <p class="ml-4">SentDate: {{ volume.sentDate }}</p>
                 <p class="ml-4">Status: {{ volume.deliveredDate ? 'Entregue' : 'Por entregar' }} </p>
                 <p class="ml-4">PackageType: {{ volume.packageTypeName }}</p>

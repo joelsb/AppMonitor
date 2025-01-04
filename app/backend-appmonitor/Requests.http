@@ -1,7 +1,15 @@
-mak############ EMPLOYEE RESPONSABILITIES
+############ EMPLOYEE RESPONSABILITIES
 
 ### GET ALL CUSTOMERS
 GET http://localhost:8080/appmonitor/api/customers
+Accept: application/json
+
+### SET A DELIVER VOLUME
+PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
+Accept: application/json
+
+### SET A DELIVER ORDER
+PATCH http://localhost:8080/appmonitor/api/orders/1/delivered
 Accept: application/json
 
 ### GET A SINGLE CUSTOMER
