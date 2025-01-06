@@ -16,6 +16,18 @@ Accept: application/json
 GET http://localhost:8080/appmonitor/api/customers/Joel
 Accept: application/json
 
+###GET ORDERS OF A CLIENT
+GET http://localhost:8080/appmonitor/api/customers/Tiago/orders
+Accept: application/json
+
+###GET SENSORS OF VOLUME
+GET http://localhost:8080/appmonitor/api/volumes/1/sensors
+Accept: application/json
+
+###GET PRODUCTS OF VOLUME
+GET http://localhost:8080/appmonitor/api/volumes/1/products
+Accept: application/json
+
 ### GET ALL PRODUCTS-TYPES
 GET http://localhost:8080/appmonitor/api/product-types
 Accept: application/json

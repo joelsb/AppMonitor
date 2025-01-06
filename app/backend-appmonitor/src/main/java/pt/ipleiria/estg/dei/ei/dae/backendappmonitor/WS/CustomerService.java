@@ -12,11 +12,14 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.CustomerBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.OrderBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeDTO;
+
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
 import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("customers")
@@ -61,6 +64,36 @@ public class CustomerService {
         }).collect(Collectors.toList());
         return Response.ok(customersDTO).build();
     }
+
+    @GET
+    @Path("/{username}/orders")
+    public Response getAllOrdersByCustomerId(@PathParam("username") String username) throws MyEntityNotFoundException {
+        // Fetch customer with orders
+        var customer = customerBean.findWithOrders(username);
+        if (customer == null) {
+            throw new MyEntityNotFoundException("Customer not found for username: " + username);
+        }
+
+        // Map customer to DTO
+        var customerDTO = CustomerDTO.fromEmployee(customer);
+
+        // Map orders to DTO
+        var orders = customer.getOrders();
+        var ordersDTO = OrderDTO.from(orders);
+        for(Order order : orders) {
+            for (OrderDTO orderDTO : ordersDTO) {
+                orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
+            }
+        }
+
+
+        // Set orders in CustomerDTO (if necessary)
+        customerDTO.setOrders(ordersDTO);
+
+        // Return orders or the customerDTO based on requirements
+        return Response.ok(ordersDTO).build();
+    }
+
 
     @GET
     @Path("/orders/{id}/volumes")

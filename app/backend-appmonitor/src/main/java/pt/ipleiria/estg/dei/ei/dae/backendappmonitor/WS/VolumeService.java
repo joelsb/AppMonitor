@@ -33,6 +33,19 @@ public class VolumeService {
         return Response.ok(volumeDTO).build();
     }
 
+    @GET
+    @Path("/{id}/sensors")
+    public Response getAllSensors(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var volume = volumeBean.findWithSensorsProducts(id);
+        return Response.ok(SensorDTO.from(volume.getSensors())).build();
+    }
+    @GET
+    @Path("/{id}/products")
+    public Response getAllProducts(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var volume = volumeBean.findWithSensorsProducts(id);
+        return Response.ok(ProductRecordDTO.from(volume.getProducts())).build();
+    }
+
     @POST
     @Path("/")
     public Response addVolume(VolumeCreateDTO volumeCreatedDTO) throws MyEntityNotFoundException, MyEntityExistsException {

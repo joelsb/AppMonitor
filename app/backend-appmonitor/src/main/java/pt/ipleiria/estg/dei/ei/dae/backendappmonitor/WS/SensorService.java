@@ -20,6 +20,7 @@ public class SensorService {
     @EJB
     private SensorBean sensorBean;
 
+
     @GET
     @Path("/{id}")
     public Response getSensorData(@PathParam("id") long id) throws MyEntityNotFoundException {

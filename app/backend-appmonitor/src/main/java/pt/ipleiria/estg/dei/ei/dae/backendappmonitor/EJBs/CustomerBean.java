@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
@@ -31,6 +32,10 @@ public class CustomerBean {
         var customer = this.find(username);
         //Initialize the lazy collection
         Hibernate.initialize(customer.getOrders());
+        var orders = customer.getOrders();
+        for(Order order : orders) {
+            Hibernate.initialize(order.getVolumes());
+        }
         return customer;
     }
 
