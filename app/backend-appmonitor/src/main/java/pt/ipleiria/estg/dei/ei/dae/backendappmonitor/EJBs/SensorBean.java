@@ -37,12 +37,12 @@ public class SensorBean implements Serializable {
         return sensor;
     }
 
-    public Sensor create(long sensorTypeId, Long volumeId) {
+    public Sensor create(long id,long sensorTypeId, Long volumeId) {
 
 
             var sensorType = entityManager.find(SensorType.class, sensorTypeId);
             //var volume = entityManager.find(Volume.class, volumeId);
-            var sensor = new Sensor(sensorType, null);
+            var sensor = new Sensor(id, sensorType, null);
             entityManager.persist(sensor);
             return sensor;
     }

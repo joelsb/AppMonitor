@@ -1,9 +1,9 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.WS;
 
+import jakarta.annotation.security.*;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.*;
 
 import org.hibernate.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.CustomerDTO;
@@ -16,19 +16,28 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.*;
 
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Path("customers")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
+@Authenticated
+@RolesAllowed({"Manager"})
 public class CustomerService {
     @EJB
     private CustomerBean customerBean;
     private OrderBean orderBean;
+
+    @Context
+    private SecurityContext securityContext;
+
+    private static final Logger logger = Logger.getLogger("WS.CustomerService");
 
 //    @GET
 //    @Path("/")
@@ -38,7 +47,16 @@ public class CustomerService {
 
     @GET
     @Path("{username}")
+    @RolesAllowed({"Customer"})
     public Response getCustomerWithOrdersIds(@PathParam("username") String username) throws MyEntityNotFoundException {
+        var principal = securityContext.getUserPrincipal();
+
+        if(!principal.getName().equals(username)) {
+            // write to the log the principal.getName() and the username
+            logger.warning("Principal name: " + principal.getName() + " does not match username: " + username);
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
         var customerWithOrders = customerBean.findWithOrders(username);
         var customerDTO = CustomerDTO.fromEmployee(customerWithOrders);
 

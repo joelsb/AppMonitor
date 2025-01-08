@@ -8,34 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class VolumeCreateDTO {
-    /*
-    Message received:
-    "id": 12,
-    "sentDate": "2021-06-01T00:00:00",
-    "orderId": 26,
-    "packageId": 9900,
-    "products":
-    [
-        {
-            "productId": 1,
-            "quatity": 1
-        },
-        {
-            "productId": 2,
-            "quatity": 3
-        }
-    ],
-    "sensors": [
-        {
-            "id": 1,
-            "sensorTypeId": 1
-        },
-        {
-            "id": 2,
-            "sensorTypeId": 2
-        }
-    ]
-     */
     private long id;
     private Date sentDate;
     private Date deliveredDate;
@@ -47,7 +19,7 @@ public class VolumeCreateDTO {
     public VolumeCreateDTO() {
     }
 
-    public VolumeCreateDTO(long id, Date sentDate, Date deliveredDate,long packageTypeId, Long orderId) {
+    public VolumeCreateDTO(long id, Date sentDate, Date deliveredDate, Long orderId, long packageTypeId) {
         this.id = id;
         this.sentDate = sentDate;
         this.deliveredDate = deliveredDate;
@@ -60,8 +32,8 @@ public class VolumeCreateDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 null,
-                volume.getPackageType().getId(),
-                null);
+                null,
+                volume.getPackageType().getId());
     }
 
     public static List<VolumeCreateDTO> from(List<Volume> volumes) {

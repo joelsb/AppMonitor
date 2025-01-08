@@ -46,7 +46,7 @@ public class OrderDTO {
 
 
     public static List<OrderDTO> fromManager(List<Order> orders) {
-        return orders.stream().map(OrderDTO::from).collect(Collectors.toList());
+        return orders.stream().map(OrderDTO::fromManager).collect(Collectors.toList());
     }
 
     public static List<OrderDTO> from(List<Order> orders) {

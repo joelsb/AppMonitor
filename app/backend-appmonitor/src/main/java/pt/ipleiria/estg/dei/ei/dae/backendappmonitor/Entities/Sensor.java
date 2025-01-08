@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "sensors")
+@NamedQueries(
+        @NamedQuery(
+                name = "getAllSensors",
+                query = "SELECT s FROM Sensor s ORDER BY s.id"
+        )
+)
+
 @Entity
 public class Sensor extends Versionable implements Serializable {
     /*
@@ -17,7 +24,6 @@ public class Sensor extends Versionable implements Serializable {
     history-List<SensorRecord>
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     @ManyToOne
@@ -32,7 +38,8 @@ public class Sensor extends Versionable implements Serializable {
     public Sensor() {
     }
 
-    public Sensor( SensorType sensorType, Volume volume) {
+    public Sensor(long id, SensorType sensorType, Volume volume) {
+        this.id = id;
         this.sensorType = sensorType;
         this.volume = volume;
     }

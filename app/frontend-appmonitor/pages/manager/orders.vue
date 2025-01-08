@@ -41,7 +41,7 @@
                                 </button>
                             </td>
                             <td class="p-3">{{ order.customerUsername }}</td>
-                            <td class="p-3">{{ order.createdDate }}</td>
+                            <td class="p-3">{{ new Date(order.createdDate).toLocaleString() }}</td>
                             <td class="p-3">
                                 {{ order.deliveredDate ? 'Entregue' : 'Por entregar' }}
                             </td>
@@ -118,6 +118,7 @@ const fetchOrders = async () => {
             throw new Error(`Failed to fetch: ${response.statusText}`);
         }
         orders.value = await response.json();
+        console.log('Orders:', orders.value);
     } catch (err) {
         error.value = err.message;
         console.error(err);

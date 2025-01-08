@@ -7,8 +7,10 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.VolumeBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 @Path("volumes")
 @Produces({MediaType.APPLICATION_JSON})
@@ -17,10 +19,16 @@ public class VolumeService {
     @EJB
     private VolumeBean volumeBean;
 
+    private static final Logger logger = Logger.getLogger("WS.VolumeService");
+
     @GET
     @Path("/")
     public Response getAllVolumes() {
-        return Response.ok(VolumeDTO.from(volumeBean.findAll())).build();
+        var volumes = volumeBean.findAll();
+        logger.info("Volumes: " + volumes.get(0).getSentDate());
+        var volumeDTOs = VolumeDTO.fromEmployee(volumes);
+        logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
+        return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
     }
 
     @GET
@@ -58,9 +66,9 @@ public class VolumeService {
     }
 
     @PATCH
-    @Path("{id}/delivered")
-    public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException {
-        volumeBean.setDelivered(id);
+    @Path("{id}/deliver")
+    public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        volumeBean.deliver(id);
         var volume = volumeBean.find(id);
         var volumeDTO = VolumeDTO.fromManager(volume);
         return Response.ok(volumeDTO).build();

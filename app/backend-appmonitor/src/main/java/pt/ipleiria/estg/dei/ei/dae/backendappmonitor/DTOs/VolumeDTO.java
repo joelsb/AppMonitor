@@ -8,23 +8,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class VolumeDTO {
-    /*
-    Atributes
-    id: long
-    sentDate: Date
-    deliveredDate: Date
-    package: PackageType
-    products: List<ProductRecord>
-    sensors: List<Sensor>
-    order: Order (não detalhado no diagrama)
-     */
     private long id;
     private Date sentDate;
     private Date deliveredDate;
     private String packageTypeName;
     private Long packageTypeId;
-    private List<ProductRecordDTO> products;
-    private List<SensorDTO> sensors;
+    private List<ProductRecordDTO> products = new ArrayList<>();
+    private List<SensorDTO> sensors = new ArrayList<>();
     private Long orderId;
 
     public VolumeDTO() {
@@ -35,8 +25,6 @@ public class VolumeDTO {
         this.sentDate = sentDate;
         this.deliveredDate = deliveredDate;
         this.packageTypeId = packageTypeId;
-        this.products = new ArrayList<>();
-        this.sensors = new ArrayList<>();
         this.orderId = orderId;
         this.packageTypeName = packageTypeName;
     }
@@ -58,17 +46,17 @@ public class VolumeDTO {
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
                 null,
-                null,
+                volume.getOrder().getId(),
                 null
         );
     }
     public static VolumeDTO fromEmployee(Volume volume){
         return new VolumeDTO(
                 volume.getId(),
+                volume.getSentDate(),
+                volume.getDeliveredDate(),
                 null,
-                null,
-                null,
-                null,
+                volume.getOrder().getId(),
                 null
         );
     }

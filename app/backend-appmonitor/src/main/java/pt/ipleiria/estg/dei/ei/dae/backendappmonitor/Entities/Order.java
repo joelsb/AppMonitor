@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Entity
 @Table(name = "orders")
@@ -22,7 +23,6 @@ import java.util.List;
 
 public class Order extends Versionable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     private Date createdDate;
@@ -38,7 +38,8 @@ public class Order extends Versionable implements Serializable {
     public Order() {
     }
 
-    public Order( Date createdDate, Customer customer) {
+    public Order(long id, Date createdDate, Customer customer) {
+        this.id = id;
         this.createdDate = createdDate;
         this.deliveredDate = null;
         this.customer = customer;

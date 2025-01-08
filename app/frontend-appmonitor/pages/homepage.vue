@@ -58,7 +58,6 @@ const fetchData = async (url, targetRef) => {
 };
 
 onMounted(() => {
-    fetchData('/customers', customers);
     fetchData('/package-types', packageTypes);
     fetchData('/product-types', products);
     fetchData('/sensor-types', sensorTypes);

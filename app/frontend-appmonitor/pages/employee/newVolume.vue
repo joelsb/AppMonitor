@@ -24,7 +24,7 @@
 
     <!-- Conditionally render OrderForm or VolumeForm based on isOrderCreated -->
     <div v-if="isOrderCreated === true">
-        <VolumeForm :packageTypes="packageTypes" :products="products" :sensorTypes="sensorTypes"
+        <VolumeForm :orders="orders" :packageTypes="packageTypes" :products="products" :sensorTypes="sensorTypes"
             @formSubmitted="handleFormSubmission" @infoMandatorySensors="handleInfoMandatorySensors" @infoMandatoryPackage="handleInfoMandatoryPackage" />
     </div>
 
@@ -56,6 +56,7 @@ const customers = ref([]);
 const packageTypes = ref([]);
 const products = ref([]);
 const sensorTypes = ref([]);
+const orders = ref([]);
 
 // PopUp state
 const showPopup = ref(false);
@@ -76,7 +77,7 @@ const fetchData = async (url, targetRef) => {
 };
 
 onMounted(() => {
-    fetchData('/customers', customers);
+    fetchData('/orders', orders);
     fetchData('/package-types', packageTypes);
     fetchData('/product-types', products);
     fetchData('/sensor-types', sensorTypes);
@@ -139,7 +140,6 @@ const handleInfoMandatorySensors = (sensors) => {
 
     // Set the message and show the popup
     popupMessage.value = message;
-    console.log(popupMessage.value);
     popupType.value = 'info';
     showPopup.value = true;
 };

@@ -30,7 +30,11 @@
     </div>
 
     <!-- Conditionally render Deliver Component passing order or volume as props -->
-    <Deliver :deliveryType="deliveryType" :orders="orders" :volumes="volumes" />
+    <Deliver :deliveryType="deliveryType" :orders="orders" :volumes="volumes" @formSubmitted="handleFormSubmission"/>
+
+    <!-- Success, Failure or Information Popup -->
+    <Popup :show="showPopup" :title="popupTitle" :message="popupMessage" :type="popupType" @close="closePopup" />
+
 
 </template>
 
@@ -41,12 +45,19 @@ import { ref, watch } from 'vue';
 import { useRuntimeConfig } from '#imports';
 import NavBar from '@/components/NavBar.vue'; // Import the NavBar component
 import Deliver from '@/components/Deliver.vue';
+import Popup from '@/components/Popup.vue'; // Import the Popup component
 
 // API and Router Setup
 const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 const orders = ref([]);
 const volumes = ref([]);
+
+// PopUp state
+const showPopup = ref(false);
+const popupTitle = ref('');
+const popupMessage = ref('');
+const popupType = ref('info'); // Can be 'success' or 'error'
 
 const deliveryType = ref('Order'); // Default is 'Order', can be changed to 'Volume'
 
@@ -67,14 +78,31 @@ const fetchDeliveryData = async (type) => {
 
 onMounted(() => {
     fetchDeliveryData(deliveryType.value);
+   
 });
 
 // Watch for changes in the delivery type and fetch new data
 watch(deliveryType, async (newValue) => {
     // Wait for data to be fetched before logging
     await fetchDeliveryData(newValue);  
-    
-    console.log('Orders: ', orders.value);  
-    console.log('Volumes: ', volumes.value);  
 });
+
+// Handle form submission
+const handleFormSubmission = (status, message) => {
+    if (status === 'success') {
+        popupTitle.value = 'Success!';
+        popupMessage.value = message;
+        popupType.value = 'success';
+    } if (status === 'error') {
+        popupTitle.value = 'Error!';
+        popupMessage.value = message;
+        popupType.value = 'failure';
+    }
+    showPopup.value = true;
+};
+
+// Close the popup
+const closePopup = () => {
+    showPopup.value = false;
+};
 </script>

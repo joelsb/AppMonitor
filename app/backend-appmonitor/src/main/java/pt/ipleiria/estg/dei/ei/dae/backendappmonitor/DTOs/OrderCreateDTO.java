@@ -9,12 +9,12 @@ public class OrderCreateDTO {
     private long id;
     private String customerUsername;
     private Date createdDate;
-    private VolumeDTO volume;
+    private VolumeCreateDTO volume;
 
     public OrderCreateDTO() {
     }
 
-    public OrderCreateDTO(long id, String customerUsername, Date createdDate, VolumeDTO volume) {
+    public OrderCreateDTO(long id, String customerUsername, Date createdDate, VolumeCreateDTO volume) {
         this.id = id;
         this.customerUsername = customerUsername;
         this.createdDate = createdDate;
@@ -45,11 +45,11 @@ public class OrderCreateDTO {
         this.createdDate = createdDate;
     }
 
-    public VolumeDTO getVolume() {
+    public VolumeCreateDTO getVolume() {
         return volume;
     }
 
-    public void setVolume(VolumeDTO volume) {
+    public void setVolume(VolumeCreateDTO volume) {
         this.volume = volume;
     }
 }

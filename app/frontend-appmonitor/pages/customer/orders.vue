@@ -41,9 +41,9 @@
                                 </button>
                             </td>
                             <td class="p-3">{{ order.customerUsername }}</td>
-                            <td class="p-3">{{ order.createdDate }}</td>
+                            <td class="p-3">{{ new Date(order.createdDate).toLocaleString() }}</td>
                             <td class="p-3">
-                                {{ order.deliveredDate ? 'Entregue' : 'Por entregar' }}
+                                {{ order.deliveredDate ? 'Delivered' : 'Not Delivered' }}
                             </td>
                             <td class="p-3">{{ order.volumes.length }}</td>
 

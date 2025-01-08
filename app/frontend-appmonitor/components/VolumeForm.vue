@@ -4,7 +4,12 @@
             <!-- Order ID -->
             <div class="mb-4">
                 <label for="orderId" class="block font-semibold">Order ID:</label>
-                <input id="orderId" v-model="form.orderId" type="number" class="w-full p-2 border rounded" />
+                <select id="orderId" v-model="form.orderId" class="w-full p-2 border rounded">
+                    <option value="" disabled>Select an Order</option>
+                    <option v-for="order in orders" :key="order.id" :value="order.id">
+                        {{ order.id }}
+                    </option>
+                </select>
             </div>
 
             <!-- Volume ID -->
@@ -30,17 +35,21 @@
                         </option>
                     </select>
                     <label :for="'quantity-' + index" class="block">Quantity:</label>
-                    <input :id="'quantity-' + index" v-model="product.quantity" type="number" class="w-full p-2 border rounded" />
-                    <button type="button" @click="removeItem(form.products, index)" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
+                    <input :id="'quantity-' + index" v-model="product.quantity" type="number"
+                        class="w-full p-2 border rounded" />
+                    <button type="button" @click="removeItem(form.products, index)"
+                        class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
                 </div>
-                <button type="button" @click="addItem(form.products)" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">Add Product</button>
+                <button type="button" @click="addItem(form.products)"
+                    class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">Add Product</button>
             </fieldset>
 
             <!-- Package Type -->
             <div class="mb-2">
                 <label class="flex items-center font-semibold">
                     Package Type:
-                    <button type="button" @click="showMandatoryPackage" class="ml-2 text-blue-500 hover:text-blue-700"><i class="fas fa-info-circle"></i> Info</button>
+                    <button type="button" @click="showMandatoryPackage"
+                        class="ml-2 text-blue-500 hover:text-blue-700"><i class="fas fa-info-circle"></i> Info</button>
                 </label>
                 <select v-model="form.packageTypeId" class="w-full p-2 border rounded">
                     <option value="">No Package Type</option>
@@ -55,22 +64,28 @@
             <fieldset class="border p-4 rounded mb-4">
                 <legend class="font-semibold flex items-center">
                     Sensors:
-                    <button type="button" @click="showMandatorySensors" class="ml-2 text-blue-500 hover:text-blue-700"><i class="fas fa-info-circle"></i> Info</button>
+                    <button type="button" @click="showMandatorySensors"
+                        class="ml-2 text-blue-500 hover:text-blue-700"><i class="fas fa-info-circle"></i> Info</button>
                 </legend>
                 <div v-for="(sensor, index) in form.sensors" :key="index" class="mb-2">
                     <label :for="'sensorTypeId-' + index" class="block">Sensor Type:</label>
-                    <select :id="'sensorTypeId-' + index" v-model="sensor.sensorTypeId" class="w-full p-2 border rounded">
+                    <select :id="'sensorTypeId-' + index" v-model="sensor.sensorTypeId"
+                        class="w-full p-2 border rounded">
                         <option v-for="type in sensorTypes" :key="type.id" :value="type.id">{{ type.name }}</option>
                     </select>
                     <label :for="'sensorId-' + index" class="block">Sensor ID:</label>
-                    <input :id="'sensorId-' + index" v-model="sensor.id" type="number" class="w-full p-2 border rounded" />
-                    <button type="button" @click="removeItem(form.sensors, index)" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
+                    <input :id="'sensorId-' + index" v-model="sensor.id" type="number"
+                        class="w-full p-2 border rounded" />
+                    <button type="button" @click="removeItem(form.sensors, index)"
+                        class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
                 </div>
-                <button type="button" @click="addItem(form.sensors)" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">Add Sensor</button>
+                <button type="button" @click="addItem(form.sensors)"
+                    class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">Add Sensor</button>
             </fieldset>
 
             <!-- Submit Button -->
-            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Create new volume</button>
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Create new
+                volume</button>
         </form>
     </div>
 </template>
@@ -83,9 +98,10 @@ const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 const emit = defineEmits(['formSubmitted', 'infoMandatorySensors', 'infoMandatoryPackage']);
 
-const { packageTypes, products, sensorTypes } = defineProps({
-    packageTypes: Array, products: Array, sensorTypes: Array
+const { orders, packageTypes, products, sensorTypes } = defineProps({
+    orders: Array, packageTypes: Array, products: Array, sensorTypes: Array
 });
+
 
 const form = ref({
     orderId: 27, id: 105, sentDate: '2021-06-01T00:00:00', packageTypeId: 1,
@@ -134,5 +150,3 @@ const showMandatorySensors = () => {
 
 const showMandatoryPackage = () => emit('infoMandatoryPackage', requiresMandatoryPackage.value);
 </script>
-
-

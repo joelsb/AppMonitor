@@ -10,6 +10,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Path("orders")
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 public class OrderService {
     @EJB
     private OrderBean orderBean;
+
+    private static final Logger logger = Logger.getLogger("WS.OrderService");
 
     @GET
     @Path("/")
@@ -107,9 +110,9 @@ public class OrderService {
     }
 
     @PATCH
-    @Path("{id}/delivered")
-    public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException {
-        orderBean.setDelivered(id);
+    @Path("{id}/deliver")
+    public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException, MyEntityExistsException {
+        orderBean.deliver(id);
         var order = orderBean.find(id);
         var orderDTO = OrderDTO.fromManager(order);
         return Response.ok(orderDTO).build();

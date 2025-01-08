@@ -22,6 +22,6 @@ const router = useRouter();
 
 // Navigate to the delivery page
 const orderPage = () => {
-    router.push('/customer/order');
+    router.push('/customer/orders');
 };
 </script>
