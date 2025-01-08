@@ -109,7 +109,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits, watch, onMounted } from 'vue';
+import { ref, computed,  watch, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
 
 const config = useRuntimeConfig();
