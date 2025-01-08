@@ -4,8 +4,28 @@
 GET http://localhost:8080/appmonitor/api/customers
 Accept: application/json
 
+### SET A DELIVER VOLUME
+PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
+Accept: application/json
+
+### SET A DELIVER ORDER
+PATCH http://localhost:8080/appmonitor/api/orders/1/delivered
+Accept: application/json
+
 ### GET A SINGLE CUSTOMER
 GET http://localhost:8080/appmonitor/api/customers/Joel
+Accept: application/json
+
+###GET ORDERS OF A CLIENT
+GET http://localhost:8080/appmonitor/api/customers/Tiago/orders
+Accept: application/json
+
+###GET SENSORS OF VOLUME
+GET http://localhost:8080/appmonitor/api/volumes/1/sensors
+Accept: application/json
+
+###GET PRODUCTS OF VOLUME
+GET http://localhost:8080/appmonitor/api/volumes/1/products
 Accept: application/json
 
 ### GET ALL PRODUCTS-TYPES
@@ -46,6 +66,10 @@ Accept: application/json
 
 ### GET SINGLE ORDERS
 GET http://localhost:8080/appmonitor/api/orders/1
+Accept: application/json
+
+### GET SINGLE VOLUME
+GET http://localhost:8080/appmonitor/api/volumes/1
 Accept: application/json
 
 
@@ -149,7 +173,7 @@ GET http://localhost:8080/appmonitor/api/volumes
 Accept: application/json
 
 ### GET A SINGLE VOLUME
-GET http://localhost:8080/appmonitor/api/volumes/105
+GET http://localhost:8080/appmonitor/api/volumes/1
 Accept: application/json
 
 

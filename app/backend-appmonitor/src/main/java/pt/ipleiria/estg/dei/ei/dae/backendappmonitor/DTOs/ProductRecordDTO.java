@@ -17,15 +17,17 @@ public class ProductRecordDTO {
     public long productId;
     public int quantity;
     public Long volumeId;
+    public String productName;
 
     public ProductRecordDTO() {
     }
 
-    public ProductRecordDTO(Long id, long productId, int quantity, Long volumeId) {
+    public ProductRecordDTO(Long id, long productId, int quantity, Long volumeId, String productName) {
         this.id = id;
         this.productId = productId;
         this.quantity = quantity;
         this.volumeId = volumeId;
+        this.productName = productName;
     }
 
     public static ProductRecordDTO from(ProductRecord productRecord) {
@@ -33,7 +35,8 @@ public class ProductRecordDTO {
                 null,
                 productRecord.getProduct().getId(),
                 productRecord.getQuantity(),
-                null
+                null,
+                productRecord.getProduct().getName()
         );
     }
 
@@ -72,4 +75,7 @@ public class ProductRecordDTO {
     public void setVolumeId(Long volumeId) {
         this.volumeId = volumeId;
     }
+
+    public String getProductName() {return productName;}
+    public void setProductName(String productName) {this.productName = productName;}
 }

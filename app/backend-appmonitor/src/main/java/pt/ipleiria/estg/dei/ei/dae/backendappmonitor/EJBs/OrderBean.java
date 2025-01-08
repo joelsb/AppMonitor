@@ -205,4 +205,21 @@ public class OrderBean {
         return order;
     }
 
+    public Order setDelivered(long id) throws MyEntityNotFoundException {
+        var order = entityManager.find(Order.class, id);
+        if (order == null) {
+            throw new MyEntityNotFoundException("Order with id: '" + id + "' not found");
+        }
+        Date date = Date.from(new Date().toInstant());
+        for (Volume volume : order.getVolumes()) {
+            if(volume.getDeliveredDate() == null) {
+                throw new MyEntityNotFoundException("Order with id: '" + id + "' have volumes not delivered");
+            }
+        }
+        order.setDeliveredDate(date);
+        entityManager.persist(order);
+        return order;
+
+    }
+
 }

@@ -45,11 +45,12 @@ public class SensorDTO {
     public static SensorDTO from(Sensor sensor) {
         return new SensorDTO(
                 sensor.getId(),
-                sensor.getSensorType().getId(),
-                sensor.getSensorType()== null ? null : SensorTypeDTO.from(sensor.getSensorType()),
+                sensor.getSensorType() == null ? null : sensor.getSensorType().getId(),
+                sensor.getSensorType() == null ? null : SensorTypeDTO.from(sensor.getSensorType()),
                 null,
                 sensor.getHistory() == null ? null : SensorRecordDTO.from(sensor.getHistory())
         );
+
     }
 
     public static List<SensorDTO> fromHistory(List<Sensor> sensors) {

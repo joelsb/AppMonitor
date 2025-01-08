@@ -25,7 +25,7 @@ public class OrderService {
     public Response getAllOrders(/*@HeaderParam("Authorization") String token*/) {
         //Deal with the token
         var orders = orderBean.findAll();
-        var ordersDTO = OrderDTO.from(orders);
+        var ordersDTO = OrderDTO.fromManager(orders);
 
         for (Order order : orders) {
             for (OrderDTO orderDTO : ordersDTO) {
@@ -50,7 +50,7 @@ public class OrderService {
         //For Manager
         var order = orderBean.findWithVolumes(id);
         var orderDTO = OrderDTO.fromManager(order);
-        orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
+        orderDTO.setVolumes(VolumeDTO.from(order.getVolumes()));
         return Response.ok(orderDTO).build();
     }
 
@@ -104,6 +104,15 @@ public class OrderService {
         var order = orderBean.findWithVolumes(id);
         var volumeDTO = VolumeDTO.from(order.getVolumes());
         return Response.ok(volumeDTO).build();
+    }
+
+    @PATCH
+    @Path("{id}/delivered")
+    public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException {
+        orderBean.setDelivered(id);
+        var order = orderBean.find(id);
+        var orderDTO = OrderDTO.fromManager(order);
+        return Response.ok(orderDTO).build();
     }
 
 
