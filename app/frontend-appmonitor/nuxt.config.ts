@@ -4,13 +4,16 @@ export default defineNuxtConfig({
     '~/assets/main.css', // Include your global CSS here
     '~/assets/fontawesome/css/all.min.css', // Include FontAwesome CSS
   ],
+
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
+
   runtimeConfig: { 
     public: { 
       API_URL: process.env.API_URL || 'http://localhost:8080/appmonitor/api' 
     } 
   },
+
   app: {
     head: {
       link: [
@@ -21,10 +24,13 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
+
+  modules: ['@pinia/nuxt']
 })

@@ -188,7 +188,6 @@ Accept: application/json
 
 ############ LOGIN RESPONSABILITIES
 
-> {% client.global.set('jwt-token', response.body) %}
 
 ### REQUEST JWT TOKEN
 POST http://localhost:8080/appmonitor/api/auth/login
@@ -197,6 +196,7 @@ Accept: application/json
 
 { "username": "Joel", "password": "123"}
 
+> {% client.global.set('jwt-token', response.body) %}
 
 ### GET ALL CUSTOMERS
 GET http://localhost:8080/appmonitor/api/customers/Joel
