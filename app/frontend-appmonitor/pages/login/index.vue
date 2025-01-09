@@ -13,7 +13,7 @@
                         <input class="form-control" id="username" v-model="username"
                             placeholder="Enter your username" />
                         <!-- Error Message for Username -->
-                        
+
                     </div>
                 </div>
 
@@ -27,9 +27,9 @@
                         <input type="password" class="form-control" id="password" v-model="password"
                             placeholder="Enter your password" />
                         <!-- Error Message for Password -->
-                        
                     </div>
                 </div>
+
                 <span v-if="!isPasswordValid" class="error-text">
                     Sorry, your password was incorrect. Please double-check your password.
                 </span>
@@ -38,12 +38,24 @@
                     Login
                 </button>
             </form>
+
+        </div>
+        <div v-if="token">
+            <div>Token: {{ token }}</div>
+        </div>
+        <div v-if="user">
+            <div>User:
+                <pre>{{ user }}</pre>
+            </div>
         </div>
     </div>
-    
+
 </template>
 
 <script setup>
+
+import { storeToRefs } from "pinia"
+import { useAuthStore } from "~/store/auth-store.js"
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -71,12 +83,16 @@ const isPasswordValid = ref(true);
 
 <style scoped>
 .error-text {
-    color: #e74c3c; /* Red for error */
-    font-size: 0.875rem; /* Smaller font size */
+    color: #e74c3c;
+    /* Red for error */
+    font-size: 0.875rem;
+    /* Smaller font size */
     margin-top: 0.5rem;
     display: block;
-    text-align: center; /* Center the text */
-    width: 100%; /* Make sure the error text spans the full width */
+    text-align: center;
+    /* Center the text */
+    width: 100%;
+    /* Make sure the error text spans the full width */
 }
 
 .error-text i {

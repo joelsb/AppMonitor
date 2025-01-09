@@ -31,6 +31,7 @@ const api = config.public.API_URL
 const loginFormData = reactive({
     username: "",
     password: ""
+    
 })
 
 const messages = ref([])
