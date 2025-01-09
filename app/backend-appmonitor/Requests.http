@@ -180,16 +180,15 @@ Accept: application/json
 PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
 
 
-
-
 ### GET ALL sensors
 GET http://localhost:8080/appmonitor/api/sensors/1/
 Accept: application/json
 
 
 
-
 ############ LOGIN RESPONSABILITIES
+
+> {% client.global.set('jwt-token', response.body) %}
 
 ### REQUEST JWT TOKEN
 POST http://localhost:8080/appmonitor/api/auth/login
@@ -198,7 +197,8 @@ Accept: application/json
 
 { "username": "Joel", "password": "123"}
 
+
 ### GET ALL CUSTOMERS
 GET http://localhost:8080/appmonitor/api/customers/Joel
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKb2VsIiwiaWF0IjoxNzM2MzQyMzIyLCJleHAiOjE3MzYzNDU5MjJ9.IW6jUG-e3V2DRzNCx-TgPmPoxaC8p7NfxYyGoP-xjeGO2QRC5tGHaT3f3SkAlvsp
+Authorization: Bearer {{jwt-token}}
