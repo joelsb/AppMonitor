@@ -1,10 +1,12 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SensorTypeDTO {
     /*
     id: long
@@ -14,7 +16,7 @@ public class SensorTypeDTO {
     floor: double
      */
 
-    private long id;
+    private Long id;
     private String name;
     private String unit;
     private Double ceiling;
@@ -23,7 +25,7 @@ public class SensorTypeDTO {
     public SensorTypeDTO() {
     }
 
-    public SensorTypeDTO(long id, String name, String unit, Double ceiling, Double floor) {
+    public SensorTypeDTO(Long id, String name, String unit, Double ceiling, Double floor) {
         this.id = id;
         this.name = name;
         this.unit = unit;
@@ -41,15 +43,31 @@ public class SensorTypeDTO {
         );
     }
 
+    public static SensorTypeDTO fromSensor(SensorType sensorType) {
+        return new SensorTypeDTO(
+                null,
+                sensorType.getName(),
+                sensorType.getUnit(),
+                null,
+                null
+        );
+    }
+
+
     public static List<SensorTypeDTO> from(List<SensorType> sensorTypes) {
         return sensorTypes.stream().map(SensorTypeDTO::from).collect(Collectors.toList());
     }
 
-    public long getId() {
+    public static List<SensorTypeDTO> fromSensor(List<SensorType> sensorTypes) {
+        return sensorTypes.stream().map(SensorTypeDTO::fromSensor).collect(Collectors.toList());
+    }
+
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.WS;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -8,6 +9,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.VolumeBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 import java.util.Date;
 import java.util.logging.Logger;
@@ -15,6 +17,7 @@ import java.util.logging.Logger;
 @Path("volumes")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
+@Authenticated
 public class VolumeService {
     @EJB
     private VolumeBean volumeBean;
@@ -23,6 +26,7 @@ public class VolumeService {
 
     @GET
     @Path("/")
+    @RolesAllowed({"Customer"})
     public Response getAllVolumes() {
         var volumes = volumeBean.findAll();
         logger.info("Volumes: " + volumes.get(0).getSentDate());

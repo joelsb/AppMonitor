@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 @NamedQueries(
         {
                 @NamedQuery(name = "getAllOrders", query = "SELECT o FROM Order o ORDER BY o.createdDate"),
-                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer = :customer ORDER BY o.createdDate"),
+                @NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer.username = :username ORDER BY o.createdDate"),
                 @NamedQuery(name = "getAvailableOrders", query = "SELECT o FROM Order o WHERE o.deliveredDate = null ORDER BY o.createdDate"),
         }
 )

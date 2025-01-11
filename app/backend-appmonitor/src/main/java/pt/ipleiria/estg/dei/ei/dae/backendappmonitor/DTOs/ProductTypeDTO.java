@@ -16,16 +16,12 @@ public class ProductTypeDTO {
     productRecords: List<ProductRecord>
      */
 
-    @JsonbProperty("id") // Will serialize first
     private long id;
 
-    @JsonbProperty("name") // Will serialize second
     private String name;
 
-    @JsonbProperty("mandatoryPackage") // Will serialize third
     private boolean mandatoryPackage;
 
-    @JsonbProperty("mandatorySensors") // Will serialize fourth
     private List<SensorTypeDTO> mandatorySensors;
 
     private boolean excludeMandatorySensors; // Flag to control serialization
