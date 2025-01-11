@@ -236,7 +236,7 @@ Accept: application/json
 ### GET ALL VOLUMES
 GET http://localhost:8080/appmonitor/api/volumes
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKb2VsIiwiaWF0IjoxNzM2NDIwMTY2LCJleHAiOjE3MzY0MjM3NjZ9.I8ghM5KmwyIU-G9ex2g0Rup71KWHQ95QTtBcwKh4wf2WTcnTUYTjGiixKL9e8-qA
+Authorization: Bearer {{jwt-token}}
 
 
 ### GET A SINGLE VOLUME
@@ -264,8 +264,3 @@ Accept: application/json
 {
   "value": 10
 }
-
-
-
-
-

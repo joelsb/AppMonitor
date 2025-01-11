@@ -10,10 +10,10 @@
                         <span class="icon">
                             <i class="fas fa-user"></i> <!-- FontAwesome user icon -->
                         </span>
-                        <input class="form-control" id="username" v-model="username"
+                        <input class="form-control" id="username" v-model="loginFormData.username"
                             placeholder="Enter your username" />
                         <!-- Error Message for Username -->
-                        
+
                     </div>
                 </div>
 
@@ -24,59 +24,103 @@
                         <span class="icon">
                             <i class="fas fa-lock"></i> <!-- FontAwesome lock icon -->
                         </span>
-                        <input type="password" class="form-control" id="password" v-model="password"
+                        <input type="password" class="form-control" id="password" v-model="loginFormData.password"
                             placeholder="Enter your password" />
                         <!-- Error Message for Password -->
-                        
                     </div>
                 </div>
-                <span v-if="!isPasswordValid" class="error-text">
-                    Sorry, your password was incorrect. Please double-check your password.
+                
+                <!-- se a password ou username tiverem incorretos -->
+                <span v-if="messages.length > 0" class="error-text ">
+                    Invalid username or password.
                 </span>
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary" :disabled="!isFormValid" @click="login">
                     Login
                 </button>
             </form>
+
         </div>
+        <div v-if="token">
+            <h3>Token:</h3>
+            <div>{{ token }}</div>
+        </div>
+        <div v-if="user">
+            <h3>User Info:</h3>
+            <pre>{{ user }}</pre>
+        </div>
+        
     </div>
-    
+
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+
+import { storeToRefs } from "pinia"
+import { useAuthStore } from "~/store/auth-store.js"
+import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
+const config = useRuntimeConfig();
+const api = config.public.API_URL;
 const router = useRouter();
-// Form fields
-const username = ref('');
-const password = ref('');
 
-// Login method
-const login = () => {
-    if (isFormValid.value) {
-        console.log(`Logging in with username: ${username.value}`);
-    }
-    router.push('/homepage');
-};
+const authStore = useAuthStore();
+const { token } = storeToRefs(authStore);
 
-const isFormValid = computed(() => {
-    return username.value.trim() && password.value.trim();
+// Form Fields
+const loginFormData = reactive({
+    username: "",
+    password: "",
 });
 
-const isPasswordValid = ref(true);
+const messages = ref([]);
+const isFormValid = computed(() => loginFormData.username.trim() && loginFormData.password.trim());
+
+// Login method
+async function login() {
+    messages.value = []; // Limpar mensagens anteriores
+    try {
+        await $fetch(`${api}/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: loginFormData,
+            onResponse({ response }) {
+                if (response.status === 200) {
+                    token.value = response._data; // Salva o token na store
+                    router.push("/homepage"); // Redireciona para a página inicial
+                } else {
+                    messages.value.push({
+                        status: response.status,
+                        payload: response._data,
+                    });
+                }
+            },
+        });
+    } catch (e) {
+        console.error("Login falhou:", e);
+    }
+}
+
 
 </script>
 
 
 <style scoped>
 .error-text {
-    color: #e74c3c; /* Red for error */
-    font-size: 0.875rem; /* Smaller font size */
+    color: #e74c3c;
+    /* Red for error */
+    font-size: 0.875rem;
+    /* Smaller font size */
     margin-top: 0.5rem;
     display: block;
-    text-align: center; /* Center the text */
-    width: 100%; /* Make sure the error text spans the full width */
+    text-align: center;
+    /* Center the text */
+    width: 100%;
+    /* Make sure the error text spans the full width */
 }
 
 .error-text i {
