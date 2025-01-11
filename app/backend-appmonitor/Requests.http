@@ -7,7 +7,7 @@ POST {{url}}/auth/login
 Content-Type: application/json
 Accept: application/json
 
-{ "username": "Tiago", "password": "123"}
+{ "username": "Joel", "password": "123"}
 
 > {% client.global.set('jwt-token', response.body) %}
 
@@ -37,14 +37,19 @@ Accept: application/json
 
 ############ CUSTOMER SERVICE
 
-### GET ALL CUSTOMERS - ONLY FOR EMPLOYEES
+### GET ALL CUSTOMERS (EMPLOYEE)
 GET {{url}}/customers
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 
-### GET A SINGLE CUSTOMER
+### GET A SINGLE CUSTOMER (CUSTOMER)
 GET {{url}}/customers/Joel
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET ORDERS OF A CUSTOMER (CUSTOMER)
+GET {{url}}/customers/Joel/orders
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
@@ -53,120 +58,28 @@ Authorization: Bearer {{jwt-token}}
 
 
 ############ ORDER SERVICE
+
+### GET ALL ORDERS (CUSTOMER, MANAGER)
 GET {{url}}/orders
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-
-
-
-
-
-
-############ EMPLOYEE RESPONSABILITIES
-
-### GET ALL CUSTOMERS
-GET http://localhost:8080/appmonitor/api/customers
+### GET AVAILABLE ORDERS (EMPLOYEE)
+GET {{url}}/orders/available
 Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
-### SET A DELIVER VOLUME
-PATCH http://localhost:8080/appmonitor/api/volumes/1/deliver
-Accept: application/json
-
-### SET A DELIVER ORDER
-PATCH http://localhost:8080/appmonitor/api/orders/1/deliver
-Accept: application/json
-
-### GET A SINGLE CUSTOMER
-GET http://localhost:8080/appmonitor/api/customers/Joel
-Accept: application/json
-
-###GET ORDERS OF A CLIENT
-GET http://localhost:8080/appmonitor/api/customers/Tiago/orders
-Accept: application/json
-
-###GET SENSORS OF VOLUME
-GET http://localhost:8080/appmonitor/api/volumes/1/sensors
-Accept: application/json
-
-###GET PRODUCTS OF VOLUME
-GET http://localhost:8080/appmonitor/api/volumes/1/products
-Accept: application/json
-
-### GET ALL PRODUCTS-TYPES
-GET http://localhost:8080/appmonitor/api/product-types
-Accept: application/json
-
-### GET A SINGLE PRODUCT-TYPE
-GET http://localhost:8080/appmonitor/api/product-types/1
-Accept: application/json
-
-### GET ALL PACKAGE-TYPES
-GET http://localhost:8080/appmonitor/api/package-types
-Accept: application/json
-
-### GET A SINGLE PACKAGE-TYPE
-GET http://localhost:8080/appmonitor/api/package-types/1
-Accept: application/json
-
-### GET ALL ORDERS
-GET http://localhost:8080/appmonitor/api/orders/
-Accept: application/json
-
-### GET ALL AVAILABLE ORDERS
-GET http://localhost:8080/appmonitor/api/orders/available
-Accept: application/json
-
-### PATCH DELIVERED VOLUME
-PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
-Content-Type: application/json
-
-
-### GET SENSOR HISTORY
-GET http://localhost:8080/appmonitor/api/sensors/1
-Accept: application/json
-
-
-
-
-### GET SINGLE ORDERS
-GET http://localhost:8080/appmonitor/api/orders/1
-Accept: application/json
-
-### GET SINGLE VOLUME
-GET http://localhost:8080/appmonitor/api/volumes/1
-Accept: application/json
-
-
-
-### GET VOLUMES OF ORDER
-GET http://localhost:8080/appmonitor/api/orders/1/volumes
-Accept: application/json
-
-### GET ALL SENSOR-TYPES
-GET http://localhost:8080/appmonitor/api/sensor-types
-Accept: application/json
-
-### GET A SINGLE SENSOR-TYPE
-GET http://localhost:8080/appmonitor/api/sensor-types/1
-Accept: application/json
-
-### GET MANDATORY SENSORS OF A PRODUCT-TYPE
-GET http://localhost:8080/appmonitor/api/product-types/1/mandatory-sensors
-
-#### GET MANDATORY SENSORS OF A PACKAGE-TYPE
-GET http://localhost:8080/appmonitor/api/package-types/1/mandatory-sensors
-
-### POST A NEW ORDER
+### POST A NEW ORDER (EMPLOYEE)
 POST http://localhost:8080/appmonitor/api/orders
 Content-Type: application/json
+Authorization: Bearer {{jwt-token}}
 
 {
-  "id": 28,
+  "id": 29,
   "customerUsername": "Tiago",
   "createdDate": "2024-11-20T21:00:00",
   "volume": {
-    "id": 103,
+    "id": 120,
     "sentDate": "2024-11-21T21:00:00",
     "packageTypeId": 2,
     "products": [
@@ -181,86 +94,154 @@ Content-Type: application/json
     ],
     "sensors": [
       {
-        "id": 3,
+        "id": 10,
         "sensorTypeId": 1
       },
       {
-        "id": 4,
+        "id": 9,
         "sensorTypeId": 2
       }
     ]
   }
 }
 
+### GET A SINGLE ORDER (CUSTOMER, MANAGER)
+GET {{url}}/orders/28
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
-### POST A NEW VOLUME
+### GET VOLUMES OF ORDER (CUSTOMER, MANAGER)
+GET {{url}}/orders/28/volumes
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### DELIVER ORDER (EMPLOYEE)
+PATCH {{url}}/orders/28/deliver
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+############ VOLUME SERVICE
+
+### GET A SPECIFIC VOLUME (CUSTOMER, MANAGER)
+GET {{url}}/volumes/103
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET ALL SENSORS OF A VOLUME (CUSTOMER, MANAGER)
+GET {{url}}/volumes/103/sensors
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET ALL PRODUCTS OF A VOLUME (CUSTOMER, MANAGER)
+GET {{url}}/volumes/103/products
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### DELIVER VOLUME (EMPLOYEE)
+PATCH {{url}}/volumes/103/deliver
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### POST A NEW VOLUME (EMPLOYEE)
 POST http://localhost:8080/appmonitor/api/volumes
 Content-Type: application/json
+Authorization: Bearer {{jwt-token}}
 
 {
-  "id": 105,
-
+  "id": 108,
   "sentDate": "2021-06-01T00:00:00",
-  "orderId": 27,
+  "orderId": 28,
   "packageTypeId": 1,
   "products": [
     {
       "productId": 1,
-      "quatity": 1
+      "quantity": 1
     },
     {
       "productId": 2,
-      "quatity": 3
+      "quantity": 3
     }
   ],
   "sensors": [
     {
-      "id": 1,
+      "id": 11,
       "sensorTypeId": 1
     },
     {
-      "id": 2,
+      "id": 12,
       "sensorTypeId": 2
     }
   ]
 }
 
-### GET ALL ORDERS
-GET http://localhost:8080/appmonitor/api/orders
-Accept: application/json
 
-### GET A SINGLE ORDER
-GET http://localhost:8080/appmonitor/api/orders/27
-Accept: application/json
 
-### GET ALL VOLUMES
-GET http://localhost:8080/appmonitor/api/volumes
+
+
+############ SENSOR SERVICE
+
+### GET ALL SENSORS (EMPLOYEE)
+GET {{url}}/sensors
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-
-### GET A SINGLE VOLUME
-GET http://localhost:8080/appmonitor/api/volumes/1
+### GET A SINGLE SENSOR (MANAGER, CUSTOMER)
+GET {{url}}/sensors/1
 Accept: application/json
-
-### DELIVER A VOLUME
-PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
-
-
-############ SENSORS ENDPOINTS
-
-### GET ALL sensors
-GET http://localhost:8080/appmonitor/api/sensors/
-Accept: application/json
-
-### GET A SINGLE SENSOR
-GET http://localhost:8080/appmonitor/api/sensors/1
-Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
 ### POST A NEW VALUE
-POST http://localhost:8080/appmonitor/api/sensors/1/add-value
+POST {{url}}/sensors/1/add-value
+Content-Type: application/json
 Accept: application/json
 
 {
   "value": 10
 }
+
+
+
+
+
+############ PRODUCT-TYPE SERVICE
+
+### GET ALL PRODUCT-TYPES (EMPLOYEE)
+GET {{url}}/product-types
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET ALL MANDATORY SENSORS OF A PRODUCT-TYPE (EMPLOYEE)
+GET {{url}}/product-types/1/mandatory-sensors
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+############ PACKAGE-TYPE SERVICE
+
+### GET ALL PACKAGE-TYPES (EMPLOYEE)
+GET {{url}}/package-types
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET ALL MANDATORY SENSORS OF A PACKAGE-TYPE (EMPLOYEE)
+GET {{url}}/package-types/1/mandatory-sensors
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+############ SENSOR-TYPE SERVICE
+
+### GET ALL SENSOR-TYPES (EMPLOYEE)
+GET {{url}}/sensor-types
+Accept: application/json
+Authorization: Bearer {{jwt-token}}

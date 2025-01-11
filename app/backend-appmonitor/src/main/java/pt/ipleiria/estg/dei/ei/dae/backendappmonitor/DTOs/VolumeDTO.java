@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
 
@@ -10,19 +11,21 @@ import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VolumeDTO {
-    private long id;
+    private Long orderId;
+    private Long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Your/Timezone")
     private Date sentDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Your/Timezone")
     private Date deliveredDate;
     private String packageTypeName;
     private Long packageTypeId;
     private List<ProductRecordDTO> products = new ArrayList<>();
     private List<SensorDTO> sensors = new ArrayList<>();
-    private Long orderId;
 
     public VolumeDTO() {
     }
 
-    public VolumeDTO(long id, Date sentDate, Date deliveredDate, Long packageTypeId, Long orderId, String packageTypeName) {
+    public VolumeDTO(Long id, Date sentDate, Date deliveredDate, Long packageTypeId, Long orderId, String packageTypeName) {
         this.id = id;
         this.sentDate = sentDate;
         this.deliveredDate = deliveredDate;
@@ -36,12 +39,12 @@ public class VolumeDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
-                null,
-                null,
+                volume.getPackageType().getId(),
+                volume.getOrder().getId(),
                 volume.getPackageType().getName()
         );
     }
-    public static VolumeDTO fromCustomer(Volume volume) {
+    public static VolumeDTO fromSimple(Volume volume) {
         return new VolumeDTO(
                 volume.getId(),
                 volume.getSentDate(),
@@ -85,15 +88,15 @@ public class VolumeDTO {
         return volumes.stream().map(VolumeDTO::from).collect(Collectors.toList());
     }
 
-    public static List<VolumeDTO> fromCustomer(List<Volume> volumes) {
-        return volumes.stream().map(VolumeDTO::fromCustomer).collect(Collectors.toList());
+    public static List<VolumeDTO> fromSimple(List<Volume> volumes) {
+        return volumes.stream().map(VolumeDTO::fromSimple).collect(Collectors.toList());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

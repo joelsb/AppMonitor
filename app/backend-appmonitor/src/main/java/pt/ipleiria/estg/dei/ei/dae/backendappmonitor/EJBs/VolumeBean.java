@@ -83,6 +83,21 @@ public class VolumeBean {
         return entityManager.createNamedQuery("getAllVolumes", Volume.class).getResultList();
     }
 
+    public Volume findWithSensors(long id) throws MyEntityNotFoundException {
+        var volume = this.find(id);
+        Hibernate.initialize(volume.getSensors());
+        for (var sensor : volume.getSensors()) {
+            Hibernate.initialize(sensor.getHistory());
+        }
+        return volume;
+    }
+
+    public Volume findWithProducts(long id) throws MyEntityNotFoundException {
+        var volume = this.find(id);
+        Hibernate.initialize(volume.getProducts());
+        return volume;
+    }
+
     public Volume findWithSensorsProducts(long id) throws MyEntityNotFoundException {
         var volume = this.find(id);
         Hibernate.initialize(volume.getSensors());
@@ -94,7 +109,7 @@ public class VolumeBean {
     }
 
     public List<Volume> findAllWithSensorsProducts() {
-        var volumes = entityManager.createNamedQuery("getAllVolumes", Volume.class).getResultList();
+        var volumes = this.findAll();
         volumes.forEach(volume -> {
             Hibernate.initialize(volume.getSensors());
             Hibernate.initialize(volume.getProducts());
@@ -210,7 +225,5 @@ public class VolumeBean {
 
         return result;
     }
-
-
 }
 

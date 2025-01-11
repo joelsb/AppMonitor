@@ -28,22 +28,16 @@ import java.util.stream.Collectors;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 @Authenticated
-@RolesAllowed({"Manager"})
 public class CustomerService {
     @EJB
     private CustomerBean customerBean;
+    @EJB
     private OrderBean orderBean;
 
     @Context
     private SecurityContext securityContext;
 
     private static final Logger logger = Logger.getLogger("WS.CustomerService");
-
-//    @GET
-//    @Path("/")
-//    public Response getAllCustomers() {
-//        return Response.ok(CustomerDTO.fromAllEmployees(customerBean.findAll())).build();
-//    }
 
     //Only Customer can access this
     @GET
@@ -92,36 +86,18 @@ public class CustomerService {
 //        return Response.ok(customersDTO).build();
 //    }
 //
-//    @GET
-//    @Path("/{username}/orders")
-//    public Response getAllOrdersByCustomerId(@PathParam("username") String username) throws MyEntityNotFoundException {
-//        // Fetch customer with orders
-//        var customer = customerBean.findWithOrders(username);
-//        if (customer == null) {
-//            throw new MyEntityNotFoundException("Customer not found for username: " + username);
-//        }
-//
-//        // Map customer to DTO
-//        var customerDTO = CustomerDTO.fromEmployee(customer);
-//
-//        // Map orders to DTO
-//        var orders = customer.getOrders();
-//        var ordersDTO = OrderDTO.from(orders);
-//        for(Order order : orders) {
-//            for (OrderDTO orderDTO : ordersDTO) {
-//                orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
-//            }
-//        }
-//
-//
-//        // Set orders in CustomerDTO (if necessary)
-//        customerDTO.setOrders(ordersDTO);
-//
-//        // Return orders or the customerDTO based on requirements
-//        return Response.ok(ordersDTO).build();
-//    }
-//
-//
+    @GET
+    @Path("/{username}/orders")
+    @RolesAllowed({"Manager"})
+    public Response getAllOrdersByCustomerId(@PathParam("username") String username) throws MyEntityNotFoundException {
+        var orders = orderBean.findAllCustomerOrders(username);
+        var ordersDTO = OrderDTO.from(orders);
+        for (int i = 0; i < orders.size(); i++) {
+            ordersDTO.get(i).setVolumes(VolumeDTO.fromSimple(orders.get(i).getVolumes()));
+        }
+        return Response.ok(ordersDTO).build();
+    }
+
 //    @GET
 //    @Path("/orders/{id}/volumes")
 //    public Response getCustomerOrderVolumes(@PathParam("id") long id) throws MyEntityNotFoundException {
@@ -131,4 +107,5 @@ public class CustomerService {
 //        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeDTO.from(volumes));
 //        return Response.ok(orderDTO).build();
 //    }
+
 }

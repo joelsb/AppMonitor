@@ -39,6 +39,12 @@ public class SensorBean implements Serializable {
         return sensor;
     }
 
+    public List<Sensor> findAllWithHistory() {
+        var sensors = this.findAll();
+        sensors.forEach(sensor -> Hibernate.initialize(sensor.getHistory()));
+        return sensors;
+    }
+
     public Sensor create(long id, long sensorTypeId, Long volumeId) throws MyEntityNotFoundException {
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if (sensorType == null) {
@@ -53,30 +59,31 @@ public class SensorBean implements Serializable {
         return sensor;
     }
 
-    public Sensor update(long id, long sensorTypeId, long volumeId) throws MyEntityNotFoundException {
-        var sensorType = entityManager.find(SensorType.class, sensorTypeId);
-        if(sensorType == null) {
-            throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found");
-        }
-        var volume = entityManager.find(Volume.class, volumeId);
-        if (volume == null) {
-            throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' not found");
-        }
-        var sensor = entityManager.find(Sensor.class, id);
-        if(sensor == null) {
-            throw new MyEntityNotFoundException("Sensor with id: '" + id + "' not found");
-        }
-        sensor.setSensorType(sensorType);
-        sensor.setVolume(volume);
-        return sensor;
-    }
+//    public Sensor update(long id, long sensorTypeId, long volumeId) throws MyEntityNotFoundException {
+//        var sensorType = entityManager.find(SensorType.class, sensorTypeId);
+//        if(sensorType == null) {
+//            throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found");
+//        }
+//        var volume = entityManager.find(Volume.class, volumeId);
+//        if (volume == null) {
+//            throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' not found");
+//        }
+//        var sensor = entityManager.find(Sensor.class, id);
+//        if(sensor == null) {
+//            throw new MyEntityNotFoundException("Sensor with id: '" + id + "' not found");
+//        }
+//        sensor.setSensorType(sensorType);
+//        sensor.setVolume(volume);
+//        return sensor;
+//    }
 
     public void addValue(Long sensorId, SensorRecordDTO sensorRecordDTO) throws MyEntityNotFoundException {
         var sensor = this.find(sensorId);
         var date = new Date();
         //TODO: Send the notification the the ones that are subscribed to this sensor
         var value = sensorRecordDTO.getValue();
-        SensorRecord record = new SensorRecord(date,value, sensor);
+        SensorRecord record = new SensorRecord(date,value,sensor);
+        entityManager.persist(record);
         sensor.addRecord(record);
     }
 

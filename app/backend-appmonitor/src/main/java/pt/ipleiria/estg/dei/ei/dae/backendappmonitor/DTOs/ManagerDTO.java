@@ -1,10 +1,12 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Manager;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ManagerDTO extends UserDTO{
 
     private String office;
@@ -20,7 +22,7 @@ public class ManagerDTO extends UserDTO{
     public static ManagerDTO from(Manager manager) {
         return new ManagerDTO(
                 manager.getUsername(),
-                manager.getPassword(),
+                null,
                 manager.getName(),
                 manager.getEmail(),
                 manager.getOffice()

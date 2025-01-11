@@ -41,14 +41,14 @@
             </form>
 
         </div>
-        <div v-if="token">
+        <!-- <div v-if="token">
             <h3>Token:</h3>
             <div>{{ token }}</div>
         </div>
         <div v-if="user">
             <h3>User Info:</h3>
             <pre>{{ user }}</pre>
-        </div>
+        </div> -->
         
     </div>
 

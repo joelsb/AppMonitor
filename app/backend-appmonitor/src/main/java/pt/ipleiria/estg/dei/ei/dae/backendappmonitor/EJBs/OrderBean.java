@@ -3,18 +3,12 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.OrderCreateDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductRecordDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeCreateDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
@@ -80,7 +74,7 @@ public class OrderBean {
         return order;
     }
 
-    public List<Order> findAvailableOrders() {
+    public List<Order> findAvailableOrdersWithVolumes() {
         var orders = entityManager.createNamedQuery("getAvailableOrders", Order.class).getResultList();
         for (Order order : orders) {
             Hibernate.initialize(order.getVolumes());

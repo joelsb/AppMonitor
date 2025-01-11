@@ -18,7 +18,6 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.TokenIssuer;
 @Path("auth")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
-
 public class AuthService {
 
     @Inject
