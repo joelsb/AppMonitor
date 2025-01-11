@@ -1,3 +1,68 @@
+@url= http://localhost:8080/appmonitor/api
+
+############ LOGIN RESPONSABILITIES
+
+### REQUEST JWT TOKEN OF CUSTOMER (Joel ou Tiago)
+POST {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "Tiago", "password": "123"}
+
+> {% client.global.set('jwt-token', response.body) %}
+
+
+### REQUEST JWT TOKEN OF EMPLOYEE
+POST {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "Jose", "password": "123"}
+
+> {% client.global.set('jwt-token', response.body) %}
+
+
+### REQUEST JWT TOKEN OF MANAGER
+POST {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "Ana", "password": "123"}
+
+> {% client.global.set('jwt-token', response.body) %}
+
+
+
+
+
+############ CUSTOMER SERVICE
+
+### GET ALL CUSTOMERS - ONLY FOR EMPLOYEES
+GET {{url}}/customers
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+### GET A SINGLE CUSTOMER
+GET {{url}}/customers/Joel
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+############ ORDER SERVICE
+GET {{url}}/orders
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+
+
 ############ EMPLOYEE RESPONSABILITIES
 
 ### GET ALL CUSTOMERS
@@ -5,11 +70,11 @@ GET http://localhost:8080/appmonitor/api/customers
 Accept: application/json
 
 ### SET A DELIVER VOLUME
-PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
+PATCH http://localhost:8080/appmonitor/api/volumes/1/deliver
 Accept: application/json
 
 ### SET A DELIVER ORDER
-PATCH http://localhost:8080/appmonitor/api/orders/1/delivered
+PATCH http://localhost:8080/appmonitor/api/orders/1/deliver
 Accept: application/json
 
 ### GET A SINGLE CUSTOMER
@@ -171,6 +236,8 @@ Accept: application/json
 ### GET ALL VOLUMES
 GET http://localhost:8080/appmonitor/api/volumes
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKb2VsIiwiaWF0IjoxNzM2NDIwMTY2LCJleHAiOjE3MzY0MjM3NjZ9.I8ghM5KmwyIU-G9ex2g0Rup71KWHQ95QTtBcwKh4wf2WTcnTUYTjGiixKL9e8-qA
+
 
 ### GET A SINGLE VOLUME
 GET http://localhost:8080/appmonitor/api/volumes/1
@@ -180,25 +247,25 @@ Accept: application/json
 PATCH http://localhost:8080/appmonitor/api/volumes/1/delivered
 
 
-
+############ SENSORS ENDPOINTS
 
 ### GET ALL sensors
-GET http://localhost:8080/appmonitor/api/sensors/1/
+GET http://localhost:8080/appmonitor/api/sensors/
 Accept: application/json
 
-
-
-
-############ LOGIN RESPONSABILITIES
-
-### REQUEST JWT TOKEN
-POST http://localhost:8080/appmonitor/api/auth/login
-Content-Type: application/json
+### GET A SINGLE SENSOR
+GET http://localhost:8080/appmonitor/api/sensors/1
 Accept: application/json
 
-{ "username": "Joel", "password": "123"}
-
-### GET ALL CUSTOMERS
-GET http://localhost:8080/appmonitor/api/customers/Joel
+### POST A NEW VALUE
+POST http://localhost:8080/appmonitor/api/sensors/1/add-value
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKb2VsIiwiaWF0IjoxNzM2MzQyMzIyLCJleHAiOjE3MzYzNDU5MjJ9.IW6jUG-e3V2DRzNCx-TgPmPoxaC8p7NfxYyGoP-xjeGO2QRC5tGHaT3f3SkAlvsp
+
+{
+  "value": 10
+}
+
+
+
+
+

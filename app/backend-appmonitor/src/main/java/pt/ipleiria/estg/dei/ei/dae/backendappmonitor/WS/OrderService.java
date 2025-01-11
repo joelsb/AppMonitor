@@ -1,14 +1,19 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.WS;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.OrderBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -16,26 +21,45 @@ import java.util.stream.Collectors;
 @Path("orders")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
+@Authenticated
 public class OrderService {
     @EJB
     private OrderBean orderBean;
 
     private static final Logger logger = Logger.getLogger("WS.OrderService");
 
+    @Context
+    private SecurityContext securityContext;
+
     @GET
     @Path("/")
+    @RolesAllowed({"Customer","Manager"})
     //Receive the Token in the header
     public Response getAllOrders(/*@HeaderParam("Authorization") String token*/) {
-        //Deal with the token
-        var orders = orderBean.findAll();
-        var ordersDTO = OrderDTO.fromManager(orders);
-
-        for (Order order : orders) {
-            for (OrderDTO orderDTO : ordersDTO) {
-                orderDTO.setVolumes(VolumeDTO.from(order.getVolumes()));
+        //For client
+        if(securityContext.isUserInRole("Customer")){
+            var orders = orderBean.findAllCustomerOrders(securityContext.getUserPrincipal().getName());
+            var ordersDTO = OrderDTO.from(orders);
+            for (Order order : orders) {
+                for (OrderDTO orderDTO : ordersDTO) {
+                    orderDTO.setVolumes(VolumeDTO.fromCustomer(order.getVolumes()));
+                }
             }
+            return Response.ok(ordersDTO).build();
         }
-        return Response.ok(ordersDTO).build();
+        if(securityContext.isUserInRole("Manager")){
+            var orders = orderBean.findAll();
+            var ordersDTO = OrderDTO.fromManager(orders);
+
+            for (Order order : orders) {
+                for (OrderDTO orderDTO : ordersDTO) {
+                    orderDTO.setVolumes(VolumeDTO.fromCustomer(order.getVolumes()));
+                }
+            }
+            return Response.ok(ordersDTO).build();
+
+        }
+        return Response.status(Response.Status.FORBIDDEN).build();
     }
 
     @GET

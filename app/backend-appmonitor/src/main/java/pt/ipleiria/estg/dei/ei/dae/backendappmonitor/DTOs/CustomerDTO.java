@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.json.bind.annotation.*;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
@@ -8,26 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerDTO extends UserDTO{
 
-    private List<OrderDTO> orders;
-    private List<Long> ordersIds;
-    private boolean excludeOrders; // Flag to control serialization
-
+    private List<OrderDTO> orders = new ArrayList<>();
+    private List<Long> ordersIds = new ArrayList<>();;
 
     public CustomerDTO() {
     }
 
     public CustomerDTO(String username, String password, String name, String email) {
         super(username, password, name, email);
-        this.orders = null;
-        this.ordersIds = new ArrayList<>();
     }
 
     public static CustomerDTO from(Customer customer) {
         return new CustomerDTO(
                 customer.getUsername(),
-                customer.getPassword(),
+                null,
                 customer.getName(),
                 customer.getEmail()
         );
@@ -53,11 +51,8 @@ public class CustomerDTO extends UserDTO{
     }
 
     public List<OrderDTO> getOrders() {
-        return excludeOrders ? null : new ArrayList<>(orders);
-    }
 
-    public void setExcludeOrders(boolean excludeOrders) {
-        this.excludeOrders = excludeOrders;
+        return orders.isEmpty() ? null : new ArrayList<>(orders);
     }
 
     public void setOrders(List<OrderDTO> orders) {
@@ -65,7 +60,8 @@ public class CustomerDTO extends UserDTO{
     }
 
     public List<Long> getOrdersIds() {
-        return ordersIds;
+
+        return ordersIds.isEmpty() ? null : ordersIds;
     }
 
     public void setOrdersIds(List<Long> ordersIds) {

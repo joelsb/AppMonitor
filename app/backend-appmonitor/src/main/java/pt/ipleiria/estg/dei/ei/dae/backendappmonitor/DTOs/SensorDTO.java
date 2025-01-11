@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Sensor;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SensorDTO {
     /*
     id: long
@@ -24,37 +26,34 @@ public class SensorDTO {
     public SensorDTO() {
     }
 
-    public SensorDTO(Long id, Long sensorTypeId,SensorTypeDTO sensorType, Long volumeId,List<SensorRecordDTO> history) {
+    public SensorDTO(Long id, Long sensorTypeId,SensorTypeDTO sensorType, Long volumeId) {
         this.id = id;
         this.sensorTypeId = sensorTypeId;
         this.sensorType = sensorType;
         this.volumeId = volumeId;
-        this.history = history;
     }
 
-    public static SensorDTO fromHistory(Sensor sensor) {
+    public static SensorDTO fromSensorService(Sensor sensor) {
         return new SensorDTO(
                 null,
                 null,
-                sensor.getSensorType()== null ? null : SensorTypeDTO.from(sensor.getSensorType()),
-                null,
-                sensor.getHistory() == null ? null : SensorRecordDTO.from(sensor.getHistory())
+                SensorTypeDTO.fromSensor(sensor.getSensorType()),
+                sensor.getVolume().getId()
         );
     }
 
     public static SensorDTO from(Sensor sensor) {
         return new SensorDTO(
                 sensor.getId(),
-                sensor.getSensorType() == null ? null : sensor.getSensorType().getId(),
-                sensor.getSensorType() == null ? null : SensorTypeDTO.from(sensor.getSensorType()),
-                null,
-                sensor.getHistory() == null ? null : SensorRecordDTO.from(sensor.getHistory())
+                sensor.getSensorType().getId(),
+                SensorTypeDTO.from(sensor.getSensorType()),
+                sensor.getVolume().getId()
         );
 
     }
 
-    public static List<SensorDTO> fromHistory(List<Sensor> sensors) {
-        return sensors.stream().map(SensorDTO::fromHistory).collect(Collectors.toList());
+    public static List<SensorDTO> fromSensorService(List<Sensor> sensors) {
+        return sensors.stream().map(SensorDTO::fromSensorService).collect(Collectors.toList());
     }
 
     public static List<SensorDTO> from(List<Sensor> sensors) {
@@ -94,7 +93,7 @@ public class SensorDTO {
     }
 
     public List<SensorRecordDTO> getHistory() {
-        return history;
+        return new ArrayList<>(history);
     }
 
     public void setHistory(List<SensorRecordDTO> history) {
