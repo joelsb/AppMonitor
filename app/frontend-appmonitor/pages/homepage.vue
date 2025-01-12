@@ -1,5 +1,5 @@
 <template>
-    <NavBar/>
+    <NavBar />
     <!-- Question inside a Card -->
     <div class="max-w-md mx-auto mt-6 p-5 bg-white rounded-lg shadow-md flex flex-col items-center">
         <label for="orderCreated" class="block font-semibold text-lg">Is the order already created?</label>
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    
+
 
 </template>
 
@@ -24,6 +24,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
+import { useAuthStore } from '~/store/auth-store';
 import NavBar from '@/components/NavBar.vue'; // Import the NavBar component
 import VolumeForm from '@/components/VolumeForm.vue'; // Import the CombinedForm component
 import OrderForm from '@/components/OrderForm.vue'; // Import the OrderForm component
@@ -32,6 +33,7 @@ import Popup from '@/components/Popup.vue'; // Import the Popup component
 // API and Router Setup
 const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
+const token = useAuthStore().token;
 
 // Data arrays for selections
 const customers = ref([]);
@@ -46,16 +48,30 @@ const popupMessage = ref('');
 const popupType = ref('info'); // Can be 'success' or 'error'
 const isOrderCreated = ref(false);
 
-// Fetch data function
 const fetchData = async (url, targetRef) => {
     try {
-        const response = await fetch(`${apiUrl}${url}`);
+        const response = await fetch(`${apiUrl}${url}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response.status === 401) {
+            console.error('Unauthorized access');
+            // Handle the error, perhaps redirect to login or refresh token
+            return;
+        }
+
         const data = await response.json();
         targetRef.value = data;
     } catch (error) {
         console.error(`Error fetching ${url}:`, error);
     }
 };
+
+
 
 onMounted(() => {
     fetchData('/package-types', packageTypes);

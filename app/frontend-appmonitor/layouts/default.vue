@@ -3,7 +3,7 @@ import { useAuthStore } from "~/store/auth-store.js";
 
 const router = useRouter()
 const authStore = useAuthStore()
-~
+
 function logout() {
     authStore.logout()
     router.push('/')
@@ -12,6 +12,6 @@ function logout() {
 
 <template>
     <div>
-        <slot />
+        <slot></slot>
     </div>
 </template>

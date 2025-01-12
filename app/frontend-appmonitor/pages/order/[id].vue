@@ -30,6 +30,7 @@ import { ref, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
 import { useRouter } from 'vue-router';
 
+
 const router = useRouter()
 
 const route = useRoute();

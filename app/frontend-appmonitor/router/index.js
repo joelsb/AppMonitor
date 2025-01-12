@@ -8,6 +8,11 @@ const routes = [
     component: OrderDetails,
     props: true  // Passa o parâmetro id como uma prop para o componente
   },
+  {
+    path: '/homepage',
+    name: 'Homepage',
+    component: Homepage
+  }
   // Outras rotas...
 ];
 
