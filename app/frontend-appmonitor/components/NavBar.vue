@@ -11,8 +11,7 @@
       <ul class="nav-links">
         <!-- Regular links (excluding Profile) -->
         <li v-for="(link, index) in links" :key="index" class="nav-item">
-          <div v-if="link.name !== 'Profile'">
-            <button :class="[
+            <button v-if="link.name !== 'Profile'" :class="[
               'nav-button',
               (activeIndex === index || link.active) ? 'active' : ''
             ]" @click="navigate(link.route)">
@@ -20,37 +19,37 @@
             </button>
 
             <!-- Submenu for other links -->
-            <ul v-if="link.submenu" class="submenu">
+            <ul v-if="link.submenu || link.name !== 'Profile'" class="submenu">
               <li v-for="(item, subIndex) in link.submenu" :key="subIndex" class="submenu-item"
                 @click="navigate(item.route)">
                 {{ item.name }}
               </li>
             </ul>
-          </div>
         </li>
 
         <!-- Profile link -->
-
+        <div class="profile-item">
         <!-- Profile link (the 4th link in the array) -->
-        <li v-if="links[3]" class="nav-item profile-item">
+        <li v-if="linkProfile" class="nav-item">
           <button :class="[
             'nav-button profile-button',
-            (activeIndex === 3 || links[3].active) ? 'active' : ''
-          ]" @click="navigate(links[3].route)">
+            (activeIndex === 3 || linkProfile.active) ? 'active' : ''
+          ]" @click="navigate(linkProfile.route)">
           <svg xmlns="http://www.w3.org/2000/svg" class="user-avatar" height="24px" viewBox="0 -960 960 960"
             width="24px" fill="#5f6368">
             <path
               d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
           </svg>
-            {{ links[3].name }}
+            {{ linkProfile.name }}
           </button>
-          <ul v-if="links[3].submenu" class="submenu">
-            <li v-for="(item, subIndex) in links[3].submenu" :key="subIndex" class="submenu-item"
+          <ul v-if="linkProfile.submenu" class="submenu profile-submenu">
+            <li v-for="(item, subIndex) in linkProfile.submenu" :key="subIndex" class="submenu-item"
               @click="navigate(item.route)">
               {{ item.name }}
             </li>
           </ul>
         </li>
+      </div>
       </ul>
     </nav>
   </div>
@@ -101,18 +100,20 @@ const links = [
       { name: 'New Volume', route: '/employee/newVolume' },
       { name: 'Deliver', route: '/employee/deliver' },
     ],
-  },
-  {
+  }
+];
+
+const linkProfile =
+{
     name: 'Profile',
     route: '/profile',
     active: false,
     submenu: [
       { name: 'Edit Profile', route: '/profile/edit' },
       { name: 'Change Password', route: '/profile/password' },
-      { name: 'Logout', route: '/logout' },
+      { name: 'Logout', route: '/login/logout' },
     ],
-  },
-];
+  }
 
 // Update active index for both parent and submenu items
 function setActiveIndex(index) {
@@ -134,6 +135,10 @@ watch(route, (newRoute) => {
 // Login button handler
 function onLogin() {
   router.push('/login');
+}
+
+function onLogout() {
+  useAuthStore().logout();
 }
 </script>
 
@@ -230,10 +235,11 @@ function onLogin() {
 
 /* Navigation Links */
 .nav-links {
+  flex-grow:1;
   display: flex;
+  flex-direction: row;
   gap: 1.5rem;
   /* space-x-6 */
-  margin: 0 auto;
   position: relative;
 }
 
@@ -242,9 +248,11 @@ function onLogin() {
 }
 
 .profile-item {
+  flex-grow:1;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .profile-button {
@@ -297,6 +305,11 @@ function onLogin() {
   visibility: hidden;
   transition: all 0.3s ease;
   z-index: 50;
+}
+
+.profile-submenu {
+  right: 0 !important;
+  left: auto !important;
 }
 
 .nav-item:hover .submenu {
