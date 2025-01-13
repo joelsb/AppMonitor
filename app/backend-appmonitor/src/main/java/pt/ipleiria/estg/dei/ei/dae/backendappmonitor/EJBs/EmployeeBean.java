@@ -50,13 +50,4 @@ public class EmployeeBean extends UserBean {
         return employee;
     }
 
-    public Employee updatePassword(String username, String password) throws MyEntityNotFoundException {
-        var employee = entityManager.find(Employee.class, username);
-        if (employee == null) {
-            throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
-        }
-        employee.setPassword(password);
-        return employee;
-    }
-
 }

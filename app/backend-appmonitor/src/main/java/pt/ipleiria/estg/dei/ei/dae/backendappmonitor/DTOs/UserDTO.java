@@ -10,18 +10,18 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     public String username;
-    public String role;
     public String name;
     public String email;
+    public String role;
 
     public UserDTO() {
     }
 
-    public UserDTO(String username, String role, String name, String email) {
+    public UserDTO(String username, String name, String email, String role) {
         this.username = username;
-        this.role = role;
         this.name = name;
         this.email = email;
+        this.role = role;
     }
 
     public static UserDTO fromUser(User user) {

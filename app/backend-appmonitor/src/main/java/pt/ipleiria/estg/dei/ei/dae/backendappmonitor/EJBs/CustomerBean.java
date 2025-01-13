@@ -65,12 +65,4 @@ public class CustomerBean {
         return customer;
     }
 
-    public Customer updatePassword(String username, String password) throws MyEntityNotFoundException {
-        var customer = entityManager.find(Customer.class, username);
-        if (customer == null) {
-            throw new MyEntityNotFoundException("Customer with username: '" + username + "' not found");
-        }
-        customer.setPassword(password);
-        return customer;
-    }
 }

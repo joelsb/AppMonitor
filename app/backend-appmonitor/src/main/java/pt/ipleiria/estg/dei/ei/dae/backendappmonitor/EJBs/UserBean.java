@@ -42,9 +42,9 @@ public class UserBean {
         return user != null && user.getPassword().equals(hasher.hash(password));
     }
 
-    public User updatePassword(String username, String password) throws MyEntityNotFoundException {
+    public User changePassword(String username, String password) throws MyEntityNotFoundException {
         var user = this.find(username);
-        user.setPassword(password);
+        user.setPassword(hasher.hash(password));
         return user;
     }
 }

@@ -27,14 +27,9 @@ export const useAuthStore = defineStore("authStore", () => {
                 token.value = response;
 
                 // Fetch user details using the token
-                const userResponse = await $fetch(`${apiUrl}/auth/user`, {
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: `Bearer ${response}`,
-                    },
-                });
+                const userResponse = await fetch(`${apiUrl}/auth/user`);
                 if (userResponse) {
-                    user.value = userResponse; // Save user info
+                    user.value = await userResponse.json(); // Save user info
                 }
                 return { success: true };
             } else {
@@ -44,6 +39,31 @@ export const useAuthStore = defineStore("authStore", () => {
             // Error handling based on the structure of the error object
             console.error("Login failed:", error);
             return { success: false, error: error.message || "Login failed" };
+        }
+    }
+
+    async function changePassword(passwordForm) {
+        // Implement change password
+        //send only the current password and the new password
+        passwordForm = {
+            username: user.value.username,
+            password: passwordForm.newPassword,
+        };
+        try{
+            const response = await fetch(`${apiUrl}/auth/${user.value.username}/change-password`, {
+                method: "POST",
+                body: JSON.stringify(passwordForm),
+            });
+            if (response) {
+                user.value = await response.json();
+                return { success: true };
+            } else {
+                return { success: false, error: "Invalid response" };
+            }
+        }
+        catch(error){
+            console.error("Change password failed:", error);
+            return { success: false, error: error.message || "Change password failed" };
         }
     }
 
@@ -62,6 +82,7 @@ export const useAuthStore = defineStore("authStore", () => {
         user,
         isAuthenticated,
         login,
+        changePassword,
         logout
     };
 });

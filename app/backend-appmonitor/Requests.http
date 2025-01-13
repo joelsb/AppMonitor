@@ -32,6 +32,10 @@ Accept: application/json
 > {% client.global.set('jwt-token', response.body) %}
 
 
+### REQUEST USER INFO
+GET {{url}}/auth/user
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
 
 
