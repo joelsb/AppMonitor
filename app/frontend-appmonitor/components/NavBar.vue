@@ -2,54 +2,50 @@
   <div>
     <nav class="navbar">
       <!-- Login Button (Left-aligned) -->
-      <div class="login-btn">
-        <button class="login-button" @click="onLogin">
-          Login
-        </button>
-      </div>
-
       <ul class="nav-links">
+        <div class="profile-item">
+        </div>
         <!-- Regular links (excluding Profile) -->
         <li v-for="(link, index) in links" :key="index" class="nav-item">
-            <button v-if="link.name !== 'Profile'" :class="[
-              'nav-button',
-              (activeIndex === index || link.active) ? 'active' : ''
-            ]" @click="navigate(link.route)">
-              {{ link.name }}
-            </button>
-
-            <!-- Submenu for other links -->
-            <ul v-if="link.submenu || link.name !== 'Profile'" class="submenu">
-              <li v-for="(item, subIndex) in link.submenu" :key="subIndex" class="submenu-item"
-                @click="navigate(item.route)">
-                {{ item.name }}
-              </li>
-            </ul>
-        </li>
-
-        <!-- Profile link -->
-        <div class="profile-item">
-        <!-- Profile link (the 4th link in the array) -->
-        <li v-if="linkProfile" class="nav-item">
-          <button :class="[
-            'nav-button profile-button',
-            (activeIndex === 3 || linkProfile.active) ? 'active' : ''
-          ]" @click="navigate(linkProfile.route)">
-          <svg xmlns="http://www.w3.org/2000/svg" class="user-avatar" height="24px" viewBox="0 -960 960 960"
-            width="24px" fill="#5f6368">
-            <path
-              d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
-          </svg>
-            {{ linkProfile.name }}
+          <button v-if="link.name !== 'Profile'" :class="[
+            'nav-button',
+            (activeIndex === index || link.active) ? 'active' : ''
+          ]" @click="navigate(link.route)">
+            {{ link.name }}
           </button>
-          <ul v-if="linkProfile.submenu" class="submenu profile-submenu">
-            <li v-for="(item, subIndex) in linkProfile.submenu" :key="subIndex" class="submenu-item"
+
+          <!-- Submenu for other links -->
+          <ul v-if="link.submenu || link.name !== 'Profile'" class="submenu">
+            <li v-for="(item, subIndex) in link.submenu" :key="subIndex" class="submenu-item"
               @click="navigate(item.route)">
               {{ item.name }}
             </li>
           </ul>
         </li>
-      </div>
+
+        <!-- Profile link -->
+        <div class="profile-item">
+          <!-- Profile link (the 4th link in the array) -->
+          <li v-if="linkProfile" class="nav-item">
+            <button :class="[
+              'nav-button profile-button',
+              (activeIndex === 3 || linkProfile.active) ? 'active' : ''
+            ]" @click="navigate(linkProfile.route)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="user-avatar" height="24px" viewBox="0 -960 960 960"
+                width="24px" fill="#5f6368">
+                <path
+                  d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+              </svg>
+              {{ user.name }}
+            </button>
+            <ul v-if="linkProfile.submenu" class="submenu profile-submenu">
+              <li v-for="(item, subIndex) in linkProfile.submenu" :key="subIndex" class="submenu-item"
+                @click="navigate(item.route)">
+                {{ item.name }}
+              </li>
+            </ul>
+          </li>
+        </div>
       </ul>
     </nav>
   </div>
@@ -105,15 +101,15 @@ const links = [
 
 const linkProfile =
 {
-    name: 'Profile',
-    route: '/profile',
-    active: false,
-    submenu: [
-      { name: 'Edit Profile', route: '/profile/edit' },
-      { name: 'Change Password', route: '/profile/password' },
-      { name: 'Logout', route: '/login/logout' },
-    ],
-  }
+  name: 'Profile',
+  route: '/profile',
+  active: false,
+  submenu: [
+    { name: 'Profile', route: '/profile' },
+    { name: 'Change Password', route: '/profile/password' },
+    { name: 'Logout', route: '/login/logout' },
+  ],
+}
 
 // Update active index for both parent and submenu items
 function setActiveIndex(index) {
@@ -204,13 +200,12 @@ function onLogout() {
 .navbar {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e5e7eb;
   /* gray-300 */
   background-color: #f3f4f6;
   /* gray-100 */
-  padding: 1rem;
+  padding: 1rem 1rem 0rem 1rem;
   width: 100%;
 }
 
@@ -235,7 +230,7 @@ function onLogout() {
 
 /* Navigation Links */
 .nav-links {
-  flex-grow:1;
+  flex-grow: 1;
   display: flex;
   flex-direction: row;
   gap: 1.5rem;
@@ -248,7 +243,8 @@ function onLogout() {
 }
 
 .profile-item {
-  flex-grow:1;
+  flex-basis: 0;
+  flex-grow: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -262,6 +258,7 @@ function onLogout() {
 
 .nav-button {
   padding: 0.5rem 0.1rem;
+  margin-bottom: 1rem;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -290,8 +287,9 @@ function onLogout() {
 /* Submenu */
 .submenu {
   position: absolute;
-  left: 0;
-  top: 100%;
+  left: 50%; /* Start positioning from the horizontal center of the parent */
+  transform: translateX(-50%); /* Shift the submenu to center */
+  top: 90%;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.375rem;
@@ -310,11 +308,19 @@ function onLogout() {
 .profile-submenu {
   right: 0 !important;
   left: auto !important;
+  transform: translateX(0) !important;
 }
 
 .nav-item:hover .submenu {
   opacity: 1;
   visibility: visible;
+}
+
+.nav-item:hover .nav-button {
+  background-color: #bfdbfe; /* blue-100 */
+  border-radius: 9999px;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .submenu-item {

@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Employee;
 
 import java.util.List;
@@ -14,15 +15,14 @@ public class EmployeeDTO extends UserDTO{
     public EmployeeDTO() {
     }
 
-    public EmployeeDTO(String username, String password, String name, String email, String warehouse) {
-        super(username, password, name, email);
+    public EmployeeDTO(String username, String name, String email, String warehouse) {
+        super(username, name, email, null);
         this.warehouse = warehouse;
     }
 
     public static EmployeeDTO from(Employee employee) {
         return new EmployeeDTO(
                 employee.getUsername(),
-                employee.getPassword(),
                 employee.getName(),
                 employee.getEmail(),
                 employee.getWarehouse()

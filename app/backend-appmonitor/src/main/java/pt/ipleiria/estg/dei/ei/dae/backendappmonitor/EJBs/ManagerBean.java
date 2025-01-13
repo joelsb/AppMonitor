@@ -48,13 +48,4 @@ public class ManagerBean extends UserBean {
         manager.setOffice(office);
         return manager;
     }
-
-    public Manager updatePassword(String username, String password) throws MyEntityNotFoundException {
-        var manager = entityManager.find(Manager.class, username);
-        if(manager == null) {
-            throw new MyEntityNotFoundException("Manager with username: '" + username + "' not found");
-        }
-        manager.setPassword(password);
-        return manager;
-    }
 }

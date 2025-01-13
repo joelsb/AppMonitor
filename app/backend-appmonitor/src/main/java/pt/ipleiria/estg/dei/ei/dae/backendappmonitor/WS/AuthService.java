@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.AuthDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.UserDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.UserBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.TokenIssuer;
 
@@ -36,6 +37,18 @@ public class AuthService {
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
+
+    @POST
+    @Path("{username}/change-password")
+    @Authenticated
+    public Response changePassword(@PathParam("username") String username, @Valid AuthDTO auth) throws MyEntityNotFoundException {
+        if (!security.getUserPrincipal().getName().equals(username) || !auth.getUsername().equals(username)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        var user = userBean.changePassword(username, auth.getPassword());
+        return Response.ok(UserDTO.fromUser(user)).build();
+    }
+
 
     @GET
     @Authenticated
