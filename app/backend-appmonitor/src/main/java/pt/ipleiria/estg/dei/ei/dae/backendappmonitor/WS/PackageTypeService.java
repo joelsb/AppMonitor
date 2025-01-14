@@ -5,6 +5,7 @@ import jakarta.ejb.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorTypeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.PackageTypeBean;
@@ -50,6 +51,16 @@ public class PackageTypeService {
         var packageType = packageTypeBean.findWithMandatorySensors(id);
         var mandatorySensors = packageType.getMandatorySensors();
         return Response.ok(SensorTypeDTO.fromSimple(mandatorySensors)).build();
+    }
+
+    @POST
+    @Path("/")
+    @RolesAllowed({"Employee"})
+    public Response createPackageType(PackageTypeCreateDTO packageTypeCreateDTO) throws MyEntityExistsException , MyEntityNotFoundException {
+        packageTypeBean.create(packageTypeCreateDTO);
+        var packageType = packageTypeBean.find(packageTypeCreateDTO.getId());
+        var packageTypeDTO = PackageTypeDTO.from(packageType);
+        return Response.ok(packageTypeDTO).build();
     }
 
 }

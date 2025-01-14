@@ -2,8 +2,11 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 import jakarta.ejb.*;
 import jakarta.persistence.*;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorTypeCreateDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 
 import java.util.List;
 
@@ -32,6 +35,16 @@ public class SensorTypeBean {
 
     public SensorType create(String name, String unit, double ceiling, double floor) {
         var sensorType = new SensorType(name, unit, ceiling, floor);
+        entityManager.persist(sensorType);
+        return sensorType;
+    }
+    public SensorType create(SensorTypeCreateDTO sensorTypeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+        if(!entityManager.createNamedQuery("getSensorTypeByName", SensorType.class)
+                .setParameter("name", sensorTypeCreateDTO.getName())
+                .getResultList().isEmpty()) {
+            throw new MyEntityExistsException("PackageType with name: '" + sensorTypeCreateDTO.getName() + "' already exists");
+        }
+        var sensorType = new SensorType(sensorTypeCreateDTO.getName(), sensorTypeCreateDTO.getUnit(), sensorTypeCreateDTO.getCeiling(), sensorTypeCreateDTO.getFloor());
         entityManager.persist(sensorType);
         return sensorType;
     }

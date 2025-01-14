@@ -6,9 +6,12 @@ import jakarta.ws.rs.*;
 
 import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorTypeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.ProductTypeBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 import java.util.stream.Collectors;
@@ -21,6 +24,15 @@ public class ProductTypeService {
 
     @EJB
     private ProductTypeBean productTypeBean;
+
+    @POST
+    @Path("/")
+    @RolesAllowed({"Employee"})
+    public Response createProductType(ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
+        productTypeBean.create(productTypeCreateDTO);
+        ProductType productType = productTypeBean.findByName(productTypeCreateDTO.getName());
+        return Response.ok(ProductTypeDTO.from(productType)).build();
+    }
 
     @GET
     @Path("/")

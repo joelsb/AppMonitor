@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
@@ -55,6 +56,17 @@ public class ProductTypeBean {
             throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
         }
         var productType = new ProductType(name, mandatoryPackage);
+        entityManager.persist(productType);
+        return productType;
+    }
+
+    public ProductType create(ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityExistsException {
+        if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
+                .setParameter("name", productTypeCreateDTO.getName())
+                .getResultList().isEmpty()) {
+            throw new MyEntityExistsException("ProductType with id: '" + productTypeCreateDTO.getName() + "' already exists");
+        }
+        var productType = new ProductType(productTypeCreateDTO.getName(), productTypeCreateDTO.isMandatoryPackage());
         entityManager.persist(productType);
         return productType;
     }

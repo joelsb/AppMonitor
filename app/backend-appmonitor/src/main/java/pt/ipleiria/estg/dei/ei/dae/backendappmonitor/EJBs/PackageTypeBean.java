@@ -4,6 +4,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ public class PackageTypeBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public PackageType find(Long id) throws MyEntityNotFoundException {
+    public PackageType find(long id) throws MyEntityNotFoundException {
         var packageType = entityManager.find(PackageType.class, id);
         if(packageType == null) {
             throw new MyEntityNotFoundException("PackageType with id: '" + id + "' not found");
@@ -52,6 +53,16 @@ public class PackageTypeBean {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
         var packageType = new PackageType(name);
+        entityManager.persist(packageType);
+        return packageType;
+    }
+    public PackageType create(PackageTypeCreateDTO packageTypeCreateDTO) throws MyEntityExistsException {
+        if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
+                .setParameter("name", packageTypeCreateDTO.getName())
+                .getResultList().isEmpty()) {
+            throw new MyEntityExistsException("PackageType with name: '" + packageTypeCreateDTO.getName() + "' already exists");
+        }
+        var packageType = new PackageType(packageTypeCreateDTO.getName());
         entityManager.persist(packageType);
         return packageType;
     }
