@@ -28,16 +28,16 @@ public class VolumeService {
     @Context
     private SecurityContext securityContext;
 
-//    @GET
-//    @Path("/")
-//    @RolesAllowed({"Customer"})
-//    public Response getAllVolumes() {
-//        var volumes = volumeBean.findAll();
-//        logger.info("Volumes: " + volumes.get(0).getSentDate());
-//        var volumeDTOs = VolumeDTO.fromEmployee(volumes);
-//        logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
-//        return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
-//    }
+    @GET
+    @Path("/")
+    @RolesAllowed({"Customer","Manager"})
+    public Response getAllVolumes() {
+        var volumes = volumeBean.findAllWithSensorsProducts();
+        logger.info("Volumes: " + volumes.get(0).getSentDate());
+        var volumeDTOs = VolumeDTO.fromEmployee(volumes);
+        logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
+        return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
+        }
 
     @GET
     @Path("/{id}")

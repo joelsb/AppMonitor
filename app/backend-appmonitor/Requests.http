@@ -129,6 +129,10 @@ Authorization: Bearer {{jwt-token}}
 
 
 ############ VOLUME SERVICE
+### GET ALL VOLUMES (CUSTOMER, MANAGER)
+GET {{url}}/volumes
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
 ### GET A SPECIFIC VOLUME (CUSTOMER, MANAGER)
 GET {{url}}/volumes/103
