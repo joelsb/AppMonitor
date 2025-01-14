@@ -11,6 +11,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.hibernate.Hibernate;
@@ -22,8 +23,10 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumen
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Utils.VolumeValidationResult;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Stateless
 public class VolumeBean {
@@ -133,7 +136,7 @@ public class VolumeBean {
         var volume = this.find(id);
         //data de hoje
         Date date = Date.from(new Date().toInstant());
-        if(volume.getDeliveredDate() != null){
+        if (volume.getDeliveredDate() != null) {
             throw new MyIllegalArgumentException("Volume with id: '" + id + "' already delivered");
         }
         volume.setDeliveredDate(date);
@@ -143,16 +146,20 @@ public class VolumeBean {
 
 
     public Volume create(VolumeCreateDTO volumeCreateDTO, Order order, VolumeValidationResult result) throws MyEntityNotFoundException, MyEntityExistsException {
-        //TODO: Falta utilizar os Beans aqui tbm (Reutilizar código)
 
         // Extract validated entities
-        var packageType = result.getPackageType();
+        PackageType packageType = null;
+        if(result.getPackageType() != null){
+            packageType = result.getPackageType();
+        }
         var sensorTypes = result.getSensorTypes();
         var productTypes = result.getProductTypes();
 
         // Create the Volume
         var volume = new Volume(volumeCreateDTO.getId(), volumeCreateDTO.getSentDate(), packageType, order);
-        packageType.addVolume(volume);
+        if(packageType != null) {
+            packageType.addVolume(volume);
+        }
         order.addVolume(volume);
         entityManager.persist(volume);
 
@@ -193,12 +200,6 @@ public class VolumeBean {
             throw new MyEntityExistsException("Volume with id: '" + volumeCreateDTO.getId() + "' already exists");
         }
 
-        // Validate PackageType
-        var packageType = entityManager.find(PackageType.class, volumeCreateDTO.getPackageTypeId());
-        if (packageType == null) {
-            throw new MyEntityNotFoundException("PackageType with id: '" + volumeCreateDTO.getPackageTypeId() + "' not found");
-        }
-        result.setPackageType(packageType);
 
         // Validate Sensors
         for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
@@ -214,16 +215,75 @@ public class VolumeBean {
             }
         }
 
+        var mandatoryPackage = false;
+        //Hash map (key=sensorTypeId, value=quantity)
+        HashMap<Long, Integer> allMandatorySensors = new HashMap<>();
+
         // Validate Products
         for (ProductRecordDTO productDTO : volumeCreateDTO.getProducts()) {
             var productType = entityManager.find(ProductType.class, productDTO.getProductId());
             if (productType == null) {
                 throw new MyEntityNotFoundException("ProductType not found for id: '" + productDTO.getProductId() + "'");
             }
+            // Retrieve mandatory sensors from the product type
+            for (SensorType mandatorySensor : productType.getMandatorySensors()) {
+                Long sensorTypeId = mandatorySensor.getId();
+
+                // If the sensorTypeId already exists in the map, increment its quantity by 1
+                allMandatorySensors.merge(sensorTypeId, 1, Integer::sum);
+            }
+            if (productType.isMandatoryPackage()) {
+                mandatoryPackage = true;
+            }
             result.addProductType(productType);
         }
+        // Initialize mandatory sensors list
+
+        if (mandatoryPackage) {
+            // Retrieve and validate packageType
+            var packageType = entityManager.find(PackageType.class, volumeCreateDTO.getPackageTypeId());
+            if (packageType == null) {
+                throw new MyEntityNotFoundException("PackageType not found for id: '" + volumeCreateDTO.getPackageTypeId() + "'");
+            }
+            result.setPackageType(packageType);
+
+            // Add mandatory sensors from packageType to the hash map
+            for (SensorType mandatorySensor : packageType.getMandatorySensors()) {
+                Long sensorTypeId = mandatorySensor.getId();
+
+                // Increment the count for this sensorTypeId in the map
+                allMandatorySensors.merge(sensorTypeId, 1, Integer::sum);
+            }
+        }
+
+        // Validate mandatory sensors using the helper method
+        validateMandatorySensors(result, allMandatorySensors);
 
         return result;
+    }
+
+    // Extracted helper method for clarity and reusability
+    private void validateMandatorySensors(VolumeValidationResult result, HashMap<Long, Integer> mandatorySensors) throws MyEntityNotFoundException {
+        // Check for missing or insufficient sensors
+        var missingSensors = mandatorySensors.entrySet().stream()
+                .filter(entry -> {
+                    var sensorTypeId = entry.getKey(); // SensorTypeId from the mandatory sensors map
+                    var requiredCount = entry.getValue(); // Required quantity of this sensor
+                    var actualCount = result.getSensorTypes().stream()
+                            .filter(sensor -> sensor.getId()==sensorTypeId) // Match by sensorTypeId
+                            .count();
+                    return actualCount < requiredCount; // Check if the count is insufficient
+                })
+                .map(entry -> "{ SensorTypeId: '" + entry.getKey() + "' " +
+                        ", Actual: '" + result.getSensorTypes().stream().filter(sensor -> sensor.getId()==entry.getKey()).count() + "' " +
+                        ", Required: '" + entry.getValue() + "' }")
+
+                .collect(Collectors.toList());
+
+        // Throw an exception if there are missing sensors
+        if (!missingSensors.isEmpty()) {
+            throw new MyEntityNotFoundException("The following sensors are missing or insufficient in quantity: " + missingSensors);
+        }
     }
 }
 
