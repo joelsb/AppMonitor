@@ -58,6 +58,14 @@ public class ProductTypeService {
 //        return Response.ok(productTypeDTO).build();
 //    }
 
+    @PUT
+    @Path("/{id}")
+    @RolesAllowed({"Employee"})
+    public Response updateProductType(@PathParam("id") long id, ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityNotFoundException , MyEntityExistsException {
+        var productType = productTypeBean.update(id, productTypeCreateDTO.getName(),productTypeCreateDTO.isMandatoryPackage());
+        return Response.ok(ProductTypeDTO.from(productType)).build();
+    }
+
     @GET
     @Path("/{id}/mandatory-sensors")
     @RolesAllowed({"Employee"})

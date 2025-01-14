@@ -36,6 +36,14 @@ public class SensorTypeService {
         return Response.ok(SensorTypeDTO.from(sensorType)).build();
     }
 
+    @PUT
+    @Path("/{id}")
+    @RolesAllowed({"Employee"})
+    public Response updateSensorType(@PathParam("id") long id, SensorTypeCreateDTO sensorTypeCreateDTO) throws MyEntityNotFoundException {
+        var sensorType = sensorTypeBean.update(id, sensorTypeCreateDTO.getName(), sensorTypeCreateDTO.getUnit(), sensorTypeCreateDTO.getCeiling(), sensorTypeCreateDTO.getFloor());
+        return Response.ok(SensorTypeDTO.from(sensorType)).build();
+    }
+
 //    @GET
 //    @Path("/{id}")
 //    public Response getSensorType(@PathParam("id") long id) throws MyEntityNotFoundException {

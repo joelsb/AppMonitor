@@ -71,7 +71,7 @@ public class ProductTypeBean {
         return productType;
     }
 
-    public ProductType update(Long id, String name, boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException {
+    public ProductType update(long id, String name, boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException {
         var productType = this.find(id);
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)

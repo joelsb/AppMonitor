@@ -63,4 +63,12 @@ public class PackageTypeService {
         return Response.ok(packageTypeDTO).build();
     }
 
+    @PUT
+    @Path("/{id}")
+    @RolesAllowed({"Employee"})
+    public Response updatePackageType(@PathParam("id") long id, PackageTypeCreateDTO packageTypeCreateDTO) throws MyEntityNotFoundException , MyEntityExistsException {
+        var packageType = packageTypeBean.update(id, packageTypeCreateDTO.getName());
+        return Response.ok(PackageTypeDTO.from(packageType)).build();
+    }
+
 }

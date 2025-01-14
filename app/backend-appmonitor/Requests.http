@@ -230,6 +230,19 @@ Authorization: Bearer {{jwt-token}}
 }
 
 
+### EDIT A PRODUCT-TYPE (x)
+PUT {{url}}/product-types/3
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "name": "Desktop",
+  "mandatoryPackage" :true
+}
+
+
+
 ### GET ALL PRODUCT-TYPES (EMPLOYEE)
 GET {{url}}/product-types
 Accept: application/json
@@ -257,7 +270,15 @@ Authorization: Bearer {{jwt-token}}
   "name": "Caixa Cartao XXL"
 }
 
+### EDIT A PACKAGE-TYPE (x)
+PUT {{url}}/package-types/10
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
+{
+  "name": "Caixa Cartao 2XL"
+}
 
 ### GET ALL PACKAGE-TYPES (EMPLOYEE)
 GET {{url}}/package-types
@@ -282,6 +303,19 @@ Authorization: Bearer {{jwt-token}}
 
 {
   "name": "Movimento",
+  "unit": "m/s",
+  "ceiling": 10,
+  "floor": 0
+}
+
+### EDIT A SENSOR-TYPE (x)
+PUT  {{url}}/sensor-types/3
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "name": "Moves",
   "unit": "m/s",
   "ceiling": 10,
   "floor": 0
