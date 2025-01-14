@@ -48,13 +48,16 @@ public class ProductTypeBean {
         return productTypes;
     }
 
-    public ProductType create(String name, boolean mandatoryPackage) throws MyEntityExistsException {
+    public ProductType create(long id, String name, boolean mandatoryPackage) throws MyEntityExistsException {
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
-            throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
+            throw new MyEntityExistsException("ProductType with name: '" + name + "' already exists");
         }
-        var productType = new ProductType(name, mandatoryPackage);
+        if(entityManager.find(ProductType.class, id) != null){
+            throw new MyEntityExistsException("ProductType with id: '" + id + "' already exists");
+        }
+        var productType = new ProductType(id, name, mandatoryPackage);
         entityManager.persist(productType);
         return productType;
     }

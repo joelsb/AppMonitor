@@ -7,9 +7,6 @@ import jakarta.ejb.Startup;
 
 import jakarta.inject.Inject;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductRecord;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Hasher;
 
 import java.time.LocalDateTime;
@@ -47,6 +44,10 @@ public class ConfigBean {
     private ProductRecordBean productRecordBean;
     @EJB
     private SensorRecordBean sensorRecordBean;
+
+    @EJB
+    private XLSXFileBean xlsxFileBean;
+
     @Inject
     private Hasher hasher;
 
@@ -56,49 +57,65 @@ public class ConfigBean {
     public void populateDB() {
         //create Entities
         try {
-            System.out.println("Populating DB");
-            //Users creation
-            var customerJoel = customerBean.create("Joel", hasher.hash("123"), "Joel", "joelsb@mail.com");
-            var customerTiago = customerBean.create("Tiago", hasher.hash("123"), "Tiago", "tiago@mail.com");
-            var employeeJose = employeeBean.create("Jose", hasher.hash("123"), "Jose", "jose@mail.com", "warehouse1");
-            var managerAna = managerBean.create("Ana", hasher.hash("123"), "Ana", "ana@mail.com", "office1");
+            if(xlsxFileBean.isFile("Users") && xlsxFileBean.isFile("ProductTypes") && xlsxFileBean.isFile("SensorTypes") && xlsxFileBean.isFile("PackageTypes")){
+                xlsxFileBean.loadAllFromXlsx();
+            }
+            else {
+                //Users creation
+                if (xlsxFileBean.isFile("Users")) {
+                    xlsxFileBean.loadAllUsersFromXlsx();
+                } else {
+                    var customerJoel = customerBean.create("Joel", hasher.hash("123"), "Joel", "joelsb@mail.com");
+                    var customerTiago = customerBean.create("Tiago", hasher.hash("123"), "Tiago", "tiago@mail.com");
+                    var employeeJose = employeeBean.create("Jose", hasher.hash("123"), "Jose", "jose@mail.com", "warehouse1");
+                    var managerAna = managerBean.create("Ana", hasher.hash("123"), "Ana", "ana@mail.com", "office1");
+                }
 
-            //Product-Type creation
-            var product1 = productTypeBean.create("Televisao LCD Samsung", false);
+                //Product-Type creation
+                if (xlsxFileBean.isFile("ProductTypes")) {
+                    xlsxFileBean.loadAllProductTypesFromXlsx();
+                } else {
+                    var product1 = productTypeBean.create(1, "Televisao LCD Samsung", false);
+                    var product2 = productTypeBean.create(2, "Gelado OLA - Corneto morango", true);
+                }
 
-            var product2 = productTypeBean.create("Gelado OLA - Corneto morango", true);
+                //Sensor-Type creation
+                if (xlsxFileBean.isFile("SensorTypes")) {
+                    xlsxFileBean.loadAllSensorTypesFromXlsx();
+                } else {
+                    var sensorTemperature = sensorTypeBean.create(1, "Temperature", "ºC", 30, 10);
+                    var sensorHumidity = sensorTypeBean.create(2, "Humidity", "%", 80, 20);
+                }
 
-            //Sensor-Type creation
-            var sensorTemperature = sensorTypeBean.create("Temperature", "ºC", 30, 10);
-            var sensorHumidity = sensorTypeBean.create("Humidity", "%", 80, 20);
-
-
-            //add a mandatory sensor to a product-type
-            //add the mandatory sensor Temperature to the product-type Televisao LCD Samsung
-            //productTypeBean.addMandatorySensor(1L, 1L);
-            //add the mandatory sensors Humidity and Temperature to the product-type Gelado OLA - Corneto morango
-            productTypeBean.addMandatorySensor(1L, 1L);
-            productTypeBean.addMandatorySensor(2L, 2L);
-
-
-            //package-type creation
-            var packageCaixaIsotermicaS = packageTypeBean.create("Caixa Isotermica S");
-            var packageCaixaIsotermicaM = packageTypeBean.create("Caixa Isotermica M");
-            var packageCaixaIsotermicaL = packageTypeBean.create("Caixa Isotermica L");
-            var packageCaixaIsotermicaXL = packageTypeBean.create("Caixa Isotermica XL");
-            var packageCaixaCartaoS = packageTypeBean.create("Caixa Cartao S");
-            var packageCaixaCartaoM = packageTypeBean.create("Caixa Cartao M");
-            var packageCaixaCartaoL = packageTypeBean.create("Caixa Cartao L");
-            var packageCaixaCartaoXL = packageTypeBean.create("Caixa Cartao XL");
-            var packageBox = packageTypeBean.create("Box");
+                //package-type creation
+                if (xlsxFileBean.isFile("PackageTypes")) {
+                    xlsxFileBean.loadAllPackageTypesFromXlsx();
+                } else {
+                    var packageCaixaIsotermicaS = packageTypeBean.create(1, "Caixa Isotermica S");
+                    var packageCaixaIsotermicaM = packageTypeBean.create(2, "Caixa Isotermica M");
+                    var packageCaixaIsotermicaL = packageTypeBean.create(3, "Caixa Isotermica L");
+                    var packageCaixaIsotermicaXL = packageTypeBean.create(4, "Caixa Isotermica XL");
+                    var packageCaixaCartaoS = packageTypeBean.create(5, "Caixa Cartao S");
+                    var packageCaixaCartaoM = packageTypeBean.create(6, "Caixa Cartao M");
+                    var packageCaixaCartaoL = packageTypeBean.create(7, "Caixa Cartao L");
+                    var packageCaixaCartaoXL = packageTypeBean.create(8, "Caixa Cartao XL");
+                    var packageBox = packageTypeBean.create(9, "Box");
+                }
+            }
 
             //add a mandatory sensor to a package-type
             packageTypeBean.addMandatorySensor(1L, 1L);
             packageTypeBean.addMandatorySensor(1L, 2L);
 
+            //add a mandatory sensor to a product-type
+            productTypeBean.addMandatorySensor(1L, 1L);
+            productTypeBean.addMandatorySensor(2L, 2L);
+
+            xlsxFileBean.saveAllToXlsx();
+
             System.out.println("Populating DB finished");
         } catch (Exception e) {
-            logger.severe("Creating Entities: " + e.getMessage());
+            logger.severe("ERROR Creating Entities: " + e.getMessage());
         }
         //create Order
         try {
@@ -140,9 +157,9 @@ public class ConfigBean {
             //Sensors for productTypeId 1 -> 1
             //Sensors for productTypeId 2 -> 2
             //Total sensorsTypeId -> 1,2,1,2
-            var volumeCreateDTO = getVolumeDTO(sentDate, 103L, 1L, null,
-                    List.of(Map.entry(1L, 1), Map.entry(2L, 1)),  //products (Id, Quantity)
-                    List.of(Map.entry(3L, 1L), Map.entry(4L, 2L)));  //sensors (Id, SensorTypeId)
+            var volumeCreateDTO = getVolumeDTO(sentDate, 103L, null, null,
+                    List.of(Map.entry(1L, 1), Map.entry(1L, 1)),  //products (Id, Quantity)
+                    List.of(Map.entry(3L, 1L), Map.entry(4L, 1L)));  //sensors (Id, SensorTypeId)
 
             /* For OrderCreateDTO:
               "id": 28,
