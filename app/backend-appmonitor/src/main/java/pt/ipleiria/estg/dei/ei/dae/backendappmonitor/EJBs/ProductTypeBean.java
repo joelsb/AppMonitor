@@ -73,7 +73,7 @@ public class ProductTypeBean {
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("ProductType with id: '" + productTypeCreateDTO.getName() + "' already exists");
         }
-        var productType = new ProductType(productTypeCreateDTO.getName(), productTypeCreateDTO.isMandatoryPackage());
+        var productType = new ProductType(productTypeCreateDTO.getId(), productTypeCreateDTO.getName(), productTypeCreateDTO.isMandatoryPackage());
         entityManager.persist(productType);
         return productType;
     }

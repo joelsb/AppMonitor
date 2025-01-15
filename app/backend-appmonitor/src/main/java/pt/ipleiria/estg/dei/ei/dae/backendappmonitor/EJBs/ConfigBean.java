@@ -58,13 +58,17 @@ public class ConfigBean {
         //create Entities
         try {
             if(xlsxFileBean.isFile("Users") && xlsxFileBean.isFile("ProductTypes") && xlsxFileBean.isFile("SensorTypes") && xlsxFileBean.isFile("PackageTypes")){
+                System.out.println("Populating DB from XLSX files");
                 xlsxFileBean.loadAllFromXlsx();
             }
             else {
                 //Users creation
+                System.out.println("Populating DB from scratch");
                 if (xlsxFileBean.isFile("Users")) {
+                    System.out.println("Populating Users from XLSX file");
                     xlsxFileBean.loadAllUsersFromXlsx();
                 } else {
+                    System.out.println("Populating Users from scratch");
                     var customerJoel = customerBean.create("Joel", hasher.hash("123"), "Joel", "joelsb@mail.com");
                     var customerTiago = customerBean.create("Tiago", hasher.hash("123"), "Tiago", "tiago@mail.com");
                     var employeeJose = employeeBean.create("Jose", hasher.hash("123"), "Jose", "jose@mail.com", "warehouse1");
@@ -73,24 +77,30 @@ public class ConfigBean {
 
                 //Product-Type creation
                 if (xlsxFileBean.isFile("ProductTypes")) {
+                    System.out.println("Populating ProductTypes from XLSX file");
                     xlsxFileBean.loadAllProductTypesFromXlsx();
                 } else {
+                    System.out.println("Populating ProductTypes from scratch");
                     var product1 = productTypeBean.create(1, "Televisao LCD Samsung", false);
                     var product2 = productTypeBean.create(2, "Gelado OLA - Corneto morango", true);
                 }
 
                 //Sensor-Type creation
                 if (xlsxFileBean.isFile("SensorTypes")) {
+                    System.out.println("Populating SensorTypes from XLSX file");
                     xlsxFileBean.loadAllSensorTypesFromXlsx();
                 } else {
+                    System.out.println("Populating SensorTypes from scratch");
                     var sensorTemperature = sensorTypeBean.create(1, "Temperature", "ºC", 30, 10);
                     var sensorHumidity = sensorTypeBean.create(2, "Humidity", "%", 80, 20);
                 }
 
                 //package-type creation
                 if (xlsxFileBean.isFile("PackageTypes")) {
+                    System.out.println("Populating PackageTypes from XLSX file");
                     xlsxFileBean.loadAllPackageTypesFromXlsx();
                 } else {
+                    System.out.println("Populating PackageTypes from scratch");
                     var packageCaixaIsotermicaS = packageTypeBean.create(1, "Caixa Isotermica S");
                     var packageCaixaIsotermicaM = packageTypeBean.create(2, "Caixa Isotermica M");
                     var packageCaixaIsotermicaL = packageTypeBean.create(3, "Caixa Isotermica L");
@@ -102,7 +112,6 @@ public class ConfigBean {
                     var packageBox = packageTypeBean.create(9, "Box");
                 }
             }
-
             //add a mandatory sensor to a package-type
             packageTypeBean.addMandatorySensor(1L, 1L);
             packageTypeBean.addMandatorySensor(1L, 2L);
@@ -112,7 +121,6 @@ public class ConfigBean {
             productTypeBean.addMandatorySensor(2L, 2L);
 
             xlsxFileBean.saveAllToXlsx();
-
             System.out.println("Populating DB finished");
         } catch (Exception e) {
             logger.severe("ERROR Creating Entities: " + e.getMessage());

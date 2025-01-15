@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
-    public String username;
-    public String name;
-    public String email;
-    public String role;
+    private String username;
+    private String name;
+    private String email;
+    private String role;
 
     public UserDTO() {
     }
@@ -61,4 +61,7 @@ public class UserDTO {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

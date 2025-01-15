@@ -69,7 +69,7 @@ public class PackageTypeBean {
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + packageTypeCreateDTO.getName() + "' already exists");
         }
-        var packageType = new PackageType(packageTypeCreateDTO.getName());
+        var packageType = new PackageType(packageTypeCreateDTO.getId(), packageTypeCreateDTO.getName());
         entityManager.persist(packageType);
         return packageType;
     }

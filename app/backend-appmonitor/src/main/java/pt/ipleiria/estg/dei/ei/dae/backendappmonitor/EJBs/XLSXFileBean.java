@@ -104,7 +104,6 @@ public class XLSXFileBean {
                 }
                 row++;
             }
-            System.out.println("Excel file for Users created successfully");
         } catch (IOException e) {
             System.out.println("Error creating the Excel file for Users: " + e.getMessage());
         }
@@ -140,7 +139,6 @@ public class XLSXFileBean {
                 row++;
             }
 
-            System.out.println("Excel file for Product Types created successfully");
         } catch (IOException e) {
             System.out.println("Error creating the Excel file for Product Types: " + e.getMessage());
         }
@@ -174,7 +172,6 @@ public class XLSXFileBean {
                 row++;
             }
 
-            System.out.println("Excel file for Package Types created successfully");
         } catch (IOException e) {
             System.out.println("Error creating the Excel file for Package Types: " + e.getMessage());
         }
@@ -215,7 +212,6 @@ public class XLSXFileBean {
                 row++;
             }
 
-            System.out.println("Excel file for Sensor Types created successfully");
         } catch (IOException e) {
             System.out.println("Error creating the Excel file for Sensor Types: " + e.getMessage());
         }
@@ -279,7 +275,6 @@ public class XLSXFileBean {
                         employeeBean.create(username, password, name, email, warehouse);
                     }
                 }
-                System.out.println("Excel file for Users read successfully");
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
             } catch (MyEntityExistsException e) {
@@ -324,7 +319,6 @@ public class XLSXFileBean {
 
                     productTypebean.create(Long.parseLong(id), name, isMandatoryPackage);
                 }
-                System.out.println("Excel file for Product Types read successfully");
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
             } catch (MyEntityExistsException e) {
@@ -364,7 +358,6 @@ public class XLSXFileBean {
                     // Create appropriate PackageType object
                     packageTypebean.create(Long.parseLong(id), name);
                 }
-                System.out.println("Excel file for Package Types read successfully");
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
             } catch (MyEntityExistsException e) {
@@ -405,7 +398,6 @@ public class XLSXFileBean {
 
                     sensorTypeBean.create(Long.parseLong(id), name, unit, Double.parseDouble(ceiling), Double.parseDouble(floor));
                 }
-                System.out.println("Excel file for Sensor Types read successfully");
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
             } catch (MyEntityExistsException e) {

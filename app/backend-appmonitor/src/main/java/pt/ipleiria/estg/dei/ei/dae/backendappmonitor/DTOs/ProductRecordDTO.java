@@ -15,11 +15,11 @@ public class ProductRecordDTO {
     volume: Volume
      */
 
-    public Long id;
-    public Long productId;
-    public String productName;
-    public Integer quantity;
-    public Long volumeId;
+    private Long id;
+    private Long productId;
+    private String productName;
+    private Integer quantity;
+    private Long volumeId;
 
     public ProductRecordDTO() {
     }

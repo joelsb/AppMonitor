@@ -52,7 +52,7 @@ public class SensorTypeBean {
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + sensorTypeCreateDTO.getName() + "' already exists");
         }
-        var sensorType = new SensorType(sensorTypeCreateDTO.getName(), sensorTypeCreateDTO.getUnit(), sensorTypeCreateDTO.getCeiling(), sensorTypeCreateDTO.getFloor());
+        var sensorType = new SensorType(sensorTypeCreateDTO.getId(), sensorTypeCreateDTO.getName(), sensorTypeCreateDTO.getUnit(), sensorTypeCreateDTO.getCeiling(), sensorTypeCreateDTO.getFloor());
         entityManager.persist(sensorType);
         return sensorType;
     }
