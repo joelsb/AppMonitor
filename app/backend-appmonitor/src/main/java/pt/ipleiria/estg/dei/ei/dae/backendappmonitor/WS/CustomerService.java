@@ -72,7 +72,6 @@ public class CustomerService {
 
     @GET
     @Path("/")
-    @RolesAllowed({"Manager"})
     public Response getAllCustomersWithOrdersIds() throws MyEntityNotFoundException {
         var customersDTO = customerBean.findAllWithOrders().stream().map(customer -> {
             var customerDTO = CustomerDTO.fromEmployee(customer);
