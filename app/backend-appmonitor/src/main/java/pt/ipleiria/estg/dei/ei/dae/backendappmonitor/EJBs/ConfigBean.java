@@ -227,7 +227,7 @@ public class ConfigBean {
         var productRecords = products.stream().map(entry -> new ProductRecordDTO(null, entry.getKey(), entry.getValue(), null, null)).collect(Collectors.toList());
 
         // Map sensor data to SensorDTO
-        var sensorDTOs = sensors.stream().map(entry -> new SensorDTO(entry.getKey(), entry.getValue(), null, null, null)).collect(Collectors.toList());
+        var sensorDTOs = sensors.stream().map(entry -> new SensorDTO(entry.getKey(), entry.getValue(), null, null)).collect(Collectors.toList());
 
         // Set products and sensors in VolumeCreateDTO
         volumeCreateDTO.setProducts(productRecords);

@@ -36,7 +36,7 @@ public class AuthenticationFilter  implements ContainerRequestFilter {
             throw new
                     NotAuthorizedException("Authorization header must be provided");
         }
-// Get token from the HTTP Authorization header
+        // Get token from the HTTP Authorization header
         String token = header.substring("Bearer".length()).trim();
         var user = userBean.findOrFail(getUsername(token));
         requestContext.setSecurityContext(new SecurityContext() {
@@ -55,6 +55,10 @@ public class AuthenticationFilter  implements ContainerRequestFilter {
             }
             @Override
             public String getAuthenticationScheme() { return "Bearer"; }
+
+            public String getUserRole() {
+                return org.hibernate.Hibernate.getClass(user).getSimpleName();
+            }
         });
     }
 

@@ -45,6 +45,7 @@ public class CustomerService {
 //        return Response.ok(CustomerDTO.fromAllEmployees(customerBean.findAll())).build();
 //    }
 
+    //Only Customer can access this
     @GET
     @Path("{username}")
     @RolesAllowed({"Customer"})
@@ -53,77 +54,81 @@ public class CustomerService {
 
         if(!principal.getName().equals(username)) {
             // write to the log the principal.getName() and the username
-            logger.warning("Principal name: " + principal.getName() + " does not match username: " + username);
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         var customerWithOrders = customerBean.findWithOrders(username);
-        var customerDTO = CustomerDTO.fromEmployee(customerWithOrders);
-
-        // Retrieve orders IDs
-        var ordersIds = customerWithOrders.getOrdersIds();
+        var customerDTO = CustomerDTO.from(customerWithOrders);
 
         // Set orders and orders IDs properly
-        customerDTO.setOrdersIds(ordersIds.isEmpty() ? null : ordersIds);
-        customerDTO.setExcludeOrders(true);
+        customerDTO.setOrdersIds(customerWithOrders.getOrdersIds());
 
         return Response.ok(customerDTO).build();
     }
 
+    //Only Employee can access this
     @GET
     @Path("/")
-    public Response getAllCustomersWithOrdersIds() throws MyEntityNotFoundException {
+    @RolesAllowed({"Employee"})
+    public Response getAllCustomers() {
         var customersDTO = customerBean.findAllWithOrders().stream().map(customer -> {
             var customerDTO = CustomerDTO.fromEmployee(customer);
             var ordersIds = customer.getOrdersIds();
-            customerDTO.setOrdersIds(ordersIds.isEmpty() ? null : ordersIds);
-            customerDTO.setExcludeOrders(true);
+            customerDTO.setOrdersIds(ordersIds);
             return customerDTO;
         }).collect(Collectors.toList());
         return Response.ok(customersDTO).build();
     }
 
-    @GET
-    @Path("/{username}/orders")
-    public Response getAllOrdersByCustomerId(@PathParam("username") String username) throws MyEntityNotFoundException {
-        // Fetch customer with orders
-        var customer = customerBean.findWithOrders(username);
-        if (customer == null) {
-            throw new MyEntityNotFoundException("Customer not found for username: " + username);
-        }
-
-        // Map customer to DTO
-        var customerDTO = CustomerDTO.fromEmployee(customer);
-
-        // Map orders to DTO
-        var orders = customer.getOrders();
-        var ordersDTO = OrderDTO.from(orders);
-        for(Order order : orders) {
-            for (OrderDTO orderDTO : ordersDTO) {
-                orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
-            }
-        }
-
-
-        // Set orders in CustomerDTO (if necessary)
-        customerDTO.setOrders(ordersDTO);
-
-        // Return orders or the customerDTO based on requirements
-        return Response.ok(ordersDTO).build();
-    }
-
-
-    @GET
-    @Path("/orders/{id}/volumes")
-    public Response getCustomerOrderVolumes(@PathParam("id") long id) throws MyEntityNotFoundException {
-        var order = orderBean.find(id);
-        var orderDTO = OrderDTO.from(order);
-        var volumes = order.getVolumes();
-        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeDTO.from(volumes));
-        return Response.ok(orderDTO).build();
-    }
-
-
-
-
+//    @GET
+//    @Path("/orders")
+//    public Response getAllCustomersWithOrdersIds() throws MyEntityNotFoundException {
+//        var customersDTO = customerBean.findAllWithOrders().stream().map(customer -> {
+//            var customerDTO = CustomerDTO.fromEmployee(customer);
+//            var ordersIds = customer.getOrdersIds();
+//            customerDTO.setOrdersIds(ordersIds.isEmpty() ? null : ordersIds);
+//            return customerDTO;
+//        }).collect(Collectors.toList());
+//        return Response.ok(customersDTO).build();
+//    }
+//
+//    @GET
+//    @Path("/{username}/orders")
+//    public Response getAllOrdersByCustomerId(@PathParam("username") String username) throws MyEntityNotFoundException {
+//        // Fetch customer with orders
+//        var customer = customerBean.findWithOrders(username);
+//        if (customer == null) {
+//            throw new MyEntityNotFoundException("Customer not found for username: " + username);
+//        }
+//
+//        // Map customer to DTO
+//        var customerDTO = CustomerDTO.fromEmployee(customer);
+//
+//        // Map orders to DTO
+//        var orders = customer.getOrders();
+//        var ordersDTO = OrderDTO.from(orders);
+//        for(Order order : orders) {
+//            for (OrderDTO orderDTO : ordersDTO) {
+//                orderDTO.setVolumes(VolumeDTO.fromManager(order.getVolumes()));
+//            }
+//        }
+//
+//
+//        // Set orders in CustomerDTO (if necessary)
+//        customerDTO.setOrders(ordersDTO);
+//
+//        // Return orders or the customerDTO based on requirements
+//        return Response.ok(ordersDTO).build();
+//    }
+//
+//
+//    @GET
+//    @Path("/orders/{id}/volumes")
+//    public Response getCustomerOrderVolumes(@PathParam("id") long id) throws MyEntityNotFoundException {
+//        var order = orderBean.find(id);
+//        var orderDTO = OrderDTO.from(order);
+//        var volumes = order.getVolumes();
+//        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeDTO.from(volumes));
+//        return Response.ok(orderDTO).build();
+//    }
 }

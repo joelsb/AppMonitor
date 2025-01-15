@@ -3,6 +3,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
@@ -89,6 +90,17 @@ public class OrderBean {
 
     public List<Order> findAll() {
         var orders = entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
+        for (Order order : orders) {
+            Hibernate.initialize(order.getVolumes());
+        }
+        return orders;
+    }
+
+    public List<Order> findAllCustomerOrders(String username) {
+        //@NamedQuery(name = "getOrdersByCustomer", query = "SELECT o FROM Order o WHERE o.customer.username = :username ORDER BY o.createdDate"),
+        var orders = entityManager.createNamedQuery("getOrdersByCustomer", Order.class)
+                .setParameter("username", username)
+                .getResultList();
         for (Order order : orders) {
             Hibernate.initialize(order.getVolumes());
         }
