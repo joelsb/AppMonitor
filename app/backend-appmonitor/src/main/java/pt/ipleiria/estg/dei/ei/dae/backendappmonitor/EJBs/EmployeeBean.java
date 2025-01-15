@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -14,6 +15,9 @@ import java.util.List;
 public class EmployeeBean extends UserBean {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public Employee find(String username) {
         var employee = entityManager.find(Employee.class, username);
@@ -36,6 +40,8 @@ public class EmployeeBean extends UserBean {
         var employee = new Employee(
                 username, password, name, email, warehouse);
         entityManager.persist(employee);
+        xlsxFileBean.saveAllUsersToXlsx();
+
         return employee;
     }
 
@@ -47,6 +53,8 @@ public class EmployeeBean extends UserBean {
         employee.setName(name);
         employee.setEmail(email);
         employee.setWarehouse(Warehouse);
+        xlsxFileBean.saveAllUsersToXlsx();
+
         return employee;
     }
 

@@ -13,10 +13,12 @@ import java.util.List;
 public class SensorTypeBean {
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public SensorType find(Long id) throws MyEntityNotFoundException {
         var sensor = entityManager.find(SensorType.class, id);
-        if(sensor == null) {
+        if (sensor == null) {
             throw new MyEntityNotFoundException("SensorType with id: '" + id + "' not found");
         }
         return sensor;
@@ -32,15 +34,14 @@ public class SensorTypeBean {
         return entityManager.createNamedQuery("getAllSensorTypes", SensorType.class).getResultList();
     }
 
-    public SensorType create(long id,String name, String unit, double ceiling, double floor) throws MyEntityExistsException {
-        if(entityManager.find(SensorType.class, id) != null){
+    public SensorType create(long id, String name, String unit, double ceiling, double floor) throws MyEntityExistsException {
+        if (entityManager.find(SensorType.class, id) != null) {
             throw new MyEntityExistsException("ProductType with id: '" + id + "' already exists");
         }
-        else{
-            var sensorType = new SensorType(id,name, unit, ceiling, floor);
-            entityManager.persist(sensorType);
-            return sensorType;
-        }
+        var sensorType = new SensorType(id, name, unit, ceiling, floor);
+        entityManager.persist(sensorType);
+        xlsxFileBean.saveAllSensorTypesToXlsx();
+        return sensorType;
     }
 
     public SensorType update(Long id, String name, String unit, double ceiling, double floor) throws MyEntityNotFoundException {
@@ -49,6 +50,7 @@ public class SensorTypeBean {
         sensorType.setUnit(unit);
         sensorType.setCeiling(ceiling);
         sensorType.setFloor(floor);
+        xlsxFileBean.saveAllSensorTypesToXlsx();
         return sensorType;
     }
 
