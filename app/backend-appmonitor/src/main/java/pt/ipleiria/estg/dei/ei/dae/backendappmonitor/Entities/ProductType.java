@@ -33,7 +33,6 @@ public class ProductType extends Versionable implements Serializable {
     volume-Volume
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     private String name;
@@ -48,7 +47,8 @@ public class ProductType extends Versionable implements Serializable {
     public ProductType() {
     }
 
-    public ProductType(String name, boolean mandatoryPackage) {
+    public ProductType(long id, String name, boolean mandatoryPackage) {
+        this.id = id;
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
     }
