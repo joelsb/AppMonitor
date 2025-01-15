@@ -19,10 +19,10 @@ public class CustomerBean {
     @EJB
     private XLSXFileBean xlsxFileBean;
 
-    public Customer find(String username) {
+    public Customer find(String username) throws MyEntityNotFoundException {
         var customer = entityManager.find(Customer.class, username);
         if (customer == null) {
-            throw new RuntimeException("User with username: '" + username + "' not found");
+            throw new MyEntityNotFoundException("User with username: '" + username + "' not found");
         }
         return customer;
     }

@@ -346,3 +346,17 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/sensor-types
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+############ EMAIL SERVICE
+POST {{url}}/emails/Joel
+Content-Type: application/json
+Accept: application/json
+
+{
+  "subject": "Teste",
+  "body": "Teste body"
+}

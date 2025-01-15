@@ -4,10 +4,7 @@ import jakarta.ejb.*;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorRecordDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Sensor;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorRecord;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 
 import java.io.*;
@@ -18,6 +15,8 @@ import java.util.List;
 public class SensorBean implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private EmailBean emailBean;
 
 
     public Sensor find(Long id) throws MyEntityNotFoundException {
@@ -80,11 +79,20 @@ public class SensorBean implements Serializable {
     public void addValue(Long sensorId, SensorRecordDTO sensorRecordDTO) throws MyEntityNotFoundException {
         var sensor = this.find(sensorId);
         var date = new Date();
-        //TODO: Send the notification the the ones that are subscribed to this sensor
         var value = sensorRecordDTO.getValue();
         SensorRecord record = new SensorRecord(date,value,sensor);
         entityManager.persist(record);
         sensor.addRecord(record);
+
+        //send email for all managers and customer of that order
+        var managers = entityManager.createNamedQuery("getAllManagers", Manager.class).getResultList();
+        for (var manager : managers) {
+            emailBean.send(manager.getEmail(), "New value for sensor with id: '" + sensorId + "'",
+                    "The sensor with id: '" + sensorId + "' has a new value: '" + value + "' at: '" + date.toString() + "'");
+        }
+        var customer = sensor.getVolume().getOrder().getCustomer();
+        emailBean.send(customer.getEmail(), "New value for sensor with id: '" + sensorId + "'",
+                "The sensor with id: '" + sensorId + "' has a new value: '" + value + "' at: '" + date.toString() + "'");
     }
 
 }
