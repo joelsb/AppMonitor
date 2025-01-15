@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,6 +17,8 @@ import java.util.List;
 public class ProductTypeBean {
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public ProductType find(Long id) throws MyEntityNotFoundException {
         var productType = entityManager.find(ProductType.class, id);
@@ -60,6 +63,7 @@ public class ProductTypeBean {
         }
         var productType = new ProductType(id, name, mandatoryPackage);
         entityManager.persist(productType);
+        xlsxFileBean.saveAllProductTypesToXlsx();
         return productType;
     }
 
@@ -83,6 +87,8 @@ public class ProductTypeBean {
         }
         productType.setName(name);
         productType.setMandatoryPackage(mandatoryPackage);
+        xlsxFileBean.saveAllProductTypesToXlsx();
+
         return productType;
     }
 

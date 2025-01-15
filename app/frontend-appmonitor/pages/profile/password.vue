@@ -1,95 +1,106 @@
 <template>
     <NavBar />
-        <div class="card">
-            <div class="card-header">
-                <h2>Change Password</h2>
-            </div>
-            <div class="card-body">
-                <form @submit.prevent="handleChangePassword">
-                    <!-- Current Password -->
-                    <div class="form-group">
-                        <label for="currentPassword">Current Password</label>
-                        <input
-                            type="password"
-                            id="currentPassword"
-                            v-model="passwordForm.currentPassword"
-                            class="form-control"
-                            placeholder="Enter your current password"
-                            required
-                        />
-                    </div>
-
-                    <!-- New Password -->
-                    <div class="form-group">
-                        <label for="newPassword">New Password</label>
-                        <input
-                            type="password"
-                            id="newPassword"
-                            v-model="passwordForm.newPassword"
-                            class="form-control"
-                            placeholder="Enter your new password"
-                            required
-                        />
-                    </div>
-
-                    <!-- Confirm New Password -->
-                    <div class="form-group">
-                        <label for="confirmNewPassword">Confirm New Password</label>
-                        <input
-                            type="password"
-                            id="confirmNewPassword"
-                            v-model="passwordForm.confirmNewPassword"
-                            class="form-control"
-                            placeholder="Confirm your new password"
-                            required
-                        />
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            Change Password
-                        </button>
-                    </div>
-
-                    <!-- Error Messages -->
-                    <div v-if="errorMessage" class="form-error">
-                        {{ errorMessage }}
-                    </div>
-                </form>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h2>Change Password</h2>
         </div>
+        <div class="card-body">
+            <form @submit.prevent="handleChangePassword">
+                <!-- Current Password -->
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" v-model="passwordForm.currentPassword"
+                        class="form-control" placeholder="Enter your current password" required />
+                </div>
+
+                <!-- New Password -->
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" v-model="passwordForm.newPassword" class="form-control"
+                        placeholder="Enter your new password" required />
+                </div>
+
+                <!-- Confirm New Password -->
+                <div class="form-group">
+                    <label for="newPasswordConfirmation">Confirm New Password</label>
+                    <input type="password" id="newPasswordConfirmation" v-model="passwordForm.newPasswordConfirmation"
+                        class="form-control" placeholder="Confirm your new password" required />
+                </div>
+                <!-- Error Messages -->
+                <div v-if="errorMessage" class="form-error">
+                    {{ errorMessage }}
+                </div>
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        Change Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Success, Failure or Information Popup -->
+    <Popup :show="showPopup" :title="popupTitle" :messages="popupMessages" :type="popupType" @close="closePopup" />
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '~/store/auth-store';
+import Popup from '@/components/Popup.vue'; // Import the Popup component
+
+// PopUp state
+const showPopup = ref(false);
+const popupTitle = ref('');
+const popupMessages = ref([]);
+const popupType = ref('info'); // Can be 'success' or 'error'
 
 const passwordForm = ref({
     currentPassword: '',
     newPassword: '',
-    confirmNewPassword: '',
+    newPasswordConfirmation: '',
 });
 
 const errorMessage = ref('');
 
 const handleChangePassword = async () => {
-    if (passwordForm.value.newPassword !== passwordForm.value.confirmNewPassword) {
+    // Reset the error message
+    popupMessages.value = [];
+    if (passwordForm.value.newPassword !== passwordForm.value.newPasswordConfirmation) {
         errorMessage.value = "New passwords don't match!";
         return;
     }
+
     try {
         const authStore = useAuthStore();
-        await authStore.changePassword(passwordForm.value);
-        // Optionally, clear the form fields
-        passwordForm.value.currentPassword = '';
-        passwordForm.value.newPassword = '';
-        passwordForm.value.confirmNewPassword = '';
+        const response = await authStore.changePassword(passwordForm.value);
+
+        if (response.success) {
+            // Clear the form fields and reset the error message
+            passwordForm.value.currentPassword = '';
+            passwordForm.value.newPassword = '';
+            passwordForm.value.newPasswordConfirmation = '';
+            popupTitle.value = 'Success!';
+            popupType.value = 'success';
+            popupMessages.value.push("Password changed successfully!");
+            errorMessage.value = '';
+            showPopup.value = true;
+        } else {
+            // Set the error message returned by the API or fallback to a default
+            popupTitle.value = 'Error!';
+            popupMessages.value.push(response.error || 'An unexpected error occurred.');
+            popupType.value = 'failure';
+            showPopup.value = true;
+        }
     } catch (error) {
-        console.error('Failed to change password:', error);
-        errorMessage.value = 'An error occurred while changing the password.';
+        errorMessage.value = "An unexpected error occurred.";
     }
 };
+
+// Close the popup
+const closePopup = () => {
+    showPopup.value = false;
+};
+
 </script>
 
 <style scoped>
@@ -134,6 +145,7 @@ const handleChangePassword = async () => {
 .form-messages li {
     font-size: 0.875rem;
 }
+
 .change-password-page {
     max-width: 400px;
     margin: 2rem auto;
@@ -185,7 +197,7 @@ const handleChangePassword = async () => {
 .form-error {
     color: red;
     font-size: 0.875rem;
-    margin-top: 0.5rem;
+    margin: 0.75rem;
     text-align: center;
 }
 </style>

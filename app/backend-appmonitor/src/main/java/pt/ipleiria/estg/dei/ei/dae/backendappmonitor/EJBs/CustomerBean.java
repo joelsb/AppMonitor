@@ -1,6 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
-import jakarta.ejb.Stateless;
+import jakarta.ejb.*;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
@@ -15,6 +15,9 @@ import java.util.List;
 public class CustomerBean {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public Customer find(String username) {
         var customer = entityManager.find(Customer.class, username);
@@ -52,6 +55,7 @@ public class CustomerBean {
         var customer = new Customer(
                 username, password, name, email);
         entityManager.persist(customer);
+        xlsxFileBean.saveAllUsersToXlsx();
         return customer;
     }
 
@@ -62,6 +66,8 @@ public class CustomerBean {
         }
         customer.setName(name);
         customer.setEmail(email);
+        xlsxFileBean.saveAllUsersToXlsx();
+
         return customer;
     }
 
