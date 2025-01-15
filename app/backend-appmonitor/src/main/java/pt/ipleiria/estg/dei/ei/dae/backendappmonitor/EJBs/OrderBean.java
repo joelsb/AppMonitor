@@ -31,42 +31,6 @@ public class OrderBean {
 
     private static final Logger logger = Logger.getLogger("ejbs.OrderBean");
 
-
-//    public Order create(Date createdDate, String customerUsername) throws MyEntityExistsException, MyEntityNotFoundException {
-//
-//
-//            var customer = entityManager.find(Customer.class, customerUsername);
-//            var order = new Order(createdDate,customer);
-//            customer.addOrder(order);
-//            //TODO: CREATE VOLUMES AND ASSOCIATE THEM TO THE ORDER
-//            entityManager.persist(order);
-//            return order;
-//    }
-
-
-//    public Order addVolume(long id, Volume volume) throws MyEntityNotFoundException {
-//        var order = entityManager.find(Order.class, id);
-//        if(order == null) {
-//            throw new MyEntityNotFoundException("Order (" + id + ") not found");
-//        }
-//        else{
-//            order.addVolume(volume);
-//            volume.setOrder(order);
-//        }
-//        return order;
-//    }
-
-
-//    public List<Volume> findVolumes(long id) throws MyEntityNotFoundException {
-//        var order = entityManager.find(Order.class, id);
-//        if (order == null) {
-//            throw new MyEntityNotFoundException("Order (" + id + ") not found");
-//        }
-//        return entityManager.createNamedQuery("getVolumesByOrder", Volume.class)
-//                .setParameter("order", order)
-//                .getResultList();
-//    }
-
     public Order find(long id) throws MyEntityNotFoundException {
         var order = entityManager.find(Order.class, id);
         if (order == null) {

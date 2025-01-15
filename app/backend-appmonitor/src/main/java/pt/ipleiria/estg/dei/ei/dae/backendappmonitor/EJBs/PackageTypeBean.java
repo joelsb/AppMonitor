@@ -47,13 +47,16 @@ public class PackageTypeBean {
         return packageTypes;
     }
 
-    public PackageType create(String name) throws MyEntityExistsException {
+    public PackageType create(long id, String name) throws MyEntityExistsException {
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
-        var packageType = new PackageType(name);
+        if(entityManager.find(PackageType.class, id) != null){
+            throw new MyEntityExistsException("PackageType with id: '" + id + "' already exists");
+        }
+        var packageType = new PackageType(id, name);
         entityManager.persist(packageType);
         return packageType;
     }

@@ -31,7 +31,7 @@ public class VolumeValidationResult {
     }
 
     public List<SensorType> getSensorTypes() {
-        return sensorTypes;
+        return new ArrayList<>(sensorTypes);
     }
 
     public void addSensorType(SensorType sensorType) {
@@ -39,7 +39,7 @@ public class VolumeValidationResult {
     }
 
     public List<ProductType> getProductTypes() {
-        return productTypes;
+        return new ArrayList<>(productTypes);
     }
 
     public void addProductType(ProductType productType) {
