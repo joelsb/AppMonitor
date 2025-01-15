@@ -9,24 +9,28 @@ import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
-    private String username;
-    private String name;
-    private String email;
-    private String role;
+    public String username;
+    public String password;
+    public String name;
+    public String email;
+    public String role;
 
     public UserDTO() {
     }
 
-    public UserDTO(String username, String name, String email, String role) {
+    public UserDTO(String username,String password, String name, String email, String role) {
         this.username = username;
+        this.password = password;
         this.name = name;
         this.email = email;
         this.role = role;
+
     }
 
     public static UserDTO fromUser(User user) {
         return new UserDTO(
                 user.getUsername(),
+                null,
                 user.getName(),
                 user.getEmail(),
                 Hibernate.getClass(user).getSimpleName()
@@ -47,6 +51,14 @@ public class UserDTO {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRole() {

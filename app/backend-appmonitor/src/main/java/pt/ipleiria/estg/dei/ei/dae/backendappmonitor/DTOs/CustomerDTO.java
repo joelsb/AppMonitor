@@ -18,13 +18,14 @@ public class CustomerDTO extends UserDTO{
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String username, String name, String email) {
-        super(username, name, email, null);
+    public CustomerDTO(String username,String password, String name, String email) {
+        super(username, password,name, email, null);
     }
 
     public static CustomerDTO from(Customer customer) {
         return new CustomerDTO(
                 customer.getUsername(),
+                null,
                 customer.getName(),
                 customer.getEmail()
         );
@@ -33,6 +34,7 @@ public class CustomerDTO extends UserDTO{
     public static CustomerDTO fromEmployee(Customer customer) {
         return new CustomerDTO(
                 customer.getUsername(),
+                null,
                 customer.getName(),
                 null
         );

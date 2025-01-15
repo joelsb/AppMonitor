@@ -15,14 +15,15 @@ public class EmployeeDTO extends UserDTO{
     public EmployeeDTO() {
     }
 
-    public EmployeeDTO(String username, String name, String email, String warehouse) {
-        super(username, name, email, null);
+    public EmployeeDTO(String username,String password, String name, String email, String warehouse) {
+        super(username,password, name, email, null);
         this.warehouse = warehouse;
     }
 
     public static EmployeeDTO from(Employee employee) {
         return new EmployeeDTO(
                 employee.getUsername(),
+                null,
                 employee.getName(),
                 employee.getEmail(),
                 employee.getWarehouse()
