@@ -33,7 +33,7 @@
     <Deliver :deliveryType="deliveryType" :orders="orders" :volumes="volumes" @formSubmitted="handleFormSubmission" />
 
     <!-- Success, Failure or Information Popup -->
-    <Popup :show="showPopup" :title="popupTitle" :messages="popupMessage" :type="popupType" @close="closePopup" />
+    <Popup :show="showPopup" :title="popupTitle" :messages="popupMessages" :type="popupType" @close="closePopup" />
 
 
 </template>
@@ -58,7 +58,7 @@ const volumes = ref([]);
 // PopUp state
 const showPopup = ref(false);
 const popupTitle = ref('');
-const popupMessage = ref({});
+const popupMessages = ref([]);
 const popupType = ref('info'); // Can be 'success' or 'error'
 
 const deliveryType = ref('Order'); // Default is 'Order', can be changed to 'Volume'
@@ -86,7 +86,7 @@ const fetchDeliveryData = async (type) => {
         }
         else {
             popupTitle.value = 'Error!';
-            popupMessage.value.push = 'The user is not authorized to access this data.';
+            popupMessages.value.push('The user is not authorized to access this data.');
             popupType.value = 'failure';
             showPopup.value = true;
         }
@@ -110,11 +110,11 @@ watch(deliveryType, async (newValue) => {
 const handleFormSubmission = (status, messages) => {
     if (status === 'success') {
         popupTitle.value = 'Success!';
-        popupMessage.value = messages;
+        popupMessages.value = messages;
         popupType.value = 'success';
     } if (status === 'error') {
         popupTitle.value = 'Error!';
-        popupMessage.value = messages;
+        popupMessages.value = messages;
         popupType.value = 'failure';
     }
     showPopup.value = true;

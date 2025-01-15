@@ -44,21 +44,18 @@ export const useAuthStore = defineStore("authStore", () => {
 
     async function changePassword(passwordForm) {
         // Implement change password
-        //send only the current password and the new password
-        passwordForm = {
-            username: user.value.username,
-            password: passwordForm.newPassword,
-        };
         try{
             const response = await fetch(`${apiUrl}/auth/${user.value.username}/change-password`, {
                 method: "POST",
                 body: JSON.stringify(passwordForm),
             });
-            if (response) {
-                user.value = await response.json();
+            const data = response.ok ? await response.json() : await response.text();
+            if (response.ok) {
+                user.value = data;
+                console.log("User data: ", user.value);
                 return { success: true };
             } else {
-                return { success: false, error: "Invalid response" };
+                return { success: false, error: data };
             }
         }
         catch(error){

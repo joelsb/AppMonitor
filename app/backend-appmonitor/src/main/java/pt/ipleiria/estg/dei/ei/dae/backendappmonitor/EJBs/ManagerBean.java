@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,6 +16,8 @@ import java.util.List;
 public class ManagerBean extends UserBean {
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public Manager find(String username) {
         var manager = entityManager.find(Manager.class, username);
@@ -36,6 +39,8 @@ public class ManagerBean extends UserBean {
         var manager = new Manager(
                 username, password, name, email, office);
         entityManager.persist(manager);
+        xlsxFileBean.saveAllUsersToXlsx();
+
         return manager;
     }
     @Transactional
@@ -48,8 +53,7 @@ public class ManagerBean extends UserBean {
         manager.setEmail(email);
         manager.setOffice(office);
         entityManager.persist(manager);
-
-        // Atualiza a entidade e persiste no banco de dados
+        xlsxFileBean.saveAllUsersToXlsx();
         return manager;
     }
 }

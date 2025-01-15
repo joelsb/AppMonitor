@@ -1,6 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
-import jakarta.ejb.Stateless;
+import jakarta.ejb.*;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
@@ -17,10 +17,13 @@ public class CustomerBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Customer find(String username) {
+    @EJB
+    private XLSXFileBean xlsxFileBean;
+
+    public Customer find(String username) throws MyEntityNotFoundException {
         var customer = entityManager.find(Customer.class, username);
         if (customer == null) {
-            throw new RuntimeException("User with username: '" + username + "' not found");
+            throw new MyEntityNotFoundException("User with username: '" + username + "' not found");
         }
         return customer;
     }
@@ -54,6 +57,7 @@ public class CustomerBean {
         var customer = new Customer(
                 username, password, name, email);
         entityManager.persist(customer);
+        xlsxFileBean.saveAllUsersToXlsx();
         return customer;
     }
 
@@ -67,6 +71,8 @@ public class CustomerBean {
         customer.setName(name);
         customer.setEmail(email);
         entityManager.persist(customer);
+        xlsxFileBean.saveAllUsersToXlsx();
+      
         return customer;
     }
 

@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
@@ -21,6 +22,8 @@ import java.util.List;
 public class PackageTypeBean {
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public PackageType find(long id) throws MyEntityNotFoundException {
         var packageType = entityManager.find(PackageType.class, id);
@@ -58,6 +61,7 @@ public class PackageTypeBean {
         }
         var packageType = new PackageType(id, name);
         entityManager.persist(packageType);
+        xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;
     }
     public PackageType create(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException {
@@ -66,8 +70,9 @@ public class PackageTypeBean {
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + packageTypeDTO.getName() + "' already exists");
         }
-        var packageType = new PackageType(packageTypeDTO.getName());
+        var packageType = new PackageType(packageTypeCreateDTO.getId(), packageTypeCreateDTO.getName());
         entityManager.persist(packageType);
+        xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;
     }
 
@@ -80,6 +85,7 @@ public class PackageTypeBean {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
         packageType.setName(name);
+        xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;
     }
 
