@@ -217,7 +217,7 @@ Accept: application/json
 
 ############ PRODUCT-TYPE SERVICE
 
-### CREATE A PRODUCT-TYPE (x)
+### CREATE A PRODUCT-TYPE (EMPLOYEE)
 POST {{url}}/product-types
 Content-Type: application/json
 Accept: application/json
@@ -230,7 +230,7 @@ Authorization: Bearer {{jwt-token}}
 }
 
 
-### EDIT A PRODUCT-TYPE (x)
+### EDIT A PRODUCT-TYPE (EMPLOYEE)
 PUT {{url}}/product-types/3
 Content-Type: application/json
 Accept: application/json
@@ -248,6 +248,16 @@ GET {{url}}/product-types
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
+### POST MANDATORY SENSOR TO A PRODUCT-TYPE (EMPLOYEE)
+POST {{url}}/product-types/2/add-mandatory-sensors
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "sensorId": 3
+}
+
 ### GET ALL MANDATORY SENSORS OF A PRODUCT-TYPE (EMPLOYEE)
 GET {{url}}/product-types/1/mandatory-sensors
 Accept: application/json
@@ -257,9 +267,10 @@ Authorization: Bearer {{jwt-token}}
 
 
 
+
 ############ PACKAGE-TYPE SERVICE
 
-### CREATE A PACKAGE-TYPE (x)
+### CREATE A PACKAGE-TYPE (EMPLOYEE)
 POST {{url}}/package-types
 Content-Type: application/json
 Accept: application/json
@@ -270,7 +281,7 @@ Authorization: Bearer {{jwt-token}}
   "name": "Caixa Cartao XXL"
 }
 
-### EDIT A PACKAGE-TYPE (x)
+### EDIT A PACKAGE-TYPE (EMPLOYEE)
 PUT {{url}}/package-types/10
 Content-Type: application/json
 Accept: application/json
@@ -278,6 +289,16 @@ Authorization: Bearer {{jwt-token}}
 
 {
   "name": "Caixa Cartao 2XL"
+}
+
+### POST MANDATORY SENSOR TO A PACKAGE-TYPE (EMPLOYEE)
+POST {{url}}/package-types/2/add-mandatory-sensors
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+    "sensorId": 2
 }
 
 ### GET ALL PACKAGE-TYPES (EMPLOYEE)
@@ -295,7 +316,7 @@ Authorization: Bearer {{jwt-token}}
 
 
 ############ SENSOR-TYPE SERVICE
-### CREATE A SENSOR-TYPE (x)
+### CREATE A SENSOR-TYPE (EMPLOYEE)
 POST {{url}}/sensor-types
 Content-Type: application/json
 Accept: application/json
@@ -308,7 +329,7 @@ Authorization: Bearer {{jwt-token}}
   "floor": 0
 }
 
-### EDIT A SENSOR-TYPE (x)
+### EDIT A SENSOR-TYPE (EMPLOYEE)
 PUT  {{url}}/sensor-types/3
 Content-Type: application/json
 Accept: application/json

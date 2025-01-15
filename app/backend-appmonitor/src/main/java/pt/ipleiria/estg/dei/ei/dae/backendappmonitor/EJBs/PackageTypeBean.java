@@ -79,7 +79,7 @@ public class PackageTypeBean {
         return packageType;
     }
 
-    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+    public void addMandatorySensor(long id, long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
         var packageType = this.find(id);
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if(sensorType == null) {

@@ -4,10 +4,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeCreateDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorTypeDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.PackageTypeBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
@@ -51,6 +48,17 @@ public class PackageTypeService {
         var packageType = packageTypeBean.findWithMandatorySensors(id);
         var mandatorySensors = packageType.getMandatorySensors();
         return Response.ok(SensorTypeDTO.fromSimple(mandatorySensors)).build();
+    }
+
+    @POST
+    @Path("/{id}/add-mandatory-sensors")
+    @RolesAllowed({"Employee"})
+    public Response addMandatorySensors(@PathParam("id") long id, SensorTypeMandatoryDTO sensorTypeMandatoryDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+        packageTypeBean.addMandatorySensor(id, sensorTypeMandatoryDTO.getSensorId());
+        var packageType = packageTypeBean.findWithMandatorySensors(id);
+        var packageTypeDTO = PackageTypeDTO.from(packageType);
+        packageTypeDTO.setMandatorySensors(SensorTypeDTO.fromSimple(packageType.getMandatorySensors()));
+        return Response.ok(packageTypeDTO).build();
     }
 
     @POST
