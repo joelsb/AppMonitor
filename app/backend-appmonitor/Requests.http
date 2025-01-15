@@ -57,7 +57,85 @@ GET {{url}}/customers/Joel/orders
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
+### CREATE A CUSTOMER (EMPLOYEE)
+POST {{url}}/customers
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
+{
+  "username": "Rodrigo",
+  "password": 123,
+  "name": "Rodrigo",
+  "email": "rodrigo@mail"
+}
+
+
+### EDIT A CUSTOMER (CUSTOMER)
+PUT {{url}}/customers/Joel
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "name": "Rordigo",
+  "email": "rodrigo@mail"
+}
+
+############## EMPLOYEE SERVICE
+
+### CREATE A EMPLOYEE (EMPLOYEE)
+POST {{url}}/employees
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "username": "Rodrigo",
+  "password": 123,
+  "name": "Rodrigo",
+  "email": "rodrigo@mail",
+  "warehouse": "Lisboa"
+}
+
+
+### EDIT A EMPLOYEE (EMPLOYEE)
+PUT {{url}}/employees/Jose
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "warehouse": "Lisboa"
+}
+
+
+############## MANAGER SERVICE
+
+### CREATE A MANAGER (MANAGER)
+POST {{url}}/managers
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "username": "Rodrigo",
+  "password": 123,
+  "name": "Rodrigo",
+  "email": "rodrigo@mail",
+  "office": "Porto"
+}
+
+
+### EDIT A MANAGER (MANAGER)
+PUT {{url}}/managers/Ana
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "office": "Lisboa"
+}
 
 
 

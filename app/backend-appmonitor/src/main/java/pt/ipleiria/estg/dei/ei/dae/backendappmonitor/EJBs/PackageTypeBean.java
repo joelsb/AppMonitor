@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeCreateDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
@@ -56,13 +57,13 @@ public class PackageTypeBean {
         entityManager.persist(packageType);
         return packageType;
     }
-    public PackageType create(PackageTypeCreateDTO packageTypeCreateDTO) throws MyEntityExistsException {
+    public PackageType create(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException {
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
-                .setParameter("name", packageTypeCreateDTO.getName())
+                .setParameter("name", packageTypeDTO.getName())
                 .getResultList().isEmpty()) {
-            throw new MyEntityExistsException("PackageType with name: '" + packageTypeCreateDTO.getName() + "' already exists");
+            throw new MyEntityExistsException("PackageType with name: '" + packageTypeDTO.getName() + "' already exists");
         }
-        var packageType = new PackageType(packageTypeCreateDTO.getName());
+        var packageType = new PackageType(packageTypeDTO.getName());
         entityManager.persist(packageType);
         return packageType;
     }

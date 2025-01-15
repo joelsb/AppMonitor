@@ -64,10 +64,10 @@ public class PackageTypeService {
     @POST
     @Path("/")
     @RolesAllowed({"Employee"})
-    public Response createPackageType(PackageTypeCreateDTO packageTypeCreateDTO) throws MyEntityExistsException , MyEntityNotFoundException {
-        packageTypeBean.create(packageTypeCreateDTO);
-        var packageType = packageTypeBean.find(packageTypeCreateDTO.getId());
-        var packageTypeDTO = PackageTypeDTO.from(packageType);
+    public Response createPackageType(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException , MyEntityNotFoundException {
+        packageTypeBean.create(packageTypeDTO);
+        var packageType = packageTypeBean.find(packageTypeDTO.getId());
+        packageTypeDTO = PackageTypeDTO.from(packageType);
         return Response.ok(packageTypeDTO).build();
     }
 

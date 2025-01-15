@@ -16,7 +16,10 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.*;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
+
 
 import java.lang.annotation.Target;
 import java.util.ArrayList;
@@ -38,6 +41,34 @@ public class CustomerService {
     private SecurityContext securityContext;
 
     private static final Logger logger = Logger.getLogger("WS.CustomerService");
+
+
+    @POST
+    @Path("/")
+    public Response createCustomer(CustomerDTO customerCreateDTO) throws MyEntityNotFoundException , MyEntityExistsException {
+        customerBean.create(customerCreateDTO.getUsername(), customerCreateDTO.getPassword(), customerCreateDTO.getName(), customerCreateDTO.getEmail());
+        Customer customer = customerBean.find(customerCreateDTO.getUsername());
+        var customerDTO = CustomerDTO.from(customer);
+        return Response.ok(customerDTO).build();
+    }
+
+    @PUT
+    @Path("/{username}")
+    @RolesAllowed({"Customer"})
+    public Response updateCustomer(@PathParam("username") String username, CustomerDTO customerDTO) throws MyEntityNotFoundException {
+        var principal = securityContext.getUserPrincipal();
+        Customer customer = customerBean.find(username);
+        if(!principal.getName().equals(username)) {
+            // write to the log the principal.getName() and the username
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        customerBean.update(username, customerDTO.getName(), customerDTO.getEmail());
+        customer = customerBean.find(username);
+        customerDTO = CustomerDTO.from(customer);
+        return Response.ok(customerDTO).build();
+    }
+
 
     //Only Customer can access this
     @GET

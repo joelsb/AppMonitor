@@ -15,14 +15,15 @@ public class ManagerDTO extends UserDTO{
     public ManagerDTO() {
     }
 
-    public ManagerDTO(String username, String name, String email, String office) {
-        super(username, name, email, null);
+    public ManagerDTO(String username, String password,String name, String email, String office) {
+        super(username,password, name, email, null);
         this.office = office;
     }
 
     public static ManagerDTO from(Manager manager) {
         return new ManagerDTO(
                 manager.getUsername(),
+                null,
                 manager.getName(),
                 manager.getEmail(),
                 manager.getOffice()

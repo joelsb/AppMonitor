@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.VolumeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
@@ -117,23 +118,25 @@ public class OrderBean {
     }
 
     public Order create(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
-        // Validate input and dependencies
+        // Validar entrada e dependências
         OrderValidationResult result = validateOrderCreation(orderCreateDTO);
 
-        // Extract validated entities
+        // Criar a entidade Order
         var customer = result.getCustomer();
-
-        // Create the Order entity
         var order = new Order(orderCreateDTO.getId(), orderCreateDTO.getCreatedDate(), customer);
         customer.addOrder(order);
-        entityManager.persist(order);
-        // Create the volumeValitationResult
-        VolumeValidationResult volumeResult = new VolumeValidationResult(result.getPackageType(), result.getSensorTypes(), result.getProductTypes());
+        entityManager.persist(order); // Persistir a ordem primeiro
 
-        volumeBean.create(orderCreateDTO.getVolume(), order, volumeResult);
+        // Adicionar volumes, se houver
+        if (orderCreateDTO.getVolume() != null) {
+            var volumeCreateDTO = orderCreateDTO.getVolume();
+            volumeCreateDTO.setOrderId(order.getId()); // Associar o ID da ordem ao volume
+            volumeBean.addVolumeToOrder(volumeCreateDTO);
+        }
 
         return order;
     }
+
 
 
     private OrderValidationResult validateOrderCreation(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
