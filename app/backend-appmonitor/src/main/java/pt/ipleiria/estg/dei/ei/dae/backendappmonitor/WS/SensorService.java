@@ -2,14 +2,18 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.WS;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
+import jakarta.mail.MessagingException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.EmailDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.GenericDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorRecordDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.CustomerBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.EmailBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.SensorBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
@@ -23,6 +27,10 @@ public class SensorService {
 
     @EJB
     private SensorBean sensorBean;
+    @EJB
+    private EmailBean emailBean;
+    @EJB
+    private CustomerBean customerBean;
 
     @Context
     private SecurityContext securityContext;
@@ -39,14 +47,14 @@ public class SensorService {
         }
         //get the volumeId
         var volumeId = sensors.get(0).getVolume().getId();
-        GenericDTO<List<SensorDTO>> answer = new GenericDTO<>("volumeId",volumeId, "sensors",sensorsDTO);
+        GenericDTO<List<SensorDTO>> answer = new GenericDTO<>("volumeId", volumeId, "sensors", sensorsDTO);
         return Response.ok(answer).build();
     }
 
     @GET
     @Path("/{id}")
     @Authenticated
-    @RolesAllowed({"Manager","Customer"})
+    @RolesAllowed({"Manager", "Customer"})
     public Response getSensorData(@PathParam("id") long id) throws MyEntityNotFoundException {
         var sensor = sensorBean.findWithHistory(id);
         if (securityContext.isUserInRole("Customer") &&
@@ -68,6 +76,14 @@ public class SensorService {
         sensorDTO.setHistory(SensorRecordDTO.fromSimple(sensor.getHistory()));
         return Response.ok(sensorDTO).build();
     }
+
+//    @POST
+//    @Path("/{username}/email")
+//    public Response sendEmail(@PathParam("username") String username, EmailDTO email) throws MyEntityNotFoundException, MessagingException {
+//        var customer = customerBean.find(username);
+//        emailBean.send(customer.getEmail(), email.getSubject(), email.getBody());
+//        return Response.status(Response.Status.OK).entity("E-mail sent").build();
+//    }
 
 
 }
