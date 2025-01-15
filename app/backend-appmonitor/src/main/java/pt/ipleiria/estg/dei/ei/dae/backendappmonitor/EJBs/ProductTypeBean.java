@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
@@ -62,7 +63,18 @@ public class ProductTypeBean {
         return productType;
     }
 
-    public ProductType update(Long id, String name, boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException {
+    public ProductType create(ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityExistsException {
+        if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
+                .setParameter("name", productTypeCreateDTO.getName())
+                .getResultList().isEmpty()) {
+            throw new MyEntityExistsException("ProductType with id: '" + productTypeCreateDTO.getName() + "' already exists");
+        }
+        var productType = new ProductType(productTypeCreateDTO.getName(), productTypeCreateDTO.isMandatoryPackage());
+        entityManager.persist(productType);
+        return productType;
+    }
+
+    public ProductType update(long id, String name, boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException {
         var productType = this.find(id);
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)

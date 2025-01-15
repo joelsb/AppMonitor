@@ -4,6 +4,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ public class PackageTypeBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public PackageType find(Long id) throws MyEntityNotFoundException {
+    public PackageType find(long id) throws MyEntityNotFoundException {
         var packageType = entityManager.find(PackageType.class, id);
         if(packageType == null) {
             throw new MyEntityNotFoundException("PackageType with id: '" + id + "' not found");
@@ -58,6 +59,16 @@ public class PackageTypeBean {
         entityManager.persist(packageType);
         return packageType;
     }
+    public PackageType create(PackageTypeCreateDTO packageTypeCreateDTO) throws MyEntityExistsException {
+        if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
+                .setParameter("name", packageTypeCreateDTO.getName())
+                .getResultList().isEmpty()) {
+            throw new MyEntityExistsException("PackageType with name: '" + packageTypeCreateDTO.getName() + "' already exists");
+        }
+        var packageType = new PackageType(packageTypeCreateDTO.getName());
+        entityManager.persist(packageType);
+        return packageType;
+    }
 
     public PackageType update(Long id, String name) throws MyEntityNotFoundException, MyEntityExistsException {
         var packageType = this.find(id);
@@ -71,7 +82,7 @@ public class PackageTypeBean {
         return packageType;
     }
 
-    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+    public void addMandatorySensor(long id, long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
         var packageType = this.find(id);
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if(sensorType == null) {
