@@ -23,6 +23,13 @@
                 <ul>
                 <li v-for="(history, index) in sensor.history" :key="index">
                     <p class="ml-4"><strong>History Sensor {{ sensor.id }}:</strong></p>
+
+
+                    
+DB_USER=postgres
+DB_PASS=dbsecret
+
+
                     <p class="ml-8">Time: {{ history.time }}</p>
                     <p class="ml-8">Value: {{ history.value }}</p>
                 </li>

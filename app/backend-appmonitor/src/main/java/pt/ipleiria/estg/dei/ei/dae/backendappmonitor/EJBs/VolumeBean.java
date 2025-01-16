@@ -148,10 +148,7 @@ public class VolumeBean {
     public Volume create(VolumeCreateDTO volumeCreateDTO, Order order, VolumeValidationResult result) throws MyEntityNotFoundException, MyEntityExistsException {
 
         // Extract validated entities
-        PackageType packageType = null;
-        if(result.getPackageType() != null){
-            packageType = result.getPackageType();
-        }
+        var packageType = result.getPackageType();
         var sensorTypes = result.getSensorTypes();
         var productTypes = result.getProductTypes();
 
@@ -254,6 +251,16 @@ public class VolumeBean {
                 // Increment the count for this sensorTypeId in the map
                 allMandatorySensors.merge(sensorTypeId, 1, Integer::sum);
             }
+        }else{
+            Long packageTypeId = volumeCreateDTO.getPackageTypeId();
+            if (packageTypeId == null) {
+                packageTypeId = 0L; // Define o ID como 0 se estiver nulo
+            }
+            var packageType = entityManager.find(PackageType.class, packageTypeId);
+            if (packageType == null) {
+                throw new MyEntityNotFoundException("PackageType not found for id: '" + packageTypeId + "'");
+            }
+            result.setPackageType(packageType);
         }
 
         // Validate mandatory sensors using the helper method
