@@ -44,7 +44,7 @@ export const useAuthStore = defineStore("authStore", () => {
 
     async function changePassword(passwordForm) {
         // Implement change password
-        try{
+        try {
             const response = await fetch(`${apiUrl}/auth/${user.value.username}/change-password`, {
                 method: "POST",
                 body: JSON.stringify(passwordForm),
@@ -58,7 +58,7 @@ export const useAuthStore = defineStore("authStore", () => {
                 return { success: false, error: data };
             }
         }
-        catch(error){
+        catch (error) {
             console.error("Change password failed:", error);
             return { success: false, error: error.message || "Change password failed" };
         }

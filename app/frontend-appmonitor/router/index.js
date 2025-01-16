@@ -7,11 +7,6 @@ const routes = [
     name: 'OrderDetails',  // Certifique-se de que o nome da rota é 'OrderDetails'
     component: OrderDetails,
     props: true  // Passa o parâmetro id como uma prop para o componente
-  },
-  {
-    path: '/homepage',
-    name: 'Homepage',
-    component: Homepage
   }
   // Outras rotas...
 ];
