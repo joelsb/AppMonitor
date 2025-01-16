@@ -61,9 +61,6 @@ public class ManagerBean extends UserBean {
         if(office != null){
            manager.setOffice(office);
         }
-        manager.setName(name);
-        manager.setEmail(email);
-        manager.setOffice(office);
         entityManager.persist(manager);
         xlsxFileBean.saveAllUsersToXlsx();
         return manager;

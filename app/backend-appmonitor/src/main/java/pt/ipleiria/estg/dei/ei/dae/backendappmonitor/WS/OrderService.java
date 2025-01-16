@@ -82,8 +82,6 @@ public class OrderService {
         var volumesDTO = VolumeDTO.from(order.getVolumes());
         for(VolumeDTO volumeDTO : volumesDTO) {
             volumeDTO.setOrderId(null);
-            volumeDTO.setPackageTypeId(null);
-            volumeDTO.setPackageTypeName(null);
         }
         orderDTO.setVolumes(volumesDTO);
         return Response.ok(orderDTO).build();

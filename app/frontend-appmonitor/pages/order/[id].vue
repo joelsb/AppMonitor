@@ -51,6 +51,7 @@ const fetchOrderDetails = async () => {
     loading.value = true;
     error.value = null;
     try {
+        console.log("Fetching order details for id:", route.params.id);
         const response = await fetch(`${apiUrl}/orders/${route.params.id}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch order: ${response.statusText}`);

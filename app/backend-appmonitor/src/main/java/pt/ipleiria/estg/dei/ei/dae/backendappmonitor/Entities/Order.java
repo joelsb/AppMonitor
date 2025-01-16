@@ -34,7 +34,6 @@ public class Order extends Versionable implements Serializable {
     @OneToMany(mappedBy = "order")
     private List<Volume> volumes = new ArrayList<>();
 
-
     public Order() {
     }
 

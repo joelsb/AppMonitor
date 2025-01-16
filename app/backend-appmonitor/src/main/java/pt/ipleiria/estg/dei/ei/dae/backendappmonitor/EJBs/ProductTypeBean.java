@@ -86,7 +86,7 @@ public class ProductTypeBean {
                 .getResultList().isEmpty() && !productType.getName().equals(name)) {
             throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
         }
-        entityManager.lock(productType, LockModeType.OPTIMISTIC);
+        //entityManager.lock(productType, LockModeType.OPTIMISTIC);
         productType.setName(name);
         productType.setMandatoryPackage(mandatoryPackage);
         xlsxFileBean.saveAllProductTypesToXlsx();

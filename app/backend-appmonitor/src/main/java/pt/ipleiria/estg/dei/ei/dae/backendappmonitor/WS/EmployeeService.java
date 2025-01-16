@@ -77,17 +77,5 @@ public class EmployeeService {
         return Response.ok(employeeDTO).build();
     }
 
-    @PUT
-    @Path("{username}")
-    @RolesAllowed({"Employee"})
-    public Response updateEmployee(@PathParam("username") String username, EmployeeDTO employeeDTO) throws MyEntityNotFoundException {
-        var principal = securityContext.getUserPrincipal();
-        if(!principal.getName().equals(username) || !principal.getName().equals(employeeDTO.getUsername())) {
-            // write to the log the principal.getName() and the username
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
-        var employee = employeeBean.update(employeeDTO.getUsername(), employeeDTO.getName(), employeeDTO.getEmail(), employeeDTO.getWarehouse());
 
-        return Response.ok(EmployeeDTO.from(employee)).build();
-    }
 }

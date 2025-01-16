@@ -129,17 +129,5 @@ public class CustomerService {
         return Response.ok(ordersDTO).build();
     }
 
-    @PUT
-    @Path("{username}")
-    @RolesAllowed({"Customer"})
-    public Response updateCustomer(@PathParam("username") String username, CustomerDTO customerDTO) throws MyEntityNotFoundException {
-        var principal = securityContext.getUserPrincipal();
-        if(!principal.getName().equals(username) || !principal.getName().equals(customerDTO.getUsername())) {
-            // write to the log the principal.getName() and the username
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
-        var customer = customerBean.update(customerDTO.getUsername(), customerDTO.getName(), customerDTO.getEmail());
-        return Response.ok(CustomerDTO.from(customer)).build();
-    }
 
 }

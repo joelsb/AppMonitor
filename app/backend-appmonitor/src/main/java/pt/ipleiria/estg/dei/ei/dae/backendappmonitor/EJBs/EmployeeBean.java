@@ -47,16 +47,17 @@ public class EmployeeBean extends UserBean {
     }
 
     public Employee update(String username, String name, String email, String Warehouse) throws MyEntityNotFoundException {
-        var employee = entityManager.find(Employee.class, username);
-        if (employee == null) {
-            throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
-        }
+        var employee = this.find(username);
+
         entityManager.lock(employee, LockModeType.OPTIMISTIC);
+
         employee.setName(name);
         employee.setEmail(email);
         employee.setWarehouse(Warehouse);
+
         xlsxFileBean.saveAllUsersToXlsx();
       
+
         return employee;
     }
 
