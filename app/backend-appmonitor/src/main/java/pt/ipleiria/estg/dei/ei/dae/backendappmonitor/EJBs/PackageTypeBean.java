@@ -70,7 +70,7 @@ public class PackageTypeBean {
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + packageTypeDTO.getName() + "' already exists");
         }
-        var packageType = new PackageType(packageTypeCreateDTO.getId(), packageTypeCreateDTO.getName());
+        var packageType = new PackageType(packageTypeDTO.getId(), packageTypeDTO.getName());
         entityManager.persist(packageType);
         xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;

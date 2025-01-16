@@ -39,9 +39,9 @@ public class VolumeDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
-                volume.getPackageType().getId(),
+                volume.getPackageType() != null ? volume.getPackageType().getId() : null,
                 volume.getOrder().getId(),
-                volume.getPackageType().getName()
+                volume.getPackageType() != null ? volume.getPackageType().getName() : null
         );
     }
     public static VolumeDTO fromSimple(Volume volume) {
