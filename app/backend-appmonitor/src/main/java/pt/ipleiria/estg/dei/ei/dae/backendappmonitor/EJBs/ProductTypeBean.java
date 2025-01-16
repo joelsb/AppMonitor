@@ -1,10 +1,12 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
@@ -16,6 +18,8 @@ import java.util.List;
 public class ProductTypeBean {
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public ProductType find(Long id) throws MyEntityNotFoundException {
         var productType = entityManager.find(ProductType.class, id);
@@ -49,18 +53,33 @@ public class ProductTypeBean {
         return productTypes;
     }
 
-    public ProductType create(String name, boolean mandatoryPackage) throws MyEntityExistsException {
+    public ProductType create(long id, String name, boolean mandatoryPackage) throws MyEntityExistsException {
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
-            throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
+            throw new MyEntityExistsException("ProductType with name: '" + name + "' already exists");
         }
-        var productType = new ProductType(name, mandatoryPackage);
+        if(entityManager.find(ProductType.class, id) != null){
+            throw new MyEntityExistsException("ProductType with id: '" + id + "' already exists");
+        }
+        var productType = new ProductType(id, name, mandatoryPackage);
+        entityManager.persist(productType);
+        xlsxFileBean.saveAllProductTypesToXlsx();
+        return productType;
+    }
+
+    public ProductType create(ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityExistsException {
+        if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
+                .setParameter("name", productTypeCreateDTO.getName())
+                .getResultList().isEmpty()) {
+            throw new MyEntityExistsException("ProductType with id: '" + productTypeCreateDTO.getName() + "' already exists");
+        }
+        var productType = new ProductType(productTypeCreateDTO.getId(), productTypeCreateDTO.getName(), productTypeCreateDTO.isMandatoryPackage());
         entityManager.persist(productType);
         return productType;
     }
 
-    public ProductType update(Long id, String name, boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException {
+    public ProductType update(long id, String name, boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException {
         var productType = this.find(id);
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
@@ -70,6 +89,8 @@ public class ProductTypeBean {
         //entityManager.lock(productType, LockModeType.OPTIMISTIC);
         productType.setName(name);
         productType.setMandatoryPackage(mandatoryPackage);
+        xlsxFileBean.saveAllProductTypesToXlsx();
+
         return productType;
     }
 

@@ -37,9 +37,9 @@ public class SensorTypeDTO {
         return new SensorTypeDTO(
                 sensorType.getId(),
                 sensorType.getName(),
-                null,
-                null,
-                null
+                sensorType.getUnit(),
+                sensorType.getCeiling(),
+                sensorType.getFloor()
         );
     }
 
@@ -53,6 +53,16 @@ public class SensorTypeDTO {
         );
     }
 
+    public static SensorTypeDTO fromSimple(SensorType sensorType) {
+        return new SensorTypeDTO(
+                sensorType.getId(),
+                sensorType.getName(),
+                null,
+                null,
+                null
+        );
+    }
+
 
     public static List<SensorTypeDTO> from(List<SensorType> sensorTypes) {
         return sensorTypes.stream().map(SensorTypeDTO::from).collect(Collectors.toList());
@@ -60,6 +70,10 @@ public class SensorTypeDTO {
 
     public static List<SensorTypeDTO> fromSensor(List<SensorType> sensorTypes) {
         return sensorTypes.stream().map(SensorTypeDTO::fromSensor).collect(Collectors.toList());
+    }
+
+    public static List<SensorTypeDTO> fromSimple(List<SensorType> sensorTypes) {
+        return sensorTypes.stream().map(SensorTypeDTO::fromSimple).collect(Collectors.toList());
     }
 
 

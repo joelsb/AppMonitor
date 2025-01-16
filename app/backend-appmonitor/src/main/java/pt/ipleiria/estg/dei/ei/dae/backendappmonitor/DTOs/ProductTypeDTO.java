@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.json.bind.annotation.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductTypeDTO {
     /*
     id: long
@@ -22,9 +24,7 @@ public class ProductTypeDTO {
 
     private boolean mandatoryPackage;
 
-    private List<SensorTypeDTO> mandatorySensors;
-
-    private boolean excludeMandatorySensors; // Flag to control serialization
+    private List<SensorTypeDTO> mandatorySensors = new ArrayList<>();
 
     public ProductTypeDTO() {
     }
@@ -33,8 +33,6 @@ public class ProductTypeDTO {
         this.id = id;
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
-        this.mandatorySensors = new ArrayList<>();
-        this.excludeMandatorySensors = false;
     }
 
     public static ProductTypeDTO from(ProductType productType) {
@@ -74,14 +72,10 @@ public class ProductTypeDTO {
     }
 
     public List<SensorTypeDTO> getMandatorySensors() {
-        return excludeMandatorySensors ? null : new ArrayList<>(mandatorySensors);
+        return mandatorySensors.isEmpty() ? null : new ArrayList<>(mandatorySensors);
     }
 
     public void setMandatorySensors(List<SensorTypeDTO> mandatorySensors) {
         this.mandatorySensors = mandatorySensors;
-    }
-
-    public void setExcludeMandatorySensors(boolean excludeMandatorySensors) {
-        this.excludeMandatorySensors = excludeMandatorySensors;
     }
 }

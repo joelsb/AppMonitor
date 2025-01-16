@@ -18,8 +18,8 @@ public class CustomerDTO extends UserDTO{
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String username, String password, String name, String email) {
-        super(username, password, name, email);
+    public CustomerDTO(String username,String password, String name, String email) {
+        super(username, password,name, email, null);
     }
 
     public static CustomerDTO from(Customer customer) {

@@ -1,28 +1,18 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PackageTypeDTO {
-    /*
-    {
-        "id": 9700,
-        "name": "Plastico com Bolhas Pequeno",
-        "mandatorySensors": [
-            {
-                "id": 3,
-                "name": "Movement",
-            }
-        ]
-    }
-     */
 
     private long id;
     private String name;
-    private List<SensorTypeDTO> mandatorySensors;
+    private List<SensorTypeDTO> mandatorySensors = new ArrayList<>();
 
     public PackageTypeDTO() {
     }
@@ -30,7 +20,6 @@ public class PackageTypeDTO {
     public PackageTypeDTO(long id, String name) {
         this.id = id;
         this.name = name;
-        this.mandatorySensors = new ArrayList<>();
     }
 
     public static PackageTypeDTO from(PackageType packageType) {
@@ -61,7 +50,7 @@ public class PackageTypeDTO {
     }
 
     public List<SensorTypeDTO> getMandatorySensors() {
-        return mandatorySensors;
+        return mandatorySensors.isEmpty() ? null : new ArrayList<>(mandatorySensors);
     }
 
     public void setMandatorySensors(List<SensorTypeDTO> mandatorySensors) {

@@ -76,6 +76,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
+
 import NavBar from '@/components/NavBar.vue'; // Import NavBar component
 import { useRouter } from 'vue-router'; // Import useRouter apenas uma vez
 
@@ -118,7 +119,6 @@ const fetchOrders = async () => {
             throw new Error(`Failed to fetch: ${response.statusText}`);
         }
         orders.value = await response.json();
-        console.log('Orders:', orders.value);
     } catch (err) {
         error.value = err.message;
         console.error(err);

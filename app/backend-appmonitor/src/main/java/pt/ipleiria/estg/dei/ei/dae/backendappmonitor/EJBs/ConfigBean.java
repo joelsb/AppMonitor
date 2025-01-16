@@ -7,9 +7,6 @@ import jakarta.ejb.Startup;
 
 import jakarta.inject.Inject;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductRecord;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Hasher;
 
 import java.time.LocalDateTime;
@@ -47,6 +44,10 @@ public class ConfigBean {
     private ProductRecordBean productRecordBean;
     @EJB
     private SensorRecordBean sensorRecordBean;
+
+    @EJB
+    private XLSXFileBean xlsxFileBean;
+
     @Inject
     private Hasher hasher;
 
@@ -56,49 +57,73 @@ public class ConfigBean {
     public void populateDB() {
         //create Entities
         try {
-            System.out.println("Populating DB");
-            //Users creation
-            var customerJoel = customerBean.create("Joel", hasher.hash("123"), "Joel", "joelsb@mail.com");
-            var customerTiago = customerBean.create("Tiago", hasher.hash("123"), "Tiago", "tiago@mail.com");
-            var customerJose = employeeBean.create("Jose", hasher.hash("123"), "Jose", "jose@mail.com", "warehouse1");
-            var customerAna = managerBean.create("Ana", hasher.hash("123"), "Ana", "ana@mail.com", "office1");
+            if(xlsxFileBean.isFile("Users") && xlsxFileBean.isFile("ProductTypes") && xlsxFileBean.isFile("SensorTypes") && xlsxFileBean.isFile("PackageTypes")){
+                System.out.println("Populating DB from XLSX files");
+                xlsxFileBean.loadAllFromXlsx();
+            }
+            else {
+                //Users creation
+                System.out.println("Populating DB from scratch");
+                if (xlsxFileBean.isFile("Users")) {
+                    System.out.println("Populating Users from XLSX file");
+                    xlsxFileBean.loadAllUsersFromXlsx();
+                } else {
+                    System.out.println("Populating Users from scratch");
+                    var customerJoel = customerBean.create("Joel", hasher.hash("123"), "Joel", "joelsb@mail.com");
+                    var customerTiago = customerBean.create("Tiago", hasher.hash("123"), "Tiago", "tiago@mail.com");
+                    var employeeJose = employeeBean.create("Jose", hasher.hash("123"), "Jose", "jose@mail.com", "warehouse1");
+                    var managerAna = managerBean.create("Ana", hasher.hash("123"), "Ana", "ana@mail.com", "office1");
+                }
 
-            //Product-Type creation
-            var product1 = productTypeBean.create("Televisao LCD Samsung", false);
+                //Product-Type creation
+                if (xlsxFileBean.isFile("ProductTypes")) {
+                    System.out.println("Populating ProductTypes from XLSX file");
+                    xlsxFileBean.loadAllProductTypesFromXlsx();
+                } else {
+                    System.out.println("Populating ProductTypes from scratch");
+                    var product1 = productTypeBean.create(1, "Televisao LCD Samsung", false);
+                    var product2 = productTypeBean.create(2, "Gelado OLA - Corneto morango", true);
+                }
 
-            var product2 = productTypeBean.create("Gelado OLA - Corneto morango", true);
+                //Sensor-Type creation
+                if (xlsxFileBean.isFile("SensorTypes")) {
+                    System.out.println("Populating SensorTypes from XLSX file");
+                    xlsxFileBean.loadAllSensorTypesFromXlsx();
+                } else {
+                    System.out.println("Populating SensorTypes from scratch");
+                    var sensorTemperature = sensorTypeBean.create(1, "Temperature", "ºC", 30, 10);
+                    var sensorHumidity = sensorTypeBean.create(2, "Humidity", "%", 80, 20);
+                }
 
-            //Sensor-Type creation
-            var sensorTemperature = sensorTypeBean.create("Temperature", "ºC", 30, 10);
-            var sensorHumidity = sensorTypeBean.create("Humidity", "%", 80, 20);
-
-
-            //add a mandatory sensor to a product-type
-            //add the mandatory sensor Temperature to the product-type Televisao LCD Samsung
-            productTypeBean.addMandatorySensor(1L, 1L);
-            //add the mandatory sensors Humidity and Temperature to the product-type Gelado OLA - Corneto morango
-            productTypeBean.addMandatorySensor(2L, 1L);
-            productTypeBean.addMandatorySensor(2L, 2L);
-
-
-            //package-type creation
-            var packageCaixaIsotermicaS = packageTypeBean.create("Caixa Isotermica S");
-            var packageCaixaIsotermicaM = packageTypeBean.create("Caixa Isotermica M");
-            var packageCaixaIsotermicaL = packageTypeBean.create("Caixa Isotermica L");
-            var packageCaixaIsotermicaXL = packageTypeBean.create("Caixa Isotermica XL");
-            var packageCaixaCartaoS = packageTypeBean.create("Caixa Cartao S");
-            var packageCaixaCartaoM = packageTypeBean.create("Caixa Cartao M");
-            var packageCaixaCartaoL = packageTypeBean.create("Caixa Cartao L");
-            var packageCaixaCartaoXL = packageTypeBean.create("Caixa Cartao XL");
-            var packageBox = packageTypeBean.create("Box");
-
+                //package-type creation
+                if (xlsxFileBean.isFile("PackageTypes")) {
+                    System.out.println("Populating PackageTypes from XLSX file");
+                    xlsxFileBean.loadAllPackageTypesFromXlsx();
+                } else {
+                    System.out.println("Populating PackageTypes from scratch");
+                    var packageCaixaIsotermicaS = packageTypeBean.create(1, "Caixa Isotermica S");
+                    var packageCaixaIsotermicaM = packageTypeBean.create(2, "Caixa Isotermica M");
+                    var packageCaixaIsotermicaL = packageTypeBean.create(3, "Caixa Isotermica L");
+                    var packageCaixaIsotermicaXL = packageTypeBean.create(4, "Caixa Isotermica XL");
+                    var packageCaixaCartaoS = packageTypeBean.create(5, "Caixa Cartao S");
+                    var packageCaixaCartaoM = packageTypeBean.create(6, "Caixa Cartao M");
+                    var packageCaixaCartaoL = packageTypeBean.create(7, "Caixa Cartao L");
+                    var packageCaixaCartaoXL = packageTypeBean.create(8, "Caixa Cartao XL");
+                    var packageBox = packageTypeBean.create(9, "Box");
+                }
+            }
             //add a mandatory sensor to a package-type
             packageTypeBean.addMandatorySensor(1L, 1L);
             packageTypeBean.addMandatorySensor(1L, 2L);
 
+            //add a mandatory sensor to a product-type
+            productTypeBean.addMandatorySensor(1L, 1L);
+            productTypeBean.addMandatorySensor(2L, 2L);
+
+            xlsxFileBean.saveAllToXlsx();
             System.out.println("Populating DB finished");
         } catch (Exception e) {
-            logger.severe("Creating Entities: " + e.getMessage());
+            logger.severe("ERROR Creating Entities: " + e.getMessage());
         }
         //create Order
         try {
@@ -109,7 +134,7 @@ public class ConfigBean {
             "packageTypeId": 2,
             "products": [
               {
-                "productId": 2,
+                "productId": 1,
                 "quantity": 1
               },
               {
@@ -136,8 +161,13 @@ public class ConfigBean {
             LocalDateTime sentDate2 = LocalDateTime.parse(sentDate1, formatter);
             // Convert LocalDateTime to Date
             Date sentDate = Date.from(sentDate2.atZone(ZoneId.systemDefault()).toInstant());
-
-            var volumeCreateDTO = getVolumeDTO(sentDate, 103, 2, List.of(Map.entry(2L, 1), Map.entry(2L, 3)), List.of(Map.entry(3L, 1L), Map.entry(4L, 2L)));
+            //Sensors for packageTypeId 1 -> 1,2
+            //Sensors for productTypeId 1 -> 1
+            //Sensors for productTypeId 2 -> 2
+            //Total sensorsTypeId -> 1,2,1,2
+            var volumeCreateDTO = getVolumeDTO(sentDate, 103L, null, null,
+                    List.of(Map.entry(1L, 1), Map.entry(1L, 1)),  //products (Id, Quantity)
+                    List.of(Map.entry(3L, 1L), Map.entry(4L, 1L)));  //sensors (Id, SensorTypeId)
 
             /* For OrderCreateDTO:
               "id": 28,
@@ -152,74 +182,56 @@ public class ConfigBean {
             var orderCreateDTO = new OrderCreateDTO(28L, "Joel", createdDate, volumeCreateDTO);
             var order = orderBean.create(orderCreateDTO);
 
-//            //Volume creation
-//            var product1 = productRecordBean.create(productType, 1,null);
-//            var product2 = productRecordBean.create(productType, 1,null);
-//            var products = List.of(product1, product2);
-//
-//            var sensor1 = sensorBean.create(sensorHumidity.getId(), null);
-//            var sensor2 = sensorBean.create(sensorTemperature.getId(), null);
-//            var sensors = List.of(sensor1, sensor2);
-//            var sensorRecord1 = sensorRecordBean.create(date, 10,sensor1);
-//            var sensorRecord2 = sensorRecordBean.create(date, 20,sensor2);
-//            var volume = volumeBean.create(date,pack,products, sensors, order);
-
         } catch (Exception e) {
             logger.severe("Creating Order: " + e.getMessage());
         }
-
         //create Volume
-        try {
-            /*
-            {
-              "id": 105,
-              "sentDate": "2021-06-01T00:00:00",
-              "orderId": 27,
-              "packageTypeId": 1,
-              "products": [
-                {
-                  "productId": 1,
-                  "quatity": 1
-                },
-                {
-                  "productId": 2,
-                  "quatity": 3
-                }
-              ],
-              "sensors": [
-                {
-                  "id": 1,
-                  "sensorTypeId": 1
-                },
-                {
-                  "id": 2,
-                  "sensorTypeId": 2
-                }
-              ]
-            }
-             */
-            var orderId = 28L;
-            var sentDate1 = "2021-06-01T00:00:00";
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-            LocalDateTime sentDate2 = LocalDateTime.parse(sentDate1, formatter);
-            Date sentDate = Date.from(sentDate2.atZone(ZoneId.systemDefault()).toInstant());
-
-            var volumeCreateDTO = getVolumeDTO(sentDate, 106, 1, orderId, List.of(Map.entry(1L, 1), Map.entry(2L, 3)), List.of(Map.entry(1L, 1L), Map.entry(2L, 2L)));
-
-            var volume = volumeBean.addVolumeToOrder(volumeCreateDTO);
-        } catch (Exception e) {
-            logger.severe("Creating Volume: " + e.getMessage());
-        }
+//        try {
+//            /*
+//            {
+//              "id": 105,
+//              "sentDate": "2021-06-01T00:00:00",
+//              "orderId": 27,
+//              "packageTypeId": 1,
+//              "products": [
+//                {
+//                  "productId": 1,
+//                  "quatity": 1
+//                },
+//                {
+//                  "productId": 2,
+//                  "quatity": 3
+//                }
+//              ],
+//              "sensors": [
+//                {
+//                  "id": 1,
+//                  "sensorTypeId": 1
+//                },
+//                {
+//                  "id": 2,
+//                  "sensorTypeId": 2
+//                }
+//              ]
+//            }
+//             */
+//            var orderId = 28L;
+//            var sentDate1 = "2021-06-01T00:00:00";
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+//            LocalDateTime sentDate2 = LocalDateTime.parse(sentDate1, formatter);
+//            Date sentDate = Date.from(sentDate2.atZone(ZoneId.systemDefault()).toInstant());
+//
+//            var volumeCreateDTO = getVolumeDTO(sentDate, 106, 1, orderId, List.of(Map.entry(1L, 1), Map.entry(2L, 3)), List.of(Map.entry(1L, 1L), Map.entry(2L, 2L)));
+//
+//            var volume = volumeBean.addVolumeToOrder(volumeCreateDTO);
+//        } catch (Exception e) {
+//            logger.severe("Creating Volume: " + e.getMessage());
+//        }
 
     }
 
 
-    private static VolumeCreateDTO getVolumeDTO(Date sentDate, long volumeId, long packageTypeId, List<Map.Entry<Long, Integer>> products, List<Map.Entry<Long, Long>> sensors) {
-        // Call the other method with a default orderId (e.g., null or a specific value)
-        return getVolumeDTO(sentDate, volumeId, packageTypeId, null, products, sensors);
-    }
-
-    private static VolumeCreateDTO getVolumeDTO(Date sentDate, long volumeId, long packageTypeId, Long orderId, List<Map.Entry<Long, Integer>> products, List<Map.Entry<Long, Long>> sensors) {
+    private static VolumeCreateDTO getVolumeDTO(Date sentDate, Long volumeId, Long packageTypeId, Long orderId, List<Map.Entry<Long, Integer>> products, List<Map.Entry<Long, Long>> sensors) {
         // Create VolumeCreateDTO with initial data
         var volumeCreateDTO = new VolumeCreateDTO(volumeId, sentDate, null, orderId, packageTypeId);
 

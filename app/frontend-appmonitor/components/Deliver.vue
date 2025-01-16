@@ -59,6 +59,7 @@
 <script setup>
 import { ref, computed, defineProps } from 'vue';
 
+
 const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 
@@ -81,38 +82,25 @@ const errorMessage = ref(null);
 const filteredItems = computed(() => {
     const items = deliveryType === 'Volume' ? volumes : orders;
 
-    // Properly use map and return formatted items
-    return items.map(item => {
-        const formattedItem = { ...item };  // Clone the item to avoid mutating original data
-
-        // Convert sentDate if available
-        if (formattedItem.sentDate) {
-            formattedItem.sentDate = new Date(formattedItem.sentDate).toLocaleString();
-        }
-
-        // Convert deliveredDate if available
-        if (formattedItem.deliveredDate) {
-            formattedItem.deliveredDate = new Date(formattedItem.deliveredDate).toLocaleString();
-        }
-
-        // Convert createdDate if available
-        if (formattedItem.createdDate) {
-            formattedItem.createdDate = new Date(formattedItem.createdDate).toLocaleString();
-        }
-
-        return formattedItem; // Return the formatted item
-    }).filter(item => filter.value === 'all' || !item.deliveredDate);
+    return items
+        .filter(item => filter.value === 'all' || !item.deliveredDate)
+        .sort((a, b) => {
+            // First sort by `orderId`, then by `id` within the same `orderId`
+            if (a.orderId !== b.orderId) {
+                return a.orderId - b.orderId;
+            }
+            return a.id - b.id;
+        });
 });
-
 
 
 // Deliver function
 async function deliver(item) {
     const endpoint = deliveryType === 'Volume' ? 'volumes' : 'orders';
-
+    const messages = ref([]); // Initialize messages as an empty array
     try {
         const response = await fetch(`${apiUrl}/${endpoint}/${item.id}/deliver`, {
-            method: 'PATCH', headers: { 'Content-Type': 'application/json' }
+            method: 'PATCH'
         });
 
         const responseBody = await response.text();
@@ -133,13 +121,20 @@ async function deliver(item) {
                     orders[index] = updatedItem;
                 }
             }
-            emit('formSubmitted', 'success', `${deliveryType.slice(0, -1)} with id: \'${item.id}\' delivered successfully!`);
 
+            // Add success message to the messages array
+            messages.value.push(`${deliveryType.slice(0, -1)} with id: '${item.id}' delivered successfully!`);
+            emit('formSubmitted', 'success', messages.value);
         } else {
-            emit('formSubmitted', 'error', responseBody);
+            // Add error response to the messages array
+            messages.value.push(responseBody);
+            emit('formSubmitted', 'error', messages.value);
         }
     } catch (error) {
-        emit('formSubmitted', 'error', error);
+        // Add error message to the messages array
+        messages.value.push(`An error occurred: ${error.message}`);
+        emit('formSubmitted', 'error', messages.value);
     }
 }
+
 </script>

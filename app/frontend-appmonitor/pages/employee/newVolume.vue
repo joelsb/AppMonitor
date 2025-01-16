@@ -34,7 +34,7 @@
     </div>
 
     <!-- Success, Failure or Information Popup -->
-    <Popup :show="showPopup" :title="popupTitle" :message="popupMessage" :type="popupType" @close="closePopup" />
+    <Popup :show="showPopup" :title="popupTitle" :messages="popupMessages" :type="popupType" @close="closePopup" />
 
 </template>
 
@@ -42,6 +42,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
+
 import NavBar from '@/components/NavBar.vue'; // Import the NavBar component
 import VolumeForm from '@/components/VolumeForm.vue'; // Import the CombinedForm component
 import OrderForm from '@/components/OrderForm.vue'; // Import the OrderForm component
@@ -61,7 +62,7 @@ const orders = ref([]);
 // PopUp state
 const showPopup = ref(false);
 const popupTitle = ref('');
-const popupMessage = ref('');
+const popupMessages = ref([]);
 const popupType = ref('info'); // Can be 'success' or 'error'
 const isOrderCreated = ref(false);
 
@@ -76,30 +77,38 @@ const fetchData = async (url, targetRef) => {
     }
 };
 
-onMounted(() => {
+const fetchAll = async () => {
+    fetchData('/customers', customers);
     fetchData('/orders', orders);
     fetchData('/package-types', packageTypes);
     fetchData('/product-types', products);
     fetchData('/sensor-types', sensorTypes);
+};
+
+onMounted(() => {
+    fetchAll();
+});
+
+watch(isOrderCreated, (newValue) => {
+    fetchAll();
 });
 
 // Handle form submission
-const handleFormSubmission = (status, message) => {
+const handleFormSubmission = (status, messages) => {
     if (status === 'success') {
         popupTitle.value = 'Success!';
-        popupMessage.value = message;
+        popupMessages.value = messages;
         popupType.value = 'success';
     } if (status === 'error') {
         popupTitle.value = 'Error!';
-        popupMessage.value = message;
+        popupMessages.value = messages;
         popupType.value = 'failure';
     }
     showPopup.value = true;
 };
 
 const handleInfoMandatorySensors = (sensors) => {
-    console.log(sensors);
-    popupTitle.value = 'Information!';
+    popupTitle.value = 'The following sensors are mandatory for this order:';
 
     // Create an object to hold the count of each sensor type
     const sensorCount = {};
@@ -113,43 +122,32 @@ const handleInfoMandatorySensors = (sensors) => {
         }
     });
 
-    let message = '';
+    // Clear the existing messages array
+    const messages = [];
+
     if (sensors.length === 0) {
-        message = 'No mandatory sensors for this order';
+        popupTitle.value = 'No mandatory sensors for this order';
     } else {
-        // Construct the message with CSS inline and bullet points
-        message = `
-            <style>
-                ul {
-                    list-style-type: disc;
-                    margin-left: 25px;
-                }
-                li {
-                    margin-bottom: 7px;
-                    margin-top: 7px;
-                }
-            </style>
-            The following sensors are mandatory for this order:<br><ul>`;
-
+        // Add each sensor with its count to the messages array
         for (const [sensorName, count] of Object.entries(sensorCount)) {
-            message += `<li>${count}x ${sensorName}</li>`;
+            messages.push(`${count}x ${sensorName}`);
         }
-
-        message += '</ul>';
     }
 
-    // Set the message and show the popup
-    popupMessage.value = message;
+    // Set the messages array, popup type, and show the popup
+    popupMessages.value = messages;
     popupType.value = 'info';
     showPopup.value = true;
 };
 
+
 const handleInfoMandatoryPackage = (needsPackage) => {
     popupTitle.value = 'Information!';
+    popupMessages.value = [];
     if (needsPackage) {
-        popupMessage.value = `A mandatory package is <strong>required</strong> for this order.`;
+        popupMessages.value.push(`A mandatory package is <strong>required</strong> for this order.`);
     } else {
-        popupMessage.value = `A mandatory package is <strong>not required</strong> for this order.`;
+        popupMessages.value.push(`A mandatory package is <strong>not required</strong> for this order.`);
     }
     popupType.value = 'info';
     showPopup.value = true;

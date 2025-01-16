@@ -2,7 +2,7 @@
     <div class="login-container">
         <div class="login-card">
             <h2 class="login-title">Login</h2>
-            <form @submit.prevent="login">
+            <form @submit.prevent="login" class="login-form">
                 <!-- Username Field -->
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -31,24 +31,24 @@
                 </div>
                 
                 <!-- se a password ou username tiverem incorretos -->
-                <span v-if="messages.length > 0" class="error-text ">
+                <span v-if="messages.length > 0" class="error-text">
                     Invalid username or password.
                 </span>
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary" :disabled="!isFormValid" @click="login">
+                <button type="submit" class="btn btn-primary" :disabled="!isFormValid"  >
                     Login
                 </button>
             </form>
 
         </div>
-        <div v-if="token">
+        <!-- <div v-if="token">
             <h3>Token:</h3>
             <div>{{ token }}</div>
         </div>
         <div v-if="user">
             <h3>User Info:</h3>
             <pre>{{ user }}</pre>
-        </div>
+        </div> -->
         
     </div>
 
@@ -66,7 +66,6 @@ const api = config.public.API_URL;
 const router = useRouter();
 
 const authStore = useAuthStore();
-const { token } = storeToRefs(authStore);
 
 // Form Fields
 const loginFormData = reactive({
@@ -79,29 +78,15 @@ const isFormValid = computed(() => loginFormData.username.trim() && loginFormDat
 
 // Login method
 async function login() {
-    messages.value = []; // Limpar mensagens anteriores
-    try {
-        await $fetch(`${api}/auth/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-            body: loginFormData,
-            onResponse({ response }) {
-                if (response.status === 200) {
-                    token.value = response._data; // Salva o token na store
-                    router.push("/homepage"); // Redireciona para a página inicial
-                } else {
-                    messages.value.push({
-                        status: response.status,
-                        payload: response._data,
-                    });
-                }
-            },
-        });
-    } catch (e) {
-        console.error("Login falhou:", e);
+    messages.value = [];
+
+    // Call the store's login method with the loginFormData object
+    const response = await authStore.login(loginFormData);
+
+    if (response.success) {
+        router.push("/homepage");
+    } else {
+        messages.value.push(response.error);
     }
 }
 
@@ -110,12 +95,19 @@ async function login() {
 
 
 <style scoped>
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
 .error-text {
     color: #e74c3c;
     /* Red for error */
     font-size: 0.875rem;
     /* Smaller font size */
-    margin-top: 0.5rem;
     display: block;
     text-align: center;
     /* Center the text */
@@ -138,14 +130,9 @@ async function login() {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 100%;
-    /* Full width button */
-    max-width: 300px;
     /* Optional: Limit maximum width */
-    margin: 1rem auto 0;
-    /* Center button and add spacing */
-    display: block;
-    /* Ensure the button is centered */
+    margin: 10px 0 0 0 ;
+    width: 80%;
 }
 
 .btn:disabled {
@@ -163,6 +150,9 @@ async function login() {
 }
 
 .login-card {
+    display:flex;
+    flex-direction: column;
+    gap: 20px;
     background: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -173,13 +163,16 @@ async function login() {
 }
 
 .login-title {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 2.1rem;
+    margin: 0px;
     color: #333333;
+    font-weight: 600;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    width: 100%;
+    margin: 0rem;
     text-align: left;
 }
 
