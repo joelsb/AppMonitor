@@ -38,7 +38,8 @@ public class VolumeCreateDTO {
                 volume.getSentDate(),
                 null,
                 null,
-                volume.getPackageType().getId());
+                volume.getPackageType() != null ? volume.getPackageType().getId() : null
+        );
     }
 
     public static List<VolumeCreateDTO> from(List<Volume> volumes) {

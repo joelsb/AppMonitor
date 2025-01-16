@@ -10,6 +10,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.ProductTypeBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 import java.util.stream.Collectors;
@@ -26,9 +27,9 @@ public class ProductTypeService {
     @POST
     @Path("/")
     @RolesAllowed({"Employee"})
-    public Response createProductType(ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
-        productTypeBean.create(productTypeCreateDTO);
-        ProductType productType = productTypeBean.findByName(productTypeCreateDTO.getName());
+    public Response createProductType(ProductTypeDTO productTypeDTO) throws MyEntityExistsException, MyEntityNotFoundException, MyIllegalArgumentException {
+        productTypeBean.create(productTypeDTO.getId(), productTypeDTO.getName(), productTypeDTO.isMandatoryPackage());
+        ProductType productType = productTypeBean.find(productTypeDTO.getId());
         return Response.ok(ProductTypeDTO.from(productType)).build();
     }
 
@@ -59,8 +60,8 @@ public class ProductTypeService {
     @PUT
     @Path("/{id}")
     @RolesAllowed({"Employee"})
-    public Response updateProductType(@PathParam("id") long id, ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityNotFoundException , MyEntityExistsException {
-        var productType = productTypeBean.update(id, productTypeCreateDTO.getName(),productTypeCreateDTO.isMandatoryPackage());
+    public Response updateProductType(@PathParam("id") long id, ProductTypeDTO productTypeDTO) throws MyEntityNotFoundException , MyEntityExistsException {
+        var productType = productTypeBean.update(id, productTypeDTO.getName(),productTypeDTO.isMandatoryPackage());
         return Response.ok(ProductTypeDTO.from(productType)).build();
     }
 
@@ -74,10 +75,10 @@ public class ProductTypeService {
     }
 
     @POST
-    @Path("/{id}/add-mandatory-sensors")
+    @Path("/{id}/add-mandatory-sensor/{sensorTypeId}")
     @RolesAllowed({"Employee"})
-    public Response addMandatorySensors(@PathParam("id") long id, SensorTypeMandatoryDTO sensorTypeMandatoryDTO) throws MyEntityNotFoundException, MyEntityExistsException {
-        productTypeBean.addMandatorySensor(id, sensorTypeMandatoryDTO.getSensorId());
+    public Response addMandatorySensors(@PathParam("id") long id, @PathParam("sensorTypeId") long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+        productTypeBean.addMandatorySensor(id, sensorTypeId);
         var productType = productTypeBean.findWithMandatorySensors(id);
         var productTypeDTO = ProductTypeDTO.from(productType);
         productTypeDTO.setMandatorySensors(SensorTypeDTO.fromSimple(productType.getMandatorySensors()));

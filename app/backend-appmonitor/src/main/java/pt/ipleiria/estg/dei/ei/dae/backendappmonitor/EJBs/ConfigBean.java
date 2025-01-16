@@ -57,26 +57,27 @@ public class ConfigBean {
     public void populateDB() {
         //create Entities
         try {
-            if(xlsxFileBean.isFile("Users") && xlsxFileBean.isFile("ProductTypes") && xlsxFileBean.isFile("SensorTypes") && xlsxFileBean.isFile("PackageTypes")){
+            var loadFromFile = false;
+            if(loadFromFile && xlsxFileBean.isFile("Users") && xlsxFileBean.isFile("ProductTypes") && xlsxFileBean.isFile("SensorTypes") && xlsxFileBean.isFile("PackageTypes")){
                 System.out.println("Populating DB from XLSX files");
                 xlsxFileBean.loadAllFromXlsx();
             }
             else {
                 //Users creation
                 System.out.println("Populating DB from scratch");
-                if (xlsxFileBean.isFile("Users")) {
+                if (loadFromFile && xlsxFileBean.isFile("Users")) {
                     System.out.println("Populating Users from XLSX file");
                     xlsxFileBean.loadAllUsersFromXlsx();
                 } else {
                     System.out.println("Populating Users from scratch");
-                    var customerJoel = customerBean.create("Joel", hasher.hash("123"), "Joel", "joelsb@mail.com");
-                    var customerTiago = customerBean.create("Tiago", hasher.hash("123"), "Tiago", "tiago@mail.com");
-                    var employeeJose = employeeBean.create("Jose", hasher.hash("123"), "Jose", "jose@mail.com", "warehouse1");
-                    var managerAna = managerBean.create("Ana", hasher.hash("123"), "Ana", "ana@mail.com", "office1");
+                    var customerJoel = customerBean.create("Joel", "123", "Joel", "joelsb@mail.com");
+                    var customerTiago = customerBean.create("Tiago", "123", "Tiago", "tiago@mail.com");
+                    var employeeJose = employeeBean.create("Jose", "123", "Jose", "jose@mail.com", "warehouse1");
+                    var managerAna = managerBean.create("Ana", "123", "Ana", "ana@mail.com", "office1");
                 }
 
                 //Product-Type creation
-                if (xlsxFileBean.isFile("ProductTypes")) {
+                if (loadFromFile && xlsxFileBean.isFile("ProductTypes")) {
                     System.out.println("Populating ProductTypes from XLSX file");
                     xlsxFileBean.loadAllProductTypesFromXlsx();
                 } else {
@@ -86,7 +87,7 @@ public class ConfigBean {
                 }
 
                 //Sensor-Type creation
-                if (xlsxFileBean.isFile("SensorTypes")) {
+                if (loadFromFile && xlsxFileBean.isFile("SensorTypes")) {
                     System.out.println("Populating SensorTypes from XLSX file");
                     xlsxFileBean.loadAllSensorTypesFromXlsx();
                 } else {
@@ -96,7 +97,7 @@ public class ConfigBean {
                 }
 
                 //package-type creation
-                if (xlsxFileBean.isFile("PackageTypes")) {
+                if (loadFromFile && xlsxFileBean.isFile("PackageTypes")) {
                     System.out.println("Populating PackageTypes from XLSX file");
                     xlsxFileBean.loadAllPackageTypesFromXlsx();
                 } else {
@@ -165,7 +166,7 @@ public class ConfigBean {
             //Sensors for productTypeId 1 -> 1
             //Sensors for productTypeId 2 -> 2
             //Total sensorsTypeId -> 1,2,1,2
-            var volumeCreateDTO = getVolumeDTO(sentDate, 103L, 1L, null,
+            var volumeCreateDTO = getVolumeDTO(sentDate, 103L, null, null,
                     List.of(Map.entry(1L, 1), Map.entry(1L, 1)),  //products (Id, Quantity)
                     List.of(Map.entry(3L, 1L), Map.entry(4L, 1L)));  //sensors (Id, SensorTypeId)
 

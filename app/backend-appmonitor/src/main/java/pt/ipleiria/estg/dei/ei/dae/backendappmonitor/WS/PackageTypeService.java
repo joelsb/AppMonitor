@@ -8,6 +8,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.PackageTypeBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 import java.util.stream.Collectors;
@@ -51,10 +52,10 @@ public class PackageTypeService {
     }
 
     @POST
-    @Path("/{id}/add-mandatory-sensors")
+    @Path("/{id}/add-mandatory-sensor/{sensorTypeId}")
     @RolesAllowed({"Employee"})
-    public Response addMandatorySensors(@PathParam("id") long id, SensorTypeMandatoryDTO sensorTypeMandatoryDTO) throws MyEntityNotFoundException, MyEntityExistsException {
-        packageTypeBean.addMandatorySensor(id, sensorTypeMandatoryDTO.getSensorId());
+    public Response addMandatorySensors(@PathParam("id") long id, @PathParam("sensorTypeId") long sensorId) throws MyEntityNotFoundException, MyEntityExistsException {
+        packageTypeBean.addMandatorySensor(id, sensorId);
         var packageType = packageTypeBean.findWithMandatorySensors(id);
         var packageTypeDTO = PackageTypeDTO.from(packageType);
         packageTypeDTO.setMandatorySensors(SensorTypeDTO.fromSimple(packageType.getMandatorySensors()));
@@ -64,8 +65,8 @@ public class PackageTypeService {
     @POST
     @Path("/")
     @RolesAllowed({"Employee"})
-    public Response createPackageType(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException , MyEntityNotFoundException {
-        packageTypeBean.create(packageTypeDTO);
+    public Response createPackageType(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException, MyEntityNotFoundException, MyIllegalArgumentException {
+        packageTypeBean.create(packageTypeDTO.getId(), packageTypeDTO.getName());
         var packageType = packageTypeBean.find(packageTypeDTO.getId());
         packageTypeDTO = PackageTypeDTO.from(packageType);
         return Response.ok(packageTypeDTO).build();
@@ -74,8 +75,8 @@ public class PackageTypeService {
     @PUT
     @Path("/{id}")
     @RolesAllowed({"Employee"})
-    public Response updatePackageType(@PathParam("id") long id, PackageTypeCreateDTO packageTypeCreateDTO) throws MyEntityNotFoundException , MyEntityExistsException {
-        var packageType = packageTypeBean.update(id, packageTypeCreateDTO.getName());
+    public Response updatePackageType(@PathParam("id") long id, PackageTypeDTO packageTypeDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
+        var packageType = packageTypeBean.update(id, packageTypeDTO.getName());
         return Response.ok(PackageTypeDTO.from(packageType)).build();
     }
 

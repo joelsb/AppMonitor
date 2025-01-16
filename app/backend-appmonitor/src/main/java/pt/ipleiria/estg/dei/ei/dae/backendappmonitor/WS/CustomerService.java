@@ -17,6 +17,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
 
@@ -45,7 +46,7 @@ public class CustomerService {
 
     @POST
     @Path("/")
-    public Response createCustomer(CustomerDTO customerCreateDTO) throws MyEntityNotFoundException , MyEntityExistsException {
+    public Response createCustomer(CustomerDTO customerCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         customerBean.create(customerCreateDTO.getUsername(), customerCreateDTO.getPassword(), customerCreateDTO.getName(), customerCreateDTO.getEmail());
         Customer customer = customerBean.find(customerCreateDTO.getUsername());
         var customerDTO = CustomerDTO.from(customer);
@@ -55,7 +56,7 @@ public class CustomerService {
     @PUT
     @Path("/{username}")
     @RolesAllowed({"Customer"})
-    public Response updateCustomer(@PathParam("username") String username, CustomerDTO customerDTO) throws MyEntityNotFoundException {
+    public Response updateCustomer(@PathParam("username") String username, CustomerDTO customerDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
         var principal = securityContext.getUserPrincipal();
         Customer customer = customerBean.find(username);
         if(!principal.getName().equals(username)) {

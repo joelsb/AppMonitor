@@ -277,7 +277,7 @@ public class XLSXFileBean {
                 }
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
-            } catch (MyEntityExistsException e) {
+            } catch (MyEntityExistsException | MyIllegalArgumentException e) {
                 throw new RuntimeException(e);
             }
 
@@ -321,7 +321,7 @@ public class XLSXFileBean {
                 }
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
-            } catch (MyEntityExistsException e) {
+            } catch (MyEntityExistsException | MyIllegalArgumentException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -360,7 +360,7 @@ public class XLSXFileBean {
                 }
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
-            } catch (MyEntityExistsException e) {
+            } catch (MyEntityExistsException | MyIllegalArgumentException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -400,7 +400,7 @@ public class XLSXFileBean {
                 }
             } catch (IOException e) {
                 System.out.println("Error reading the Excel file: " + e.getMessage());
-            } catch (MyEntityExistsException e) {
+            } catch (MyEntityExistsException | MyIllegalArgumentException e) {
                 throw new RuntimeException(e);
             }
         }

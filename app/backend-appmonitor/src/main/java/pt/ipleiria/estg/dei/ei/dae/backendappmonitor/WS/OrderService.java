@@ -12,6 +12,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.OrderBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 import java.util.List;
@@ -134,7 +135,7 @@ public class OrderService {
     @POST
     @Path("/")
     @RolesAllowed({"Employee"})
-    public Response createOrder(OrderCreateDTO orderCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+    public Response createOrder(OrderCreateDTO orderCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         orderBean.create(orderCreateDTO);
         Order order = orderBean.findWithVolumesProductsSensors(orderCreateDTO.getId());
         var orderDTO = OrderDTO.from(order);

@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -33,6 +34,11 @@ public class VolumeBean {
 
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private SensorBean sensorBean;
+    @EJB
+    private ProductRecordBean productRecordBean;
+
 
     private static final Logger logger = Logger.getLogger("VolumeBean");
 
@@ -120,16 +126,18 @@ public class VolumeBean {
         return volumes;
     }
 
-    public Volume addVolumeToOrder(VolumeCreateDTO volumeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+    public void addVolumeToOrder(VolumeCreateDTO volumeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         var orderId = volumeCreateDTO.getOrderId();
         var order = entityManager.find(Order.class, orderId);
         if (order == null) {
             throw new MyEntityNotFoundException("Order with id: '" + orderId + "' not found");
         }
+        if(order.getDeliveredDate() != null) {
+            throw new MyEntityNotFoundException("Order with id: '" + orderId + "' already delivered");
+        }
         VolumeValidationResult result = validateVolumeCreation(volumeCreateDTO);
         var volume = this.create(volumeCreateDTO, order, result);
         order.addVolume(volume);
-        return volume;
     }
 
     public Volume deliver(long id) throws MyEntityNotFoundException, MyIllegalArgumentException {
@@ -145,7 +153,7 @@ public class VolumeBean {
     }
 
 
-    public Volume create(VolumeCreateDTO volumeCreateDTO, Order order, VolumeValidationResult result) throws MyEntityNotFoundException, MyEntityExistsException {
+    public Volume create(VolumeCreateDTO volumeCreateDTO, Order order, VolumeValidationResult result) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
 
         // Extract validated entities
         var packageType = result.getPackageType();
@@ -165,11 +173,7 @@ public class VolumeBean {
         for (int i = 0; i < sensorDTOs.size(); i++) {
             var sensorDTO = sensorDTOs.get(i);
             var sensorType = sensorTypes.get(i); // Use validated SensorType
-            var sensor = new Sensor(sensorDTO.getId(), sensorType, volume);
-            volume.addSensor(sensor);
-
-            // Persist each sensor
-            entityManager.persist(sensor);
+            var sensor = sensorBean.create(sensorDTO.getId(), sensorType.getId(), volume.getId());
         }
 
         // Use the validated ProductTypes and create product records
@@ -177,18 +181,14 @@ public class VolumeBean {
         for (int i = 0; i < productDTOs.size(); i++) {
             var productDTO = productDTOs.get(i);
             var productType = productTypes.get(i); // Use validated ProductType
-            var productRecord = new ProductRecord(productType, productDTO.getQuantity(), volume);
-            volume.addProduct(productRecord);
-
-            // Persist each product record
-            entityManager.persist(productRecord);
+            var productRecord = productRecordBean.create(productType.getId(), productDTO.getQuantity(), volume.getId());
         }
 
         return volume;
     }
 
 
-    public VolumeValidationResult validateVolumeCreation(VolumeCreateDTO volumeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+    public VolumeValidationResult validateVolumeCreation(VolumeCreateDTO volumeCreateDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         VolumeValidationResult result = new VolumeValidationResult();
 
         // Check if Volume already exists
@@ -196,8 +196,9 @@ public class VolumeBean {
         if (existingVolume != null) {
             throw new MyEntityExistsException("Volume with id: '" + volumeCreateDTO.getId() + "' already exists");
         }
-
-
+        if(volumeCreateDTO.getId()<=0) {
+            throw new MyIllegalArgumentException("Volume id must be greater than 0");
+        }
         // Validate Sensors
         for (SensorDTO sensorDTO : volumeCreateDTO.getSensors()) {
             var sensorType = entityManager.find(SensorType.class, sensorDTO.getSensorTypeId());
@@ -251,16 +252,6 @@ public class VolumeBean {
                 // Increment the count for this sensorTypeId in the map
                 allMandatorySensors.merge(sensorTypeId, 1, Integer::sum);
             }
-        }else{
-            Long packageTypeId = volumeCreateDTO.getPackageTypeId();
-            if (packageTypeId == null) {
-                packageTypeId = 0L; // Define o ID como 0 se estiver nulo
-            }
-            var packageType = entityManager.find(PackageType.class, packageTypeId);
-            if (packageType == null) {
-                throw new MyEntityNotFoundException("PackageType not found for id: '" + packageTypeId + "'");
-            }
-            result.setPackageType(packageType);
         }
 
         // Validate mandatory sensors using the helper method

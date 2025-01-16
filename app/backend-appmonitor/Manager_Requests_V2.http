@@ -1,0 +1,28 @@
+@url= http://localhost:8080/appmonitor/api
+@username = Ana
+
+### LOGIN EMPLOYEE
+POST {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "Ana", "password": "123"}
+
+> {% client.global.set('jwt-token', response.body) %}
+
+### REQUEST USER INFO
+GET {{url}}/auth/user
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### CHANGE PASSWORD
+POST {{url}}/auth/{{username}}/change-password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "currentPassword": "123",
+  "newPassword": "1234",
+  "newPasswordConfirmation": "1234"
+}

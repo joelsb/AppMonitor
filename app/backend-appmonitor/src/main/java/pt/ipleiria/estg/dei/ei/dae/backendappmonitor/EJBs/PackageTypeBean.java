@@ -3,18 +3,17 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
-import jakarta.ejb.Stateless;
-import jakarta.persistence.*;
 import org.hibernate.Hibernate;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
+
 import java.util.List;
 
 
@@ -50,12 +49,14 @@ public class PackageTypeBean {
         return packageTypes;
     }
 
-    public PackageType create(long id, String name) throws MyEntityExistsException {
+    public PackageType create(long id, String name) throws MyEntityExistsException, MyIllegalArgumentException {
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
+        if(id<=0) throw new MyIllegalArgumentException("PackageType id must be greater than 0");
+        if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("PackageType name cannot be empty");
         if(entityManager.find(PackageType.class, id) != null){
             throw new MyEntityExistsException("PackageType with id: '" + id + "' already exists");
         }
@@ -64,19 +65,8 @@ public class PackageTypeBean {
         xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;
     }
-    public PackageType create(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException {
-        if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
-                .setParameter("name", packageTypeDTO.getName())
-                .getResultList().isEmpty()) {
-            throw new MyEntityExistsException("PackageType with name: '" + packageTypeDTO.getName() + "' already exists");
-        }
-        var packageType = new PackageType(packageTypeDTO.getId(), packageTypeDTO.getName());
-        entityManager.persist(packageType);
-        xlsxFileBean.saveAllPackageTypesToXlsx();
-        return packageType;
-    }
 
-    public PackageType update(Long id, String name) throws MyEntityNotFoundException, MyEntityExistsException {
+    public PackageType update(Long id, String name) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         var packageType = this.find(id);
         //if a package type with the same name already exists and its a different package type from the one passed with the id  then throw exception
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
@@ -84,7 +74,8 @@ public class PackageTypeBean {
                 .getResultList().isEmpty() && !packageType.getName().equals(name)) {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
-        //entityManager.lock(packageType, LockModeType.OPTIMISTIC);
+        if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("PackageType name cannot be empty");
+        entityManager.lock(packageType, LockModeType.OPTIMISTIC);
         packageType.setName(name);
         xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;

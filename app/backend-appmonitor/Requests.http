@@ -52,6 +52,11 @@ GET {{url}}/customers/Joel
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
+### GET ORDERS OF A CUSTOMER (MANAGER)
+GET {{url}}/orders
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
 ### GET ORDERS OF A CUSTOMER (CUSTOMER)
 GET {{url}}/customers/Joel/orders
 Accept: application/json

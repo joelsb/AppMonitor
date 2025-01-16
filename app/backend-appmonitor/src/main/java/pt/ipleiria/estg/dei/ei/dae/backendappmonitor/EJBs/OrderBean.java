@@ -83,7 +83,7 @@ public class OrderBean {
         return order;
     }
 
-    public Order create(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
+    public Order create(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException, MyIllegalArgumentException {
         // Validar entrada e dependências
         OrderValidationResult result = validateOrderCreation(orderCreateDTO);
 
@@ -91,36 +91,27 @@ public class OrderBean {
         var customer = result.getCustomer();
         var order = new Order(orderCreateDTO.getId(), orderCreateDTO.getCreatedDate(), customer);
         customer.addOrder(order);
-<<<<<<< Updated upstream
-        entityManager.persist(order); // Persistir a ordem primeiro
-=======
         entityManager.persist(order);
 
         // Create the volumeValitationResult
         VolumeValidationResult volumeResult = new VolumeValidationResult(result.getPackageType(), result.getSensorTypes(), result.getProductTypes());
->>>>>>> Stashed changes
 
-        // Adicionar volumes, se houver
-        if (orderCreateDTO.getVolume() != null) {
-            var volumeCreateDTO = orderCreateDTO.getVolume();
-            volumeCreateDTO.setOrderId(order.getId()); // Associar o ID da ordem ao volume
-            volumeBean.addVolumeToOrder(volumeCreateDTO);
-        }
-
-        volumeBean.addVolumeToOrder(orderCreateDTO.getVolume());
+        volumeBean.create(orderCreateDTO.getVolume(), order, volumeResult);
 
         return order;
     }
 
 
 
-    private OrderValidationResult validateOrderCreation(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException {
+    private OrderValidationResult validateOrderCreation(OrderCreateDTO orderCreateDTO) throws MyEntityExistsException, MyEntityNotFoundException, MyIllegalArgumentException {
 
         // Check if the order already exists
         if (entityManager.find(Order.class, orderCreateDTO.getId()) != null) {
             throw new MyEntityExistsException("Order with id: '" + orderCreateDTO.getId() + "' already exists");
         }
-
+        if(orderCreateDTO.getId()<=0) {
+            throw new MyIllegalArgumentException("Order id must be greater than 0");
+        }
         // Validate customer
         var customer = entityManager.find(Customer.class, orderCreateDTO.getCustomerUsername());
         if (customer == null) {
@@ -141,28 +132,10 @@ public class OrderBean {
         if(order.getDeliveredDate() == null) {
             throw new MyIllegalArgumentException("Order with id: '" + id + "' not delivered yet");
         }
-        //entityManager.lock(order, LockModeType.OPTIMISTIC);
+        entityManager.lock(order, LockModeType.OPTIMISTIC);
         order.setDeliveredDate(deliveredDate);
         return order;
     }
-
-    //nao é necessário pois o adicionar volumes é feito no bean dos volumes
-//    public Order addVolumes(long id, List<Long> volumesIds) throws MyEntityNotFoundException {
-//        var order = this.find(id);
-//        for (long volumeId : volumesIds) {
-//            var volume = entityManager.find(Volume.class, volumeId);
-//            if (volume == null) {
-//                throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' not found");
-//            } else {
-//                if (order.getVolumes().contains(volume)) {
-//                    throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' already in order with id: '" + id + "'");
-//                }
-//                order.addVolume(volume);
-//                volume.setOrder(order);
-//            }
-//        }
-//        return order;
-//    }
 
     public Order deliver(long id) throws MyEntityNotFoundException, MyEntityExistsException {
         var order = this.find(id);

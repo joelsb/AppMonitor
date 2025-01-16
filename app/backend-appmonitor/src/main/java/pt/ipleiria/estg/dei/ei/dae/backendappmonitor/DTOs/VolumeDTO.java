@@ -49,7 +49,7 @@ public class VolumeDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
-                volume.getPackageType().getId(),
+                null,
                 null,
                 null
         );
@@ -60,7 +60,7 @@ public class VolumeDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
-                volume.getPackageType().getId(),
+                volume.getPackageType() != null ? volume.getPackageType().getId() : null,
                 volume.getOrder().getId(),
                 null
         );
@@ -70,7 +70,7 @@ public class VolumeDTO {
                 volume.getId(),
                 volume.getSentDate(),
                 volume.getDeliveredDate(),
-                volume.getPackageType().getId(),
+                volume.getPackageType() != null ? volume.getPackageType().getId() : null,
                 volume.getOrder().getId(),
                 null
         );
