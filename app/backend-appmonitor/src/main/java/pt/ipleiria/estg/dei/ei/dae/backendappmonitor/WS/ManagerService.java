@@ -69,4 +69,17 @@ public class ManagerService {
         return Response.ok(managerDTO).build();
     }
 
+    @PUT
+    @Path("{username}")
+    @RolesAllowed({"Manager"})
+    public Response updateManager(@PathParam("username") String username, ManagerDTO managerDTO) throws MyEntityNotFoundException {
+        var principal = securityContext.getUserPrincipal();
+        if(!principal.getName().equals(username) || !principal.getName().equals(managerDTO.getUsername())) {
+            // write to the log the principal.getName() and the username
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        var manager = managerBean.update(username, managerDTO.getName(), managerDTO.getEmail(), managerDTO.getOffice());
+        return Response.ok(ManagerDTO.from(manager)).build();
+    }
+
 }

@@ -56,7 +56,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
 import { useAuthStore } from "~/store/auth-store.js"
 
 

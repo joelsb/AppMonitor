@@ -129,14 +129,17 @@ public class CustomerService {
         return Response.ok(ordersDTO).build();
     }
 
-//    @GET
-//    @Path("/orders/{id}/volumes")
-//    public Response getCustomerOrderVolumes(@PathParam("id") long id) throws MyEntityNotFoundException {
-//        var order = orderBean.find(id);
-//        var orderDTO = OrderDTO.from(order);
-//        var volumes = order.getVolumes();
-//        orderDTO.setVolumes(volumes.isEmpty() ? null : VolumeDTO.from(volumes));
-//        return Response.ok(orderDTO).build();
-//    }
+    @PUT
+    @Path("{username}")
+    @RolesAllowed({"Customer"})
+    public Response updateCustomer(@PathParam("username") String username, CustomerDTO customerDTO) throws MyEntityNotFoundException {
+        var principal = securityContext.getUserPrincipal();
+        if(!principal.getName().equals(username) || !principal.getName().equals(customerDTO.getUsername())) {
+            // write to the log the principal.getName() and the username
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        var customer = customerBean.update(customerDTO.getUsername(), customerDTO.getName(), customerDTO.getEmail());
+        return Response.ok(CustomerDTO.from(customer)).build();
+    }
 
 }
