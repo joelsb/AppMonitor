@@ -89,7 +89,14 @@ public class OrderBean {
         var customer = result.getCustomer();
         var order = new Order(orderCreateDTO.getId(), orderCreateDTO.getCreatedDate(), customer);
         customer.addOrder(order);
+<<<<<<< Updated upstream
         entityManager.persist(order); // Persistir a ordem primeiro
+=======
+        entityManager.persist(order);
+
+        // Create the volumeValitationResult
+        VolumeValidationResult volumeResult = new VolumeValidationResult(result.getPackageType(), result.getSensorTypes(), result.getProductTypes());
+>>>>>>> Stashed changes
 
         // Adicionar volumes, se houver
         if (orderCreateDTO.getVolume() != null) {
@@ -97,6 +104,8 @@ public class OrderBean {
             volumeCreateDTO.setOrderId(order.getId()); // Associar o ID da ordem ao volume
             volumeBean.addVolumeToOrder(volumeCreateDTO);
         }
+
+        volumeBean.addVolumeToOrder(orderCreateDTO.getVolume());
 
         return order;
     }
