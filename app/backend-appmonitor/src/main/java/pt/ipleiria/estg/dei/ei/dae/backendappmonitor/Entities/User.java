@@ -36,8 +36,8 @@ public class User  extends Versionable implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Version
-    private int version;
+    //@Version
+    //private int version;
 
     public User() {
 

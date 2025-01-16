@@ -170,7 +170,7 @@ public class OrderBean {
         if(order.getDeliveredDate() == null) {
             throw new MyIllegalArgumentException("Order with id: '" + id + "' not delivered yet");
         }
-        entityManager.lock(order, LockModeType.OPTIMISTIC);
+        //entityManager.lock(order, LockModeType.OPTIMISTIC);
         order.setDeliveredDate(deliveredDate);
         return order;
     }

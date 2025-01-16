@@ -45,7 +45,7 @@ public class EmployeeBean extends UserBean {
         if (employee == null) {
             throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
         }
-        entityManager.lock(employee, LockModeType.OPTIMISTIC);
+        //entityManager.lock(employee, LockModeType.OPTIMISTIC);
         employee.setName(name);
         employee.setEmail(email);
         employee.setWarehouse(Warehouse);
@@ -57,7 +57,7 @@ public class EmployeeBean extends UserBean {
         if (employee == null) {
             throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
         }
-        entityManager.lock(employee, LockModeType.OPTIMISTIC);
+        //entityManager.lock(employee, LockModeType.OPTIMISTIC);
         employee.setPassword(password);
         return employee;
     }

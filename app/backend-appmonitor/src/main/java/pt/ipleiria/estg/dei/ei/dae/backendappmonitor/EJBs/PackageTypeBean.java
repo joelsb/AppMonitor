@@ -64,7 +64,7 @@ public class PackageTypeBean {
                 .getResultList().isEmpty() && !packageType.getName().equals(name)) {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
-        entityManager.lock(packageType, LockModeType.OPTIMISTIC);
+        //entityManager.lock(packageType, LockModeType.OPTIMISTIC);
         packageType.setName(name);
         return packageType;
     }
