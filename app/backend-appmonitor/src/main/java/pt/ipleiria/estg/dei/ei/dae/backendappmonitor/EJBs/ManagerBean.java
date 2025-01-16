@@ -51,6 +51,16 @@ public class ManagerBean extends UserBean {
             throw new MyEntityNotFoundException("Manager with username: '" + username + "' not found");
         }
         entityManager.lock(manager, LockModeType.OPTIMISTIC);
+      
+        if (name != null) {
+            manager.setName(name);
+        }
+        if (email != null) {
+            manager.setEmail(email);
+        }
+        if(office != null){
+           manager.setOffice(office);
+        }
         manager.setName(name);
         manager.setEmail(email);
         manager.setOffice(office);

@@ -165,7 +165,7 @@ public class ConfigBean {
             //Sensors for productTypeId 1 -> 1
             //Sensors for productTypeId 2 -> 2
             //Total sensorsTypeId -> 1,2,1,2
-            var volumeCreateDTO = getVolumeDTO(sentDate, 103L, null, null,
+            var volumeCreateDTO = getVolumeDTO(sentDate, 103L, 1L, null,
                     List.of(Map.entry(1L, 1), Map.entry(1L, 1)),  //products (Id, Quantity)
                     List.of(Map.entry(3L, 1L), Map.entry(4L, 1L)));  //sensors (Id, SensorTypeId)
 

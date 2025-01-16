@@ -26,7 +26,7 @@ public class VolumeValidationResult {
         return packageType;
     }
 
-    public void setPackageType(PackageType packageType) {
+    public void    setPackageType(PackageType packageType) {
         this.packageType = packageType;
     }
 
