@@ -60,6 +60,7 @@ public class CustomerBean {
         if (customer == null) {
             throw new MyEntityNotFoundException("Customer with username: '" + username + "' not found");
         }
+        entityManager.lock(customer, LockModeType.OPTIMISTIC);
         customer.setName(name);
         customer.setEmail(email);
         return customer;

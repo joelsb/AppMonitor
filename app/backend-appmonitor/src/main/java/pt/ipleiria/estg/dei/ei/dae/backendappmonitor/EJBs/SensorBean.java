@@ -66,6 +66,7 @@ public class SensorBean implements Serializable {
         if(sensor == null) {
             throw new MyEntityNotFoundException("Sensor with id: '" + id + "' not found");
         }
+        entityManager.lock(sensor, LockModeType.OPTIMISTIC);
         sensor.setSensorType(sensorType);
         sensor.setVolume(volume);
         return sensor;

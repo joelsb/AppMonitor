@@ -38,6 +38,7 @@ public class SensorTypeBean {
 
     public SensorType update(Long id, String name, String unit, double ceiling, double floor) throws MyEntityNotFoundException {
         var sensorType = this.find(id);
+        entityManager.lock(sensorType, LockModeType.OPTIMISTIC);
         sensorType.setName(name);
         sensorType.setUnit(unit);
         sensorType.setCeiling(ceiling);

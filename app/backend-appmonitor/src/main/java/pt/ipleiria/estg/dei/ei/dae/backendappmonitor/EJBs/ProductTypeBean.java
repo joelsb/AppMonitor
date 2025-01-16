@@ -2,6 +2,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
@@ -66,6 +67,7 @@ public class ProductTypeBean {
                 .getResultList().isEmpty() && !productType.getName().equals(name)) {
             throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
         }
+        entityManager.lock(productType, LockModeType.OPTIMISTIC);
         productType.setName(name);
         productType.setMandatoryPackage(mandatoryPackage);
         return productType;

@@ -2,6 +2,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.EmployeeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Employee;
@@ -44,6 +45,7 @@ public class EmployeeBean extends UserBean {
         if (employee == null) {
             throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
         }
+        entityManager.lock(employee, LockModeType.OPTIMISTIC);
         employee.setName(name);
         employee.setEmail(email);
         employee.setWarehouse(Warehouse);
@@ -55,6 +57,7 @@ public class EmployeeBean extends UserBean {
         if (employee == null) {
             throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
         }
+        entityManager.lock(employee, LockModeType.OPTIMISTIC);
         employee.setPassword(password);
         return employee;
     }

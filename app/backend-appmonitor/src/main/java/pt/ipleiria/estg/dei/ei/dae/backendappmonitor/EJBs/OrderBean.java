@@ -3,6 +3,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
@@ -169,6 +170,7 @@ public class OrderBean {
         if(order.getDeliveredDate() == null) {
             throw new MyIllegalArgumentException("Order with id: '" + id + "' not delivered yet");
         }
+        entityManager.lock(order, LockModeType.OPTIMISTIC);
         order.setDeliveredDate(deliveredDate);
         return order;
     }
