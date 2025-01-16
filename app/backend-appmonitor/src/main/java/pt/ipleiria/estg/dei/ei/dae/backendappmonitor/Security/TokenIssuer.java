@@ -31,4 +31,5 @@ public class TokenIssuer {
                 .signWith(key)
                 .compact();
     }
+
 }

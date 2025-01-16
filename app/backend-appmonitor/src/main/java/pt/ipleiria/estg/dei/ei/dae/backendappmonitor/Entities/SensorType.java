@@ -36,7 +36,6 @@ public class SensorType extends Versionable implements Serializable {
      */
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     private String name;
@@ -61,7 +60,8 @@ public class SensorType extends Versionable implements Serializable {
     }
 
 
-    public SensorType(String name, String unit, double ceiling, double floor) {
+    public SensorType(long id,String name, String unit, double ceiling, double floor) {
+        this.id = id;
         this.name = name;
         this.unit = unit;
         this.ceiling = ceiling;

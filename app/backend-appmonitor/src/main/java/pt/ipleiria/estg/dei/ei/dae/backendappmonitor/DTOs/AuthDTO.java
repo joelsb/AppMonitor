@@ -1,10 +1,12 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Customer;
 
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthDTO implements Serializable {
 
     @NotBlank

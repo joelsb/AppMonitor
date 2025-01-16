@@ -79,6 +79,7 @@ import { useRuntimeConfig } from '#imports';
 import NavBar from '@/components/NavBar.vue'; // Import NavBar component
 import { useRouter } from 'vue-router'; // Import useRouter apenas uma vez
 
+
 const router = useRouter(); // Mantenha apenas uma declaração de 'router'
 
 // API Config

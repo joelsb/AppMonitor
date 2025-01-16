@@ -1,9 +1,12 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeCreateDTO;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.PackageTypeDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.PackageType;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
@@ -19,8 +22,10 @@ import java.util.List;
 public class PackageTypeBean {
     @PersistenceContext
     private EntityManager entityManager;
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
-    public PackageType find(Long id) throws MyEntityNotFoundException {
+    public PackageType find(long id) throws MyEntityNotFoundException {
         var packageType = entityManager.find(PackageType.class, id);
         if(packageType == null) {
             throw new MyEntityNotFoundException("PackageType with id: '" + id + "' not found");
@@ -45,14 +50,29 @@ public class PackageTypeBean {
         return packageTypes;
     }
 
-    public PackageType create(String name) throws MyEntityExistsException {
+    public PackageType create(long id, String name) throws MyEntityExistsException {
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
-        var packageType = new PackageType(name);
+        if(entityManager.find(PackageType.class, id) != null){
+            throw new MyEntityExistsException("PackageType with id: '" + id + "' already exists");
+        }
+        var packageType = new PackageType(id, name);
         entityManager.persist(packageType);
+        xlsxFileBean.saveAllPackageTypesToXlsx();
+        return packageType;
+    }
+    public PackageType create(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException {
+        if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
+                .setParameter("name", packageTypeDTO.getName())
+                .getResultList().isEmpty()) {
+            throw new MyEntityExistsException("PackageType with name: '" + packageTypeDTO.getName() + "' already exists");
+        }
+        var packageType = new PackageType(packageTypeCreateDTO.getId(), packageTypeCreateDTO.getName());
+        entityManager.persist(packageType);
+        xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;
     }
 
@@ -66,10 +86,11 @@ public class PackageTypeBean {
         }
         entityManager.lock(packageType, LockModeType.OPTIMISTIC);
         packageType.setName(name);
+        xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;
     }
 
-    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+    public void addMandatorySensor(long id, long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
         var packageType = this.find(id);
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if(sensorType == null) {

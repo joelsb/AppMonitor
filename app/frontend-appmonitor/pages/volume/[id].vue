@@ -43,6 +43,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useRuntimeConfig } from '#imports';
 
+
 // Obter parâmetros da rota, configuração de API e roteador
 const route = useRoute();
 const router = useRouter();

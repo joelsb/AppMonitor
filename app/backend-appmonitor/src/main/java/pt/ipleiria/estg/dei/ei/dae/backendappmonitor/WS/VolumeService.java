@@ -11,8 +11,9 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFound
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
-import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Path("volumes")
 @Produces({MediaType.APPLICATION_JSON})
@@ -24,59 +25,89 @@ public class VolumeService {
 
     private static final Logger logger = Logger.getLogger("WS.VolumeService");
 
+    @Context
+    private SecurityContext securityContext;
+
     @GET
     @Path("/")
-    @RolesAllowed({"Customer"})
+    @RolesAllowed({"Customer","Manager"})
     public Response getAllVolumes() {
-        var volumes = volumeBean.findAll();
+        var volumes = volumeBean.findAllWithSensorsProducts();
         logger.info("Volumes: " + volumes.get(0).getSentDate());
         var volumeDTOs = VolumeDTO.fromEmployee(volumes);
         logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
         return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
-    }
+        }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Customer", "Manager"})
     public Response getVolume(@PathParam("id") long id) throws MyEntityNotFoundException {
         var volume = volumeBean.findWithSensorsProducts(id);
+        if (securityContext.isUserInRole("Customer") &&
+                !volume.getOrder().getCustomer().getUsername().equals(securityContext.getUserPrincipal().getName())) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         var volumeDTO = VolumeDTO.from(volume);
-        volumeDTO.setProducts(ProductRecordDTO.from(volume.getProducts()));
-        volumeDTO.setSensors(SensorDTO.from(volume.getSensors()));
+        volumeDTO.setProducts(ProductRecordDTO.fromSimple(volume.getProducts()));
+        volumeDTO.setSensors(SensorDTO.fromSimple(volume.getSensors()));
+        volumeDTO.setPackageTypeId(null);
         return Response.ok(volumeDTO).build();
     }
 
     @GET
     @Path("/{id}/sensors")
+    @RolesAllowed({"Customer", "Manager"})
     public Response getAllSensors(@PathParam("id") long id) throws MyEntityNotFoundException {
-        var volume = volumeBean.findWithSensorsProducts(id);
-        return Response.ok(SensorDTO.from(volume.getSensors())).build();
-    }
-    @GET
-    @Path("/{id}/products")
-    public Response getAllProducts(@PathParam("id") long id) throws MyEntityNotFoundException {
-        var volume = volumeBean.findWithSensorsProducts(id);
-        return Response.ok(ProductRecordDTO.from(volume.getProducts())).build();
+        var volume = volumeBean.findWithSensors(id);
+        if (securityContext.isUserInRole("Customer") &&
+                !volume.getOrder().getCustomer().getUsername().equals(securityContext.getUserPrincipal().getName())) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        var sensorsDTO = SensorDTO.fromSimple(volume.getSensors());
+        //set the history to the same as the volume.getSensors().getIndex().getHistory()
+        for (int i = 0; i < volume.getSensors().size(); i++) {
+            sensorsDTO.get(i).setHistory(SensorRecordDTO.fromSimple(volume.getSensors().get(i).getHistory()));
+        }
+        //build an Answer with the DTO and a property containing the volumeId
+        //Respond with the answer
+        GenericDTO<List<SensorDTO>> answer = new GenericDTO<>("volumeId",volume.getId(),"sensors",sensorsDTO);
+        return Response.ok(answer).build();
+
     }
 
-    @POST
-    @Path("/")
-    public Response addVolume(VolumeCreateDTO volumeCreatedDTO) throws MyEntityNotFoundException, MyEntityExistsException {
-        volumeBean.addVolumeToOrder(volumeCreatedDTO);
-        var volume = volumeBean.findWithSensorsProducts(volumeCreatedDTO.getId());
-        var volumeDTO = VolumeCreateDTO.from(volume);
-        volumeDTO.setProducts(ProductRecordDTO.from(volume.getProducts()));
-        volumeDTO.setSensors(SensorDTO.from(volume.getSensors()));
-        return Response.ok(volumeDTO).build();
+    @GET
+    @Path("/{id}/products")
+    @RolesAllowed({"Customer", "Manager"})
+    public Response getAllProducts(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var volume = volumeBean.findWithProducts(id);
+        if (securityContext.isUserInRole("Customer") &&
+                !volume.getOrder().getCustomer().getUsername().equals(securityContext.getUserPrincipal().getName())) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        var productsDTO = ProductRecordDTO.fromSimple(volume.getProducts());
+        GenericDTO<List<ProductRecordDTO>> answer = new GenericDTO<>("volumeId",volume.getId(),"products",productsDTO);
+        return Response.ok(answer).build();
     }
 
     @PATCH
     @Path("{id}/deliver")
+    @RolesAllowed({"Employee"})
     public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException, MyIllegalArgumentException {
-        volumeBean.deliver(id);
-        var volume = volumeBean.find(id);
-        var volumeDTO = VolumeDTO.fromManager(volume);
+        var volume = volumeBean.deliver(id);
+        var volumeDTO = VolumeDTO.fromSimple(volume);
         return Response.ok(volumeDTO).build();
     }
 
-
+    @POST
+    @Path("/")
+    @RolesAllowed({"Employee"})
+    public Response addVolume(VolumeCreateDTO volumeCreatedDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+        volumeBean.addVolumeToOrder(volumeCreatedDTO);
+        var volume = volumeBean.findWithSensorsProducts(volumeCreatedDTO.getId());
+        var volumeDTO = VolumeCreateDTO.from(volume);
+        volumeDTO.setProducts(ProductRecordDTO.fromSimple(volume.getProducts()));
+        volumeDTO.setSensors(SensorDTO.fromSimple(volume.getSensors()));
+        return Response.ok(volumeDTO).build();
+    }
 }

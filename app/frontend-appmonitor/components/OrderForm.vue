@@ -19,7 +19,7 @@
                 <label for="customerUsername" class="block font-semibold">Customer Username:</label>
                 <select id="customerUsername" v-model="form.customerUsername"
                     class="w-full p-2 border border-gray-300 rounded">
-                    <option v-for="customer in customers" :key="customer.id" :value="customer.username">{{
+                    <option v-for="customer in customers" :key="customer.username" :value="customer.username">{{
                         customer.username }}</option>
                 </select>
             </div>
@@ -163,13 +163,87 @@ const showMandatorySensors = () => {
 };
 
 const showMandatoryPackage = () => emit('infoMandatoryPackage', requiresMandatoryPackage.value);
+const validatedForm = () => {
+    const errors = [];
+
+    // Check if the Order ID is provided
+    if (!form.value.id) {
+        errors.push('Order ID is required.');
+    }
+
+    // Check if the Order Created Date is provided and valid
+    if (!form.value.createdDate) {
+        errors.push('Order Created Date is required.');
+    }
+
+    // Check if the Customer Username is provided
+    if (!form.value.customerUsername) {
+        errors.push('Customer Username is required.');
+    }
+
+    // Check if the Volume ID is provided
+    if (!form.value.volume.id) {
+        errors.push('Volume ID is required.');
+    }
+
+    // Check if the Volume Sent Date is provided and valid
+    if (!form.value.volume.sentDate) {
+        errors.push('Volume Sent Date is required.');
+    }
+
+    // Check if the Volume's products have valid product IDs and quantities
+    const invalidProducts = form.value.volume.products.find(product => !product.productId || !product.quantity);
+    if (invalidProducts) {
+        errors.push('All products must have a valid product type and quantity.');
+    }
+
+    // Check if the Volume's sensors have valid sensor type IDs and IDs
+    const invalidSensors = form.value.volume.sensors.find(sensor => !sensor.sensorTypeId || !sensor.id);
+    if (invalidSensors) {
+        errors.push('All sensors must have a valid sensor type and ID.');
+    }
+
+    // Check if a package type is selected when required
+    if (requiresMandatoryPackage.value && !form.value.volume.packageTypeId) {
+        errors.push('One or more products require a package. Please select a package type.');
+    }
+
+    // If there are errors, return the array of errors; otherwise, return false
+    return errors.length > 0 ? errors : false;
+};
+
 
 const handleSubmit = async () => {
-    form.value.packageTypeId = form.value.packageTypeId || null;
+    const validationErrors = validatedForm();
+
+    if (validationErrors) {
+        // Display all validation errors
+        emit('formSubmitted', 'error', validationErrors);
+        return;
+    }
+
     const response = await fetch(`${apiUrl}/orders`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form.value),
+        method: 'POST', body: JSON.stringify(form.value),
     });
-    const data = await response.json();
-    emit('formSubmitted', response.ok ? 'success' : 'error', response.ok ? 'Order created successfully!' : data);
+
+    const data = response.ok ? await response.json() : await response.text();
+    const messages = ref([]);
+
+    // Check if the data is a string or array
+    if (typeof data === 'string') {
+        // Add the single error message to the messages array
+        messages.value.push(data);
+    } else if (Array.isArray(data)) {
+        // If the data is an array of messages, spread it into the messages array
+        messages.value.push(...data);
+    } else if (response.ok) {
+        // Created successfully
+        messages.value.push('Order created successfully!');
+    }
+
+    // Emit the form submission result
+    emit('formSubmitted', response.ok ? 'success' : 'error', response.ok ? messages.value : messages.value);
+
 };
+
 </script>

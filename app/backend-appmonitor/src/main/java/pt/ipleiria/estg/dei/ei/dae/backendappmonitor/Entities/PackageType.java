@@ -25,7 +25,6 @@ public class PackageType extends Versionable implements Serializable {
     volume-Volume
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
     private String name;
@@ -41,7 +40,8 @@ public class PackageType extends Versionable implements Serializable {
     public PackageType() {
     }
 
-    public PackageType(String name) {
+    public PackageType(long id, String name) {
+        this.id = id;
         this.name = name;
     }
 

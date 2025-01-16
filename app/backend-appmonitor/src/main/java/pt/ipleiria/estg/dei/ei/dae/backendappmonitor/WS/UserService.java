@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.WS;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -7,10 +8,13 @@ import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.UserDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.UserBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 @Path("users")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
+@Authenticated
+@RolesAllowed({"Manager","Employee","Customer"})
 public class UserService {
     @EJB
     private UserBean userBean;

@@ -104,7 +104,7 @@ const { orders, packageTypes, products, sensorTypes } = defineProps({
 
 
 const form = ref({
-    orderId: 27, id: 105, sentDate: '2021-06-01T00:00:00', packageTypeId: 1,
+    orderId: 28, id: 105, sentDate: '2021-06-01T00:00:00', packageTypeId: 1,
     products: [{ productId: 1, quantity: 1 }, { productId: 2, quantity: 3 }],
     sensors: [{ id: 1, sensorTypeId: 1 }, { id: 2, sensorTypeId: 2 }],
 });
@@ -113,16 +113,72 @@ const requiresMandatoryPackage = computed(() =>
     form.value.products.some(p => products.find(prod => prod.id === p.productId)?.mandatoryPackage)
 );
 
-const handleSubmit = async () => {
-    try {
-        const res = await fetch(`${apiUrl}/volumes`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form.value)
-        });
-        const data = res.ok ? await res.json() : await res.text();
-        emit('formSubmitted', res.ok ? 'success' : 'error', data);
-    } catch (err) {
-        emit('formSubmitted', 'error', err.message);
+const validatedForm = () => {
+    const errors = [];
+
+    // Check if the Order ID is provided
+    if (!form.value.orderId) {
+        errors.push('Order ID is required.');
     }
+
+    // Check if the Volume ID is provided
+    if (!form.value.id) {
+        errors.push('Volume ID is required.');
+    }
+
+    // Check if the Sent Date is provided
+    if (!form.value.sentDate) {
+        errors.push('Sent Date is required.');
+    }
+
+    // Check if all products have valid product IDs and quantities
+    const invalidProducts = form.value.products.find(product => !product.productId || !product.quantity);
+    if (invalidProducts) {
+        errors.push('All products must have a valid product type and quantity.');
+    }
+
+    // Check if all sensors have valid sensor type IDs and IDs
+    const invalidSensors = form.value.sensors.find(sensor => !sensor.sensorTypeId || !sensor.id);
+    if (invalidSensors) {
+        errors.push('All sensors must have a valid sensor type and ID.');
+    }
+
+    // Check if a package type is selected when required
+    if (requiresMandatoryPackage.value && !form.value.packageTypeId) {
+        errors.push('One or more products require a package. Please select a package type.');
+    }
+
+    // Return the array of errors if any; otherwise, return false
+    return errors.length > 0 ? errors : false;
+};
+
+
+const handleSubmit = async () => {
+    const errors = validatedForm();
+    if (errors) {
+        emit('formSubmitted', 'error', errors);
+        return;
+    }
+    const response = await fetch(`${apiUrl}/volumes`, {
+        method: 'POST', body: JSON.stringify(form.value)
+    });
+    const data = response.ok ? await response.json() : await response.text();
+    const messages = ref([]);
+
+    // Check if the data is a string or array
+    if (typeof data === 'string') {
+        // Add the single error message to the messages array
+        messages.value.push(data);
+    } else if (Array.isArray(data)) {
+        // If the data is an array of messages, spread it into the messages array
+        messages.value.push(...data);
+    } else if (response.ok) {
+        // Created successfully
+        messages.value.push('Order created successfully!');
+    }
+
+    // Emit the form submission result
+    emit('formSubmitted', response.ok ? 'success' : 'error', response.ok ? messages.value : messages.value);
 };
 
 const addItem = (array) => array.push({ productId: null, quantity: null });

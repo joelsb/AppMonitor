@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
@@ -15,6 +16,9 @@ import java.util.List;
 public class EmployeeBean extends UserBean {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @EJB
+    private XLSXFileBean xlsxFileBean;
 
     public Employee find(String username) {
         var employee = entityManager.find(Employee.class, username);
@@ -37,6 +41,8 @@ public class EmployeeBean extends UserBean {
         var employee = new Employee(
                 username, password, name, email, warehouse);
         entityManager.persist(employee);
+        xlsxFileBean.saveAllUsersToXlsx();
+
         return employee;
     }
 
@@ -49,16 +55,8 @@ public class EmployeeBean extends UserBean {
         employee.setName(name);
         employee.setEmail(email);
         employee.setWarehouse(Warehouse);
-        return employee;
-    }
-
-    public Employee updatePassword(String username, String password) throws MyEntityNotFoundException {
-        var employee = entityManager.find(Employee.class, username);
-        if (employee == null) {
-            throw new MyEntityNotFoundException("Employee with username: '" + username + "' not found");
-        }
-        entityManager.lock(employee, LockModeType.OPTIMISTIC);
-        employee.setPassword(password);
+        xlsxFileBean.saveAllUsersToXlsx();
+      
         return employee;
     }
 

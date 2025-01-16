@@ -1,10 +1,12 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductRecord;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductRecordDTO {
     /*
     id: long
@@ -13,16 +15,16 @@ public class ProductRecordDTO {
     volume: Volume
      */
 
-    public Long id;
-    public long productId;
-    public int quantity;
-    public Long volumeId;
-    public String productName;
+    private Long id;
+    private Long productId;
+    private String productName;
+    private Integer quantity;
+    private Long volumeId;
 
     public ProductRecordDTO() {
     }
 
-    public ProductRecordDTO(Long id, long productId, int quantity, Long volumeId, String productName) {
+    public ProductRecordDTO(Long id, Long productId, Integer quantity, Long volumeId, String productName) {
         this.id = id;
         this.productId = productId;
         this.quantity = quantity;
@@ -31,6 +33,16 @@ public class ProductRecordDTO {
     }
 
     public static ProductRecordDTO from(ProductRecord productRecord) {
+        return new ProductRecordDTO(
+                productRecord.getId(),
+                productRecord.getProduct().getId(),
+                productRecord.getQuantity(),
+                productRecord.getVolume().getId(),
+                productRecord.getProduct().getName()
+        );
+    }
+
+    public static ProductRecordDTO fromSimple(ProductRecord productRecord) {
         return new ProductRecordDTO(
                 null,
                 productRecord.getProduct().getId(),
@@ -43,6 +55,9 @@ public class ProductRecordDTO {
     public static List<ProductRecordDTO> from(List<ProductRecord> productRecords) {
         return productRecords.stream().map(ProductRecordDTO::from).collect(Collectors.toList());
     }
+    public static List<ProductRecordDTO> fromSimple(List<ProductRecord> productRecords) {
+        return productRecords.stream().map(ProductRecordDTO::fromSimple).collect(Collectors.toList());
+    }
 
     public Long getId() {
         return id;
@@ -52,19 +67,19 @@ public class ProductRecordDTO {
         this.id = id;
     }
 
-    public long getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

@@ -1,13 +1,17 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderCreateDTO {
 
     private long id;
     private String customerUsername;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Your/Timezone")
     private Date createdDate;
     private VolumeCreateDTO volume;
 

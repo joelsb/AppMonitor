@@ -1,28 +1,25 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorRecord;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SensorRecordDTO {
-    /*
-    id: long
-    time: Date
-    value: double
-    sensor: Sensor
-     */
-
     private Long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Your/Timezone")
     private Date time;
-    private double value;
+    private Double value;
     private Long sensorId;
 
     public SensorRecordDTO() {
     }
 
-    public SensorRecordDTO(Long id, Date time, double value, Long sensorId) {
+    public SensorRecordDTO(Long id, Date time, Double value, Long sensorId) {
         this.id = id;
         this.time = time;
         this.value = value;
@@ -37,7 +34,7 @@ public class SensorRecordDTO {
         );
     }
 
-    public static SensorRecordDTO fromSensor(SensorRecord sensorRecord) {
+    public static SensorRecordDTO fromSimple(SensorRecord sensorRecord) {
         return new SensorRecordDTO(
                 null,
                 sensorRecord.getTime(),
@@ -46,8 +43,8 @@ public class SensorRecordDTO {
         );
     }
 
-    public static List<SensorRecordDTO> fromSensor(List<SensorRecord> sensorRecords) {
-        return sensorRecords.stream().map(SensorRecordDTO::fromSensor).collect(Collectors.toList());
+    public static List<SensorRecordDTO> fromSimple(List<SensorRecord> sensorRecords) {
+        return sensorRecords.stream().map(SensorRecordDTO::fromSimple).collect(Collectors.toList());
     }
 
     public static List<SensorRecordDTO> from(List<SensorRecord> sensorRecords) {
@@ -70,11 +67,11 @@ public class SensorRecordDTO {
         this.time = time;
     }
 
-    public double getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
