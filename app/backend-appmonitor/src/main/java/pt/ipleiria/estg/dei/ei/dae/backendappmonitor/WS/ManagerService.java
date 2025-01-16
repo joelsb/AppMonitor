@@ -10,6 +10,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ManagerDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.ManagerBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 
@@ -31,7 +32,7 @@ public class ManagerService {
     @POST
     @Path("/")
     @RolesAllowed({"Manager"})
-    public Response createManager(ManagerDTO managerDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+    public Response createManager(ManagerDTO managerDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         managerBean.create(managerDTO.getUsername(), managerDTO.getPassword(), managerDTO.getName(), managerDTO.getEmail(),managerDTO.getOffice());
         var manager = managerBean.find(managerDTO.getUsername());
         var managerDTO1 = ManagerDTO.from(manager);
@@ -41,7 +42,7 @@ public class ManagerService {
     @PUT
     @Path("/{username}")
     @RolesAllowed({"Manager"})
-    public Response updateManager(@PathParam("username") String username, ManagerDTO managerDTO) throws MyEntityNotFoundException {
+    public Response updateManager(@PathParam("username") String username, ManagerDTO managerDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
         var principal = securityContext.getUserPrincipal();
         var manager = managerBean.find(username);
         if(!principal.getName().equals(username)) {

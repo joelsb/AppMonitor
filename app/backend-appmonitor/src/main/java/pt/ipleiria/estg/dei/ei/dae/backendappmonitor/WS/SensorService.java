@@ -35,6 +35,8 @@ public class SensorService {
     @Context
     private SecurityContext securityContext;
 
+
+    //TODO: VERIFICAR SE ESTE MÉTODO É NECESSÁRIO
     @GET
     @Path("/")
     @Authenticated
@@ -46,9 +48,9 @@ public class SensorService {
             sensorsDTO.get(i).setHistory(SensorRecordDTO.fromSimple(sensors.get(i).getHistory()));
         }
         //get the volumeId
-        var volumeId = sensors.get(0).getVolume().getId();
-        GenericDTO<List<SensorDTO>> answer = new GenericDTO<>("volumeId", volumeId, "sensors", sensorsDTO);
-        return Response.ok(answer).build();
+//        var volumeId = sensors.get(0).getVolume().getId();
+//        GenericDTO<List<SensorDTO>> answer = new GenericDTO<>("volumeId", volumeId, "sensors", sensorsDTO);
+        return Response.ok(sensorsDTO).build();
     }
 
     @GET

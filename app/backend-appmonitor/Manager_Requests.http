@@ -1,0 +1,70 @@
+@url= http://localhost:8080/appmonitor/api
+
+### LOGIN MANAGER
+POST {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "Ana", "password": "123"}
+
+> {% client.global.set('jwt-token', response.body) %}
+
+### REQUEST USER INFO
+GET {{url}}/auth/user
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+############## MANAGER SERVICE
+
+### CREATE A MANAGER
+POST {{url}}/managers
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "username": "JR",
+  "password": 123,
+  "name": "Rodrigo",
+  "email": "jr@mail",
+  "office": "Porto"
+}
+
+### EDIT A MANAGER
+PUT {{url}}/managers/Ana
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "office": "Lisboa-UPDATED"
+}
+
+############ ORDER SERVICE (MANAGER)
+
+### GET ALL ORDERS
+GET {{url}}/orders
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET A SINGLE ORDER
+GET {{url}}/orders/28
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET VOLUMES OF ORDER
+GET {{url}}/orders/28/volumes
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+############ VOLUME SERVICE (MANAGER)
+
+### GET ALL VOLUMES
+GET {{url}}/volumes
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET A SPECIFIC VOLUME
+GET {{url}}/volumes/103
+Accept: application/json
+Authorization: Bearer {{jwt-token}}

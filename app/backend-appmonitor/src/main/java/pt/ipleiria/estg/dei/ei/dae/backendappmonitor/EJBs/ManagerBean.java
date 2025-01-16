@@ -2,14 +2,17 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ManagerDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Manager;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Hasher;
 
 import java.util.List;
 
@@ -19,6 +22,10 @@ public class ManagerBean extends UserBean {
     private EntityManager entityManager;
     @EJB
     private XLSXFileBean xlsxFileBean;
+    @EJB
+    private UserBean userBean;
+    @Inject
+    private Hasher hasher;
 
     public Manager find(String username) {
         var manager = entityManager.find(Manager.class, username);
@@ -33,35 +40,29 @@ public class ManagerBean extends UserBean {
         return entityManager.createNamedQuery("getAllManagers", Manager.class).getResultList();
     }
     @Transactional
-    public Manager create(String username, String password, String name, String email, String office) throws MyEntityExistsException {
-        if(entityManager.find(Manager.class, username) != null) {
-            throw new MyEntityExistsException("Manager with username: '" + username + "' already exists");
+    public Manager create(String username, String password, String name, String email, String office) throws MyEntityExistsException, MyIllegalArgumentException {
+        if(entityManager.find(User.class, username) != null) {
+            throw new MyEntityExistsException("User with username: '" + username + "' already exists");
         }
-        var manager = new Manager(
-                username, password, name, email, office);
-        entityManager.persist(manager);
-        xlsxFileBean.saveAllUsersToXlsx();
 
+        userBean.validateFieldsCreate(username, password, name, email);
+        if(office == null || office.isEmpty()) throw new MyIllegalArgumentException("Office cannot be empty");
+        var manager = new Manager(
+                username, hasher.hash(password), name, email, office);
+        entityManager.persist(manager);
+
+        xlsxFileBean.saveAllUsersToXlsx();
         return manager;
     }
     @Transactional
-    public Manager update(String username, String name, String email, String office) throws MyEntityNotFoundException {
-        var manager = entityManager.find(Manager.class, username);
-        if (manager == null) {
-            throw new MyEntityNotFoundException("Manager with username: '" + username + "' not found");
-        }
+    public Manager update(String username, String name, String email, String office) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        var manager = this.find(username);
         entityManager.lock(manager, LockModeType.OPTIMISTIC);
-      
-        if (name != null) {
-            manager.setName(name);
-        }
-        if (email != null) {
-            manager.setEmail(email);
-        }
-        if(office != null){
-           manager.setOffice(office);
-        }
-        entityManager.persist(manager);
+
+        if(office != null) manager.setOffice(office);
+        if(office != null && office.isEmpty()) throw new MyIllegalArgumentException("Office cannot be empty");
+        userBean.update(username, name, email);
+
         xlsxFileBean.saveAllUsersToXlsx();
         return manager;
     }

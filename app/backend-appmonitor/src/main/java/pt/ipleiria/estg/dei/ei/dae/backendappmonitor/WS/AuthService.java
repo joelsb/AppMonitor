@@ -48,7 +48,7 @@ public class AuthService {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         var user = userBean.changePassword(username, newPasswordDTO.getCurrentPassword(), newPasswordDTO.getNewPassword(), newPasswordDTO.getNewPasswordConfirmation());
-        return Response.ok(UserDTO.fromUser(user)).build();
+        return Response.status(Response.Status.OK).entity("Password changed for user: '"+user.getUsername() +"'").build();
     }
 
 

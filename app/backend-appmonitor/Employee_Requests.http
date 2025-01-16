@@ -1,0 +1,185 @@
+@url= http://localhost:8080/appmonitor/api
+
+### LOGIN EMPLOYEE
+POST {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "Jose", "password": "123"}
+
+> {% client.global.set('jwt-token', response.body) %}
+
+### REQUEST USER INFO
+GET {{url}}/auth/user
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+############## EMPLOYEE SERVICE
+
+### GET EMPLOYEE INFO
+GET {{url}}/employees/Jose
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### CREATE A EMPLOYEE
+POST {{url}}/employees
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "username": "Rodrigo",
+  "password": 123,
+  "name": "Rodrigo",
+  "email": "rodrigo@mail",
+  "warehouse": "Lisboa"
+}
+
+### EDIT A EMPLOYEE
+PUT {{url}}/employees/Jose
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "warehouse": "Lisboa-UPDATED"
+}
+
+############ CUSTOMER SERVICE (EMPLOYEE)
+
+### GET ALL CUSTOMERS
+GET {{url}}/customers
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### CREATE A CUSTOMER
+POST {{url}}/customers
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "username": "Joao",
+  "password": 123,
+  "name": "Joao",
+  "email": "joao@mail"
+}
+
+############ ORDER SERVICE (EMPLOYEE)
+
+### GET AVAILABLE ORDERS
+GET {{url}}/orders/available
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### POST A NEW ORDER
+POST {{url}}/orders
+Content-Type: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "id": 29,
+  "customerUsername": "Tiago",
+  "createdDate": "2024-11-20 21:00:00",
+  "volume": {
+    "id": 120,
+    "sentDate": "2024-11-21 21:00:00",
+    "packageTypeId": 2,
+    "products": [
+      {
+        "productId": 2,
+        "quantity": 1
+      },
+      {
+        "productId": 1,
+        "quantity": 3
+      }
+    ],
+    "sensors": [
+      {
+        "id": 10,
+        "sensorTypeId": 1
+      },
+      {
+        "id": 9,
+        "sensorTypeId": 2
+      }
+    ]
+  }
+}
+
+### DELIVER ORDER
+PATCH {{url}}/orders/28/deliver
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+############ VOLUME SERVICE (EMPLOYEE)
+
+### DELIVER VOLUME (103 & 120)
+PATCH {{url}}/volumes/103/deliver
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### POST A NEW VOLUME
+POST {{url}}/volumes
+Content-Type: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "id": 108,
+  "sentDate": "2021-06-01 00:00:00",
+  "orderId": 28,
+  "packageTypeId": 1,
+  "products": [
+    {
+      "productId": 1,
+      "quantity": 1
+    },
+    {
+      "productId": 2,
+      "quantity": 3
+    }
+  ],
+  "sensors": [
+    {
+      "id": 11,
+      "sensorTypeId": 1
+    },
+    {
+      "id": 12,
+      "sensorTypeId": 2
+    }
+  ]
+}
+
+############ SENSOR SERVICE (EMPLOYEE)
+
+### GET ALL SENSORS
+GET {{url}}/sensors
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### POST A NEW VALUE
+POST {{url}}/sensors/3/add-value
+Content-Type: application/json
+Accept: application/json
+
+{
+  "value": 10
+}
+
+### SENSOR-TYPE SERVICE (EMPLOYEE)
+
+### CREATE A SENSOR-TYPE
+POST {{url}}/sensor-types
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "id" : 4,
+  "name": "",
+  "unit": "m/s",
+  "ceiling": 10,
+  "floor": 0
+}

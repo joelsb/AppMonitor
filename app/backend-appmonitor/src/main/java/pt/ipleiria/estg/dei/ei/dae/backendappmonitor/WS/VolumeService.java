@@ -101,7 +101,7 @@ public class VolumeService {
     @POST
     @Path("/")
     @RolesAllowed({"Employee"})
-    public Response addVolume(VolumeCreateDTO volumeCreatedDTO) throws MyEntityNotFoundException, MyEntityExistsException {
+    public Response addVolume(VolumeCreateDTO volumeCreatedDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         volumeBean.addVolumeToOrder(volumeCreatedDTO);
         var volume = volumeBean.findWithSensorsProducts(volumeCreatedDTO.getId());
         var volumeDTO = VolumeCreateDTO.from(volume);

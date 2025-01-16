@@ -1,0 +1,72 @@
+@url= http://localhost:8080/appmonitor/api
+
+### LOGIN CUSTOMER
+POST {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "Joel", "password": "123"}
+
+> {% client.global.set('jwt-token', response.body) %}
+
+### REQUEST USER INFO
+GET {{url}}/auth/user
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+############ CUSTOMER SERVICE
+
+### GET A SINGLE CUSTOMER
+GET {{url}}/customers/Joel
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### EDIT A CUSTOMER
+PUT {{url}}/customers/Joel
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "name": "Rodrigo",
+  "email": "rodrigo@mail"
+}
+
+############ ORDER SERVICE (CUSTOMER)
+
+### GET ALL ORDERS
+GET {{url}}/orders
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET A SINGLE ORDER
+GET {{url}}/orders/28
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET VOLUMES OF ORDER
+GET {{url}}/orders/28/volumes
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+############ VOLUME SERVICE (CUSTOMER)
+
+### GET ALL VOLUMES
+GET {{url}}/volumes
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET A SPECIFIC VOLUME
+GET {{url}}/volumes/103
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### EMAIL SERVICE
+POST {{url}}/emails/Joel
+Content-Type: application/json
+Accept: application/json
+
+{
+  "subject": "Teste",
+  "body": "Teste body"
+}

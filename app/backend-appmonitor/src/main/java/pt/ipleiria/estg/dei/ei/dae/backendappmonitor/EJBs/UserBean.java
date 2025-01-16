@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.NewPasswordDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
@@ -50,17 +49,28 @@ public class UserBean {
     public User changePassword(String username, String currentPassword, String newPassword, String newPasswordConfirmation) throws MyEntityNotFoundException, MyIllegalArgumentException {
         var user = this.find(username);
         var currentPasswordHash = hasher.hash(currentPassword);
-        if(!currentPasswordHash.equals(user.getPassword())) {
-            throw new MyIllegalArgumentException("Current password is incorrect");
-        }
-        if(newPassword.equals(currentPassword)) {
-            throw new MyIllegalArgumentException("New password must be different from the current password");
-        }
-        if(!newPassword.equals(newPasswordConfirmation)) {
-            throw new MyIllegalArgumentException("New password and confirmation must match");
-        }
+
+        if(!currentPasswordHash.equals(user.getPassword())) throw new MyIllegalArgumentException("Current password is incorrect");
+        if(newPassword.equals(currentPassword)) throw new MyIllegalArgumentException("New password must be different from the current password");
+        if(!newPassword.equals(newPasswordConfirmation)) throw new MyIllegalArgumentException("New password and confirmation must match");
+
         user.setPassword(hasher.hash(newPassword));
         xlsxFileBean.saveAllUsersToXlsx();
         return user;
+    }
+
+    public void validateFieldsCreate(String username, String password, String name, String email) throws MyIllegalArgumentException {
+        if(username == null || username.isEmpty()) throw new MyIllegalArgumentException("Username cannot be empty");
+        if(password == null || password.isEmpty()) throw new MyIllegalArgumentException("Password cannot be empty");
+        if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("Name cannot be empty");
+        if(email == null || email.isEmpty()) throw new MyIllegalArgumentException("Email cannot be empty");
+    }
+
+    public void update(String username, String name, String email) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        var user = this.find(username);
+        if(name != null) user.setName(name);
+        if(name != null && name.isEmpty()) throw new MyIllegalArgumentException("Name cannot be empty");
+        if(email != null) user.setEmail(email);
+        if(email != null && email.isEmpty()) throw new MyIllegalArgumentException("Email cannot be empty");
     }
 }

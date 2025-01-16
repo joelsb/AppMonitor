@@ -2,14 +2,13 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.WS;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.*;
-import jakarta.persistence.PersistenceContext;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorTypeDTO;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.SensorTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.SensorTypeBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 @Path("/sensor-types")
@@ -31,16 +30,16 @@ public class SensorTypeService {
     @POST
     @Path("/")
     @RolesAllowed({"Employee"})
-    public Response createSensorType(SensorTypeCreateDTO sensorTypeCreateDTO) throws MyEntityNotFoundException , MyEntityExistsException {
-        var sensorType = sensorTypeBean.create(sensorTypeCreateDTO);
+    public Response createSensorType(SensorTypeDTO sensorTypeDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
+        var sensorType = sensorTypeBean.create(sensorTypeDTO.getId(), sensorTypeDTO.getName(), sensorTypeDTO.getUnit(), sensorTypeDTO.getCeiling(), sensorTypeDTO.getFloor());
         return Response.ok(SensorTypeDTO.from(sensorType)).build();
     }
 
     @PUT
     @Path("/{id}")
     @RolesAllowed({"Employee"})
-    public Response updateSensorType(@PathParam("id") long id, SensorTypeCreateDTO sensorTypeCreateDTO) throws MyEntityNotFoundException {
-        var sensorType = sensorTypeBean.update(id, sensorTypeCreateDTO.getName(), sensorTypeCreateDTO.getUnit(), sensorTypeCreateDTO.getCeiling(), sensorTypeCreateDTO.getFloor());
+    public Response updateSensorType(@PathParam("id") long id, SensorTypeDTO sensorTypeDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        var sensorType = sensorTypeBean.update(id, sensorTypeDTO.getName(), sensorTypeDTO.getUnit(), sensorTypeDTO.getCeiling(), sensorTypeDTO.getFloor());
         return Response.ok(SensorTypeDTO.from(sensorType)).build();
     }
 

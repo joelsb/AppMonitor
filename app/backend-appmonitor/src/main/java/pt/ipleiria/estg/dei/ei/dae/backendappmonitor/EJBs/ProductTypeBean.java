@@ -6,11 +6,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
-import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ProductTypeCreateDTO;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.SensorType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class ProductTypeBean {
         return productTypes;
     }
 
-    public ProductType create(long id, String name, boolean mandatoryPackage) throws MyEntityExistsException {
+    public ProductType create(long id, String name, boolean mandatoryPackage) throws MyEntityExistsException, MyIllegalArgumentException {
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
@@ -62,20 +62,11 @@ public class ProductTypeBean {
         if(entityManager.find(ProductType.class, id) != null){
             throw new MyEntityExistsException("ProductType with id: '" + id + "' already exists");
         }
+        if(id<=0) throw new MyIllegalArgumentException("ProductType id must be greater than 0");
+        if(name == null || name.isEmpty()) throw new MyEntityExistsException("ProductType name cannot be empty");
         var productType = new ProductType(id, name, mandatoryPackage);
         entityManager.persist(productType);
         xlsxFileBean.saveAllProductTypesToXlsx();
-        return productType;
-    }
-
-    public ProductType create(ProductTypeCreateDTO productTypeCreateDTO) throws MyEntityExistsException {
-        if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
-                .setParameter("name", productTypeCreateDTO.getName())
-                .getResultList().isEmpty()) {
-            throw new MyEntityExistsException("ProductType with id: '" + productTypeCreateDTO.getName() + "' already exists");
-        }
-        var productType = new ProductType(productTypeCreateDTO.getId(), productTypeCreateDTO.getName(), productTypeCreateDTO.isMandatoryPackage());
-        entityManager.persist(productType);
         return productType;
     }
 
@@ -86,11 +77,11 @@ public class ProductTypeBean {
                 .getResultList().isEmpty() && !productType.getName().equals(name)) {
             throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
         }
-        //entityManager.lock(productType, LockModeType.OPTIMISTIC);
+        entityManager.lock(productType, LockModeType.OPTIMISTIC);
+        if(name == null || name.isEmpty()) throw new MyEntityNotFoundException("ProductType name cannot be empty");
         productType.setName(name);
         productType.setMandatoryPackage(mandatoryPackage);
         xlsxFileBean.saveAllProductTypesToXlsx();
-
         return productType;
     }
 
