@@ -119,10 +119,10 @@ Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 {
-  "username": "Rodrigo",
+  "username": "JR",
   "password": 123,
   "name": "Rodrigo",
-  "email": "rodrigo@mail",
+  "email": "jr@mail",
   "office": "Porto"
 }
 
@@ -159,10 +159,10 @@ Authorization: Bearer {{jwt-token}}
 {
   "id": 29,
   "customerUsername": "Tiago",
-  "createdDate": "2024-11-20T21:00:00",
+  "createdDate": "2024-11-20 21:00:00",
   "volume": {
     "id": 120,
-    "sentDate": "2024-11-21T21:00:00",
+    "sentDate": "2024-11-21 21:00:00",
     "packageTypeId": 2,
     "products": [
       {
@@ -182,13 +182,17 @@ Authorization: Bearer {{jwt-token}}
       {
         "id": 9,
         "sensorTypeId": 2
-      }
+      },
+      {
+            "id": 8,
+            "sensorTypeId": 2
+       }
     ]
   }
 }
 
 ### GET A SINGLE ORDER (CUSTOMER, MANAGER)
-GET {{url}}/orders/28
+GET {{url}}/orders/29
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 

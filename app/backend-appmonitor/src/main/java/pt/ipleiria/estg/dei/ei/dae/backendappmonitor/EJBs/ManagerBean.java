@@ -50,10 +50,17 @@ public class ManagerBean extends UserBean {
         if (manager == null) {
             throw new MyEntityNotFoundException("Manager with username: '" + username + "' not found");
         }
-        //entityManager.lock(manager, LockModeType.OPTIMISTIC);
-        manager.setName(name);
-        manager.setEmail(email);
-        manager.setOffice(office);
+        entityManager.lock(manager, LockModeType.OPTIMISTIC);
+      
+        if (name != null) {
+            manager.setName(name);
+        }
+        if (email != null) {
+            manager.setEmail(email);
+        }
+        if(office != null){
+           manager.setOffice(office);
+        }
         entityManager.persist(manager);
         xlsxFileBean.saveAllUsersToXlsx();
         return manager;

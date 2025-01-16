@@ -51,7 +51,6 @@ public class VolumeService {
         var volumeDTO = VolumeDTO.from(volume);
         volumeDTO.setProducts(ProductRecordDTO.fromSimple(volume.getProducts()));
         volumeDTO.setSensors(SensorDTO.fromSimple(volume.getSensors()));
-        volumeDTO.setPackageTypeId(null);
         return Response.ok(volumeDTO).build();
     }
 
