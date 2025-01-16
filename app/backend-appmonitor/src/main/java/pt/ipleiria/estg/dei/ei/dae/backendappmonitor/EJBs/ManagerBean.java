@@ -3,6 +3,7 @@ package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.ManagerDTO;
@@ -49,6 +50,7 @@ public class ManagerBean extends UserBean {
         if (manager == null) {
             throw new MyEntityNotFoundException("Manager with username: '" + username + "' not found");
         }
+        entityManager.lock(manager, LockModeType.OPTIMISTIC);
         manager.setName(name);
         manager.setEmail(email);
         manager.setOffice(office);
