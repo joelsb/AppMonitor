@@ -74,7 +74,7 @@ public class SensorService {
         sensorBean.addValue(sensorId, sensorRecordDTO);
         var sensor = sensorBean.findWithHistory(sensorId);
         var sensorDTO = SensorDTO.from(sensor);
-        sensorDTO.setSensorTypeId(null);
+        sensorDTO.setSensorTypeId(sensorId);
         sensorDTO.setHistory(SensorRecordDTO.fromSimple(sensor.getHistory()));
         return Response.ok(sensorDTO).build();
     }

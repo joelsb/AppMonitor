@@ -6,7 +6,7 @@
         <div class="profile-item">
         </div>
         <!-- Regular links (excluding Profile) -->
-        <li v-for="(link, index) in links" :key="index" class="nav-item">
+        <li v-for="(link, index) in filteredLinks" :key="index" class="nav-item">
           <button v-if="link.name !== 'Profile'" :class="[
             'nav-button',
             (activeIndex === index || link.active) ? 'active' : ''
@@ -63,14 +63,20 @@ const router = useRouter();
 const activeIndex = ref(null);
 const route = useRoute();
 
-const user = useAuthStore().user
+const user = useAuthStore().user;// Obter o utilizador logado
+console.log(user.role);
+const filteredLinks = computed(() => {
+  if (!user || !user.role) return []; // Nenhum usuário ou sem role
+  return links.filter(link => link.roles.includes(user.role));
+});
 
-// Navigation links and submenus
+
 const links = [
   {
     name: 'Customer',
     route: '/customer',
     active: false,
+    roles: ['Customer'], // Apenas usuários com role 'customer' podem acessar
     submenu: [
       { name: 'Show Orders', route: '/customer/orders' },
       { name: 'Show Volumes', route: '/customer/volumes' },
@@ -81,6 +87,7 @@ const links = [
     name: 'Manager',
     route: '/manager',
     active: false,
+    roles: ['Manager'], // Apenas usuários com role 'manager' podem acessar
     submenu: [
       { name: 'Show Orders', route: '/manager/orders' },
       { name: 'Show Volumes', route: '/manager/volumes' },
@@ -91,12 +98,14 @@ const links = [
     name: 'Employee',
     route: '/employee',
     active: false,
+    roles: ['Employee'], // Apenas usuários com role 'employee' podem acessar
     submenu: [
       { name: 'New Volume', route: '/employee/newVolume' },
       { name: 'Deliver', route: '/employee/deliver' },
     ],
-  }
+  },
 ];
+
 
 const linkProfile =
 {

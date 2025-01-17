@@ -82,8 +82,8 @@ async function login() {
 
     // Call the store's login method with the loginFormData object
     const response = await authStore.login(loginFormData);
-
     if (response.success) {
+        // Redirect to the homepage
         router.push("/homepage");
     } else {
         messages.value.push(response.error);
