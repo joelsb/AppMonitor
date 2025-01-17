@@ -6,6 +6,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.DTOs.*;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.VolumeBean;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Order;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
@@ -32,12 +33,28 @@ public class VolumeService {
     @Path("/")
     @RolesAllowed({"Customer","Manager"})
     public Response getAllVolumes() {
-        var volumes = volumeBean.findAllWithSensorsProducts();
-        logger.info("Volumes: " + volumes.get(0).getSentDate());
-        var volumeDTOs = VolumeDTO.fromEmployee(volumes);
-        logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
-        return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
+        if (securityContext.isUserInRole("Customer")) {
+            var volumes = volumeBean.findAllCustomerVolumes(securityContext.getUserPrincipal().getName());
+            var volumesDTO = VolumeDTO.fromSimple(volumes);
+            return Response.ok(volumesDTO).build();
         }
+        if(securityContext.isUserInRole("Manager")){
+            var volumes = volumeBean.findAllWithSensorsProducts();
+            logger.info("Volumes: " + volumes.get(0).getSentDate());
+            var volumeDTOs = VolumeDTO.fromEmployee(volumes);
+            logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
+            return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
+        }
+        return Response.status(Response.Status.FORBIDDEN).build();
+    }
+    @GET
+    @Path("/available")
+    @RolesAllowed({"Employee"})
+    public Response getAvailableVolumes() {
+        var volumes = volumeBean.findAvailableVolumes();
+        var volumesDTO = VolumeDTO.from(volumes);
+        return Response.ok(volumesDTO).build();
+    }
 
     @GET
     @Path("/{id}")

@@ -3,10 +3,10 @@
         <!-- NavBar -->
         <NavBar />
 
-        <!-- volume Table Section -->
+        <!-- user Table Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Volume Page</h2>
-            <p class="mb-4 text-lg text-gray-600">See all the volumes.</p>
+            <h2 class="text-2xl font-semibold mb-4">User Page</h2>
+            <p class="mb-4 text-lg text-gray-600">See all the users.</p>
 
             <!-- Loading Indicator -->
             <div v-if="loading" class="flex justify-center items-center">
@@ -19,35 +19,32 @@
             <!-- Error Message -->
             <div v-if="error" class="text-red-500 text-center mb-4">{{ error }}</div>
 
-            <!-- volumes Table -->
+            <!-- users Table -->
             <div v-if="!loading && !error" class="table-container">
-                <div v-if="volumes.length === 0" class="text-center text-gray-500">
-                    Ainda sem volumes
+                <div v-if="users.length === 0" class="text-center text-gray-500">
+                    Ainda sem users 
                 </div>
-                <table v-if="volumes.length > 0" aria-label="volumes table" class="table w-full">
+                <table v-if="users.length > 0" aria-label="users table" class="table w-full">
                     <thead>
                         <tr>
-                            <th class="p-3 font-semibold text-left">Volume ID</th>
-                            <th class="p-3 font-semibold text-left">Order ID</th>
-                            <th class="p-3 font-semibold text-left">Volume Created Date</th>
-                            <th class="p-3 font-semibold text-left">Status</th>
+                            <th class="p-3 font-semibold text-left">Userame</th>
+                            <th class="p-3 font-semibold text-left">Name</th>
+                            <th class="p-3 font-semibold text-left">Email</th>
+                            <th class="p-3 font-semibold text-left">Role</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="volume in paginatedVolumes" :key="volume.id">
+                        <tr v-for="user in paginatedUsers" :key="user.id">
                             <td class="p-3">
                                 <button 
-                                    @click="viewvolumeDetails(volume.id)" 
+                                    @click="viewuserDetails(user.username)" 
                                     class="text-blue-600 hover:underline">
-                                    {{ volume.id }}
+                                    {{ user.username }}
                                 </button>
                             </td>
-                            <td class="p-3">{{ volume.orderId }}</td>
-                            <td class="p-3">{{ new Date(volume.sentDate).toLocaleString() }}</td>
-                            <td class="p-3">
-                                {{ volume.deliveredDate ? 'Entregue' : 'Por entregar' }}
-                            </td>
-
+                            <td class="p-3">{{ user.name }}</td>
+                            <td class="p-3">{{ user.email }}</td>
+                            <td class="p-3">{{ user.role }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -88,38 +85,38 @@ const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 
 // Reactive Data
-const volumes = ref([]);
+const users = ref([]);
 const loading = ref(false);
 const error = ref(null);
 const currentPage = ref(1);
 const pageSize = 10;
 
-// Computed Paginated volumes
-const paginatedVolumes = computed(() => 
-    volumes.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
+// Computed Paginated users
+const paginatedUsers = computed(() => 
+    users.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
 );
 
 // Total Pages
-const totalPages = computed(() => Math.ceil(volumes.value.length / pageSize));
+const totalPages = computed(() => Math.ceil(users.value.length / pageSize));
 
 // Função para ver os detalhes do pedido e redirecionar
-const viewvolumeDetails = (volumeId) => {
-    console.log("Navigating to volumeDetails with id:", volumeId);  // Verifique se o id está correto
-    router.push({ name: 'volume-id', params: { id: volumeId } });
+const viewuserDetails = (username) => {
+    console.log("Navigating to userDetails with id:", username);  // Verifique se o id está correto
+    router.push({ name: 'user-username', params: { username: username } });
 };
 
 
 
-// Fetch volumes Function
-const fetchvolumes = async () => {
+// Fetch users Function
+const fetchUsers = async () => {
     loading.value = true;
     error.value = null;
     try {
-        const response = await fetch(`${apiUrl}/volumes`);
+        const response = await fetch(`${apiUrl}/users`);
         if (!response.ok) {
             throw new Error(`Failed to fetch: ${response.statusText}`);
         }
-        volumes.value = await response.json();
+        users.value = await response.json();
     } catch (err) {
         error.value = err.message;
         console.error(err);
@@ -143,7 +140,7 @@ const prevPage = () => {
 
 // Fetch Data on Mount
 onMounted(() => {
-    fetchvolumes();
+    fetchUsers();
 });
 </script>
 
@@ -154,13 +151,13 @@ onMounted(() => {
 }
 
 .table {
-    bvolume-collapse: collapse;
+    buser-collapse: collapse;
     width: 100%;
 }
 
 .table th,
 .table td {
-    bvolume: 1px solid #ccc;
+    buser: 1px solid #ccc;
     padding: 0.75rem;
 }
 

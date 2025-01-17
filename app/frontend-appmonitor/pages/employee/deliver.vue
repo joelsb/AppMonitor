@@ -67,7 +67,7 @@ const deliveryType = ref('Order'); // Default is 'Order', can be changed to 'Vol
 const fetchDeliveryData = async (type) => {
     try {
         //console.log(`Token data: ${token} \n User data: ${JSON.stringify(user)}`);
-        const response = await fetch(`${apiUrl}/${type.toLowerCase()}s`, {
+        const response = await fetch(`${apiUrl}/${type.toLowerCase()}s/available`, {
             method: 'GET'
         });
 

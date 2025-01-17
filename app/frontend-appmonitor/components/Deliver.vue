@@ -4,16 +4,7 @@
         <div class="flex justify-between mb-4">
             <h1 class="text-3xl font-semibold">{{ deliveryType }}s</h1>
             <div class="flex items-center space-x-6">
-                <div class="flex items-center">
-                    <input type="radio" id="all" value="all" v-model="filter"
-                        class="w-5 h-5 border-2 border-gray-600 rounded-full">
-                    <label for="all" class="ml-2 text-lg">All</label>
-                </div>
-                <div class="flex items-center">
-                    <input type="radio" id="notDelivered" value="notDelivered" v-model="filter"
-                        class="w-5 h-5 border-2 border-gray-600 rounded-full">
-                    <label for="notDelivered" class="ml-2 text-lg">{{ deliveryType }}s not Delivered</label>
-                </div>
+                
             </div>
         </div>
 
@@ -22,8 +13,10 @@
             {{ errorMessage }}
         </div>
 
-        <!-- Table -->
-        <table class="min-w-full table-auto border-collapse mt-4">
+        <div v-if="filteredItems.length === 0" class="text-center text-gray-500">
+                    Sem {{ deliveryType }} para entregar
+                </div>
+                <table v-if=" filteredItems.length > 0" class="min-w-full table-auto border-collapse mt-4">
             <thead>
                 <tr>
                     <th class="px-4 py-2 text-left border-b w-1/12">ID</th>

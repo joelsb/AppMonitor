@@ -15,7 +15,7 @@
             <!-- Volume ID -->
             <div class="mb-4">
                 <label for="volumeId" class="block font-semibold">Volume ID:</label>
-                <input id="volumeId" v-model="form.id" type="number" class="w-full p-2 border rounded" />
+                <input id="volumeId" v-model="form.id" type="number" class="w-full p-2 border rounded"  />
             </div>
 
             <!-- Sent Date -->
@@ -73,9 +73,6 @@
                         class="w-full p-2 border rounded">
                         <option v-for="type in sensorTypes" :key="type.id" :value="type.id">{{ type.name }}</option>
                     </select>
-                    <label :for="'sensorId-' + index" class="block">Sensor ID:</label>
-                    <input :id="'sensorId-' + index" v-model="sensor.id" type="number"
-                        class="w-full p-2 border rounded" />
                     <button type="button" @click="removeItem(form.sensors, index)"
                         class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
                 </div>
@@ -98,16 +95,27 @@ const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 const emit = defineEmits(['formSubmitted', 'infoMandatorySensors', 'infoMandatoryPackage']);
 
-const { orders, packageTypes, products, sensorTypes } = defineProps({
-    orders: Array, packageTypes: Array, products: Array, sensorTypes: Array
+const { orders, volumes,packageTypes, products, sensorTypes } = defineProps({
+    orders: Array,volumes: Array, packageTypes: Array, products: Array, sensorTypes: Array
+});
+const nextVolumeId = computed(() => {
+    // Get the highest volume ID from volumes
+    const lastId = volumes.reduce((max, volume) => Math.max(max, volume.id), 0);
+    return lastId + 1;
+});
+const nextSensorId = computed(() => {
+    // Get the highest volume ID from orders
+    const lastId = sensors.reduce((max, sensor) => Math.max(max, sensor.id), 0);
+    return lastId + 1;
 });
 
 
 const form = ref({
-    orderId: 28, id: 105, sentDate: '2021-06-01T00:00:00', packageTypeId: 1,
+    orderId: 28, id: nextVolumeId, sentDate: '2021-06-01T00:00:00', packageTypeId: 1,
     products: [{ productId: 1, quantity: 1 }, { productId: 2, quantity: 3 }],
-    sensors: [{ id: 1, sensorTypeId: 1 }, { id: 2, sensorTypeId: 2 }],
+    sensors: [{ id: nextSensorId, sensorTypeId: 1 }, { id: nextSensorId+1, sensorTypeId: 2 }],
 });
+
 
 const requiresMandatoryPackage = computed(() =>
     form.value.products.some(p => products.find(prod => prod.id === p.productId)?.mandatoryPackage)

@@ -221,6 +221,12 @@ GET {{url}}/volumes
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
+
+### GET AVAILABLE VOLUMES (EMPLOYEE)
+GET {{url}}/volumes/available
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
 ### GET A SPECIFIC VOLUME (CUSTOMER, MANAGER)
 GET {{url}}/volumes/103
 Accept: application/json

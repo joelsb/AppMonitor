@@ -57,7 +57,10 @@
 
             <!-- Users List -->
             <div v-if="!loading && !error && showUsers">
-                <h3 class="text-lg font-semibold mb-4">Users with Orders</h3>
+                <div v-if="orders.length === 0" class="text-center text-gray-500">
+                    Ainda sem orders
+                </div>
+                <h3 v-if="orders.length > 0" class="text-lg font-semibold mb-4">Users with Orders</h3>
                 <ul>
                     <li
                         v-for="user in usersWithOrders"
@@ -76,7 +79,10 @@
 
             <!-- Orders Table -->
             <div v-if="!loading && !error && !showUsers" class="table-container">
-                <table aria-label="Orders table" class="table w-full">
+                <div v-if="orders.length === 0" class="text-center text-gray-500">
+                    Ainda sem orders
+                </div>
+                <table v-if="orders.length > 0" aria-label="Orders table" class="table w-full">
                     <thead>
                         <tr>
                             <th class="p-3 font-semibold text-left">Order ID</th>
