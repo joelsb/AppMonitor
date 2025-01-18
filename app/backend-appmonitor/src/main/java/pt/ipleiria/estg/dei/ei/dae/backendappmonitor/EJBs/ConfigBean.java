@@ -29,6 +29,8 @@ public class ConfigBean {
     @EJB
     private EmployeeBean employeeBean;
     @EJB
+    private AdminBean adminBean;
+    @EJB
     private ProductTypeBean productTypeBean;
     @EJB
     private SensorTypeBean sensorTypeBean;
@@ -74,6 +76,7 @@ public class ConfigBean {
                     var customerTiago = customerBean.create("Tiago", "123", "Tiago", "tiago@mail.com");
                     var employeeJose = employeeBean.create("Jose", "123", "Jose", "jose@mail.com", "warehouse1");
                     var managerAna = managerBean.create("Ana", "123", "Ana", "ana@mail.com", "office1");
+                    var admin = adminBean.create("Admin", "123", "Admin", "admin@mail.com");
                 }
 
                 //Product-Type creation
@@ -82,8 +85,8 @@ public class ConfigBean {
                     xlsxFileBean.loadAllProductTypesFromXlsx();
                 } else {
                     System.out.println("Populating ProductTypes from scratch");
-                    var product1 = productTypeBean.create(1, "Televisao LCD Samsung", false);
-                    var product2 = productTypeBean.create(2, "Gelado OLA - Corneto morango", true);
+                    var product1 = productTypeBean.create(1L, "Televisao LCD Samsung", false);
+                    var product2 = productTypeBean.create(2L, "Gelado OLA - Corneto morango", true);
                 }
 
                 //Sensor-Type creation
@@ -92,8 +95,8 @@ public class ConfigBean {
                     xlsxFileBean.loadAllSensorTypesFromXlsx();
                 } else {
                     System.out.println("Populating SensorTypes from scratch");
-                    var sensorTemperature = sensorTypeBean.create(1, "Temperature", "ºC", 30, 10);
-                    var sensorHumidity = sensorTypeBean.create(2, "Humidity", "%", 80, 20);
+                    var sensorTemperature = sensorTypeBean.create(1L, "Temperature", "ºC", 30D, 10D);
+                    var sensorHumidity = sensorTypeBean.create(2L, "Humidity", "%", 80D, 20D);
                 }
 
                 //package-type creation
@@ -102,15 +105,15 @@ public class ConfigBean {
                     xlsxFileBean.loadAllPackageTypesFromXlsx();
                 } else {
                     System.out.println("Populating PackageTypes from scratch");
-                    var packageCaixaIsotermicaS = packageTypeBean.create(1, "Caixa Isotermica S");
-                    var packageCaixaIsotermicaM = packageTypeBean.create(2, "Caixa Isotermica M");
-                    var packageCaixaIsotermicaL = packageTypeBean.create(3, "Caixa Isotermica L");
-                    var packageCaixaIsotermicaXL = packageTypeBean.create(4, "Caixa Isotermica XL");
-                    var packageCaixaCartaoS = packageTypeBean.create(5, "Caixa Cartao S");
-                    var packageCaixaCartaoM = packageTypeBean.create(6, "Caixa Cartao M");
-                    var packageCaixaCartaoL = packageTypeBean.create(7, "Caixa Cartao L");
-                    var packageCaixaCartaoXL = packageTypeBean.create(8, "Caixa Cartao XL");
-                    var packageBox = packageTypeBean.create(9, "Box");
+                    var packageCaixaIsotermicaS = packageTypeBean.create(1L, "Caixa Isotermica S");
+                    var packageCaixaIsotermicaM = packageTypeBean.create(2L, "Caixa Isotermica M");
+                    var packageCaixaIsotermicaL = packageTypeBean.create(3L, "Caixa Isotermica L");
+                    var packageCaixaIsotermicaXL = packageTypeBean.create(4L, "Caixa Isotermica XL");
+                    var packageCaixaCartaoS = packageTypeBean.create(5L, "Caixa Cartao S");
+                    var packageCaixaCartaoM = packageTypeBean.create(6L, "Caixa Cartao M");
+                    var packageCaixaCartaoL = packageTypeBean.create(7L, "Caixa Cartao L");
+                    var packageCaixaCartaoXL = packageTypeBean.create(8L, "Caixa Cartao XL");
+                    var packageBox = packageTypeBean.create(9L, "Box");
                 }
             }
             //add a mandatory sensor to a package-type

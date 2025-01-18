@@ -15,6 +15,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 @Consumes("application/json")
 @Produces("application/json")
 @Authenticated
+@RolesAllowed({"Admin"})
 public class SensorTypeService {
     @EJB
     private SensorTypeBean sensorTypeBean;
@@ -29,7 +30,6 @@ public class SensorTypeService {
 
     @POST
     @Path("/")
-    @RolesAllowed({"Employee"})
     public Response createSensorType(SensorTypeDTO sensorTypeDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         var sensorType = sensorTypeBean.create(sensorTypeDTO.getId(), sensorTypeDTO.getName(), sensorTypeDTO.getUnit(), sensorTypeDTO.getCeiling(), sensorTypeDTO.getFloor());
         return Response.ok(SensorTypeDTO.from(sensorType)).build();
@@ -37,15 +37,14 @@ public class SensorTypeService {
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Employee"})
     public Response updateSensorType(@PathParam("id") long id, SensorTypeDTO sensorTypeDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
         var sensorType = sensorTypeBean.update(id, sensorTypeDTO.getName(), sensorTypeDTO.getUnit(), sensorTypeDTO.getCeiling(), sensorTypeDTO.getFloor());
         return Response.ok(SensorTypeDTO.from(sensorType)).build();
     }
 
-//    @GET
-//    @Path("/{id}")
-//    public Response getSensorType(@PathParam("id") long id) throws MyEntityNotFoundException {
-//        return Response.ok(SensorTypeDTO.from(sensorTypeBean.find(id))).build();
-//    }
+    @GET
+    @Path("/{id}")
+    public Response getSensorType(@PathParam("id") long id) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        return Response.ok(SensorTypeDTO.from(sensorTypeBean.find(id))).build();
+    }
 }

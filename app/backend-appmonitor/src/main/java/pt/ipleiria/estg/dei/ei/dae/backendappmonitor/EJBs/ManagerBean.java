@@ -34,10 +34,12 @@ public class ManagerBean extends UserBean {
         }
         return manager;
     }
-
-    public List<Manager> findAll(String username) throws MyEntityNotFoundException {
-        // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
-        return entityManager.createNamedQuery("getAllManagers", Manager.class).getResultList();
+    public List<Manager> findAllManagers() {
+        var managers = entityManager.createNamedQuery("getAllManagers", Manager.class).getResultList();
+        if(managers.isEmpty()) {
+            throw new MyEntityNotFoundException("No managers found");
+        }
+        return managers;
     }
     @Transactional
     public Manager create(String username, String password, String name, String email, String office) throws MyEntityExistsException, MyIllegalArgumentException {
@@ -60,7 +62,6 @@ public class ManagerBean extends UserBean {
         entityManager.lock(manager, LockModeType.OPTIMISTIC);
 
         if(office != null) manager.setOffice(office);
-        if(office != null && office.isEmpty()) throw new MyIllegalArgumentException("Office cannot be empty");
         userBean.update(username, name, email);
 
         xlsxFileBean.saveAllUsersToXlsx();

@@ -36,8 +36,11 @@ public class ProductTypeBean {
     }
 
     public List<ProductType> findAll() {
-        // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
-        return entityManager.createNamedQuery("getAllProductTypes", ProductType.class).getResultList();
+        var productTypes = entityManager.createNamedQuery("getAllProductTypes", ProductType.class).getResultList();
+        if(productTypes.isEmpty()){
+            throw new MyEntityNotFoundException("No ProductTypes found");
+        }
+        return productTypes;
     }
 
     public ProductType findWithMandatorySensors(Long id) throws MyEntityNotFoundException {
@@ -53,24 +56,26 @@ public class ProductTypeBean {
         return productTypes;
     }
 
-    public ProductType create(long id, String name, boolean mandatoryPackage) throws MyEntityExistsException, MyIllegalArgumentException {
+    public ProductType create(Long id, String name, Boolean mandatoryPackage) throws MyEntityExistsException, MyIllegalArgumentException {
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("ProductType with name: '" + name + "' already exists");
         }
+        if(id ==null || id<=0) throw new MyIllegalArgumentException("ProductType id must be greater than 0");
         if(entityManager.find(ProductType.class, id) != null){
             throw new MyEntityExistsException("ProductType with id: '" + id + "' already exists");
         }
-        if(id<=0) throw new MyIllegalArgumentException("ProductType id must be greater than 0");
-        if(name == null || name.isEmpty()) throw new MyEntityExistsException("ProductType name cannot be empty");
+        if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("ProductType name cannot be empty");
+        if(mandatoryPackage == null) throw new MyIllegalArgumentException("ProductType mandatoryPackage cannot be null");
         var productType = new ProductType(id, name, mandatoryPackage);
         entityManager.persist(productType);
         xlsxFileBean.saveAllProductTypesToXlsx();
         return productType;
     }
 
-    public ProductType update(long id, String name, boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException {
+    public ProductType update(Long id, String name, Boolean mandatoryPackage) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("ProductType id must be greater than 0");
         var productType = this.find(id);
         if(!entityManager.createNamedQuery("getProductTypeByName", ProductType.class)
                 .setParameter("name", name)
@@ -78,15 +83,16 @@ public class ProductTypeBean {
             throw new MyEntityExistsException("ProductType with id: '" + name + "' already exists");
         }
         entityManager.lock(productType, LockModeType.OPTIMISTIC);
-        if(name == null || name.isEmpty()) throw new MyEntityNotFoundException("ProductType name cannot be empty");
-        productType.setName(name);
-        productType.setMandatoryPackage(mandatoryPackage);
+        if(mandatoryPackage != null) productType.setMandatoryPackage(mandatoryPackage);
+        if(name != null) productType.setName(name);
         xlsxFileBean.saveAllProductTypesToXlsx();
         return productType;
     }
 
-    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("ProductType id must be greater than 0");
         var productType = this.find(id);
+        if (productType == null) throw new MyIllegalArgumentException("ProductType with id: '" + id + "' not found");
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if (sensorType == null) {
             throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found");

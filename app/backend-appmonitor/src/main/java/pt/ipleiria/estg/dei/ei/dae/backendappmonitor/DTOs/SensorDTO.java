@@ -9,12 +9,6 @@ import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SensorDTO {
-    /*
-    id: long
-    sensorType: SensorType
-    volume: Volume
-    history: List<HistoryRecord> (não detalhado no diagrama)
-     */
     private Long volumeId;
     private Long id;
     private Long sensorTypeId;

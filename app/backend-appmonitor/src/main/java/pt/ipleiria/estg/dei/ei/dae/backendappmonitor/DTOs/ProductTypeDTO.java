@@ -10,26 +10,18 @@ import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductTypeDTO {
-    /*
-    id: long
-    name: String
-    mandatoryPackage: boolean
-    mandatorySensors: List<SensorType>
-    productRecords: List<ProductRecord>
-     */
-
-    private long id;
+    private Long id;
 
     private String name;
 
-    private boolean mandatoryPackage;
+    private Boolean mandatoryPackage;
 
     private List<SensorTypeDTO> mandatorySensors = new ArrayList<>();
 
     public ProductTypeDTO() {
     }
 
-    public ProductTypeDTO(long id, String name, boolean mandatoryPackage) {
+    public ProductTypeDTO(Long id, String name, Boolean mandatoryPackage) {
         this.id = id;
         this.name = name;
         this.mandatoryPackage = mandatoryPackage;
@@ -47,11 +39,11 @@ public class ProductTypeDTO {
         return productTypes.stream().map(ProductTypeDTO::from).collect(Collectors.toList());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,11 +55,11 @@ public class ProductTypeDTO {
         this.name = name;
     }
 
-    public boolean isMandatoryPackage() {
+    public Boolean isMandatoryPackage() {
         return mandatoryPackage;
     }
 
-    public void setMandatoryPackage(boolean mandatoryPackage) {
+    public void setMandatoryPackage(Boolean mandatoryPackage) {
         this.mandatoryPackage = mandatoryPackage;
     }
 

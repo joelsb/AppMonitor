@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.*;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 @Authenticated
+@RolesAllowed({"Admin"})
 public class ManagerService {
 
     @EJB
@@ -29,9 +30,30 @@ public class ManagerService {
     @Context
     private SecurityContext securityContext;
 
+    @GET
+    @Path("/")
+    public Response getManagers() {
+        var managers = managerBean.findAllManagers();
+        return Response.ok(ManagerDTO.from(managers)).build();
+    }
+
+    @GET
+    @Path("{username}")
+    @RolesAllowed({"Manager"})
+    public Response getManager(@PathParam("username") String username) throws MyEntityNotFoundException {
+        var principal = securityContext.getUserPrincipal();
+
+        if(securityContext.isUserInRole("Manager") && !principal.getName().equals(username)) {
+            // write to the log the principal.getName() and the username
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        var manager = managerBean.find(username);
+        var managerDTO = ManagerDTO.from(manager);
+        return Response.ok(managerDTO).build();
+    }
+
     @POST
     @Path("/")
-    @RolesAllowed({"Manager"})
     public Response createManager(ManagerDTO managerDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         managerBean.create(managerDTO.getUsername(), managerDTO.getPassword(), managerDTO.getName(), managerDTO.getEmail(),managerDTO.getOffice());
         var manager = managerBean.find(managerDTO.getUsername());
@@ -45,7 +67,7 @@ public class ManagerService {
     public Response updateManager(@PathParam("username") String username, ManagerDTO managerDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
         var principal = securityContext.getUserPrincipal();
         var manager = managerBean.find(username);
-        if(!principal.getName().equals(username)) {
+        if(securityContext.isUserInRole("Manager") && !principal.getName().equals(username)) {
             // write to the log the principal.getName() and the username
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -54,21 +76,4 @@ public class ManagerService {
         managerDTO = ManagerDTO.from(manager);
         return Response.ok(managerDTO).build();
     }
-
-    @GET
-    @Path("{username}")
-    @RolesAllowed({"Manager"})
-    public Response getManager(@PathParam("username") String username) throws MyEntityNotFoundException {
-        var principal = securityContext.getUserPrincipal();
-
-        if(!principal.getName().equals(username)) {
-            // write to the log the principal.getName() and the username
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
-        var manager = managerBean.find(username);
-        var managerDTO = ManagerDTO.from(manager);
-        return Response.ok(managerDTO).build();
-    }
-
-
 }

@@ -33,7 +33,11 @@ public class PackageTypeBean {
     }
 
     public List<PackageType> findAll() {
-        return entityManager.createNamedQuery("getAllPackageTypes", PackageType.class).getResultList();
+        var packageTypes = entityManager.createNamedQuery("getAllPackageTypes", PackageType.class).getResultList();
+        if(packageTypes.isEmpty()){
+            throw new MyEntityNotFoundException("No PackageTypes found");
+        }
+        return packageTypes;
     }
 
     public PackageType findWithMandatorySensors(Long id) throws MyEntityNotFoundException {
@@ -49,17 +53,17 @@ public class PackageTypeBean {
         return packageTypes;
     }
 
-    public PackageType create(long id, String name) throws MyEntityExistsException, MyIllegalArgumentException {
+    public PackageType create(Long id, String name) throws MyEntityExistsException, MyIllegalArgumentException {
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
                 .setParameter("name", name)
                 .getResultList().isEmpty()) {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
-        if(id<=0) throw new MyIllegalArgumentException("PackageType id must be greater than 0");
-        if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("PackageType name cannot be empty");
+        if(id ==null || id<=0) throw new MyIllegalArgumentException("PackageType id must be greater than 0");
         if(entityManager.find(PackageType.class, id) != null){
             throw new MyEntityExistsException("PackageType with id: '" + id + "' already exists");
         }
+        if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("PackageType name cannot be empty");
         var packageType = new PackageType(id, name);
         entityManager.persist(packageType);
         xlsxFileBean.saveAllPackageTypesToXlsx();
@@ -67,6 +71,7 @@ public class PackageTypeBean {
     }
 
     public PackageType update(Long id, String name) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("PackageType id must be greater than 0");
         var packageType = this.find(id);
         //if a package type with the same name already exists and its a different package type from the one passed with the id  then throw exception
         if(!entityManager.createNamedQuery("getPackageTypeByName", PackageType.class)
@@ -74,15 +79,16 @@ public class PackageTypeBean {
                 .getResultList().isEmpty() && !packageType.getName().equals(name)) {
             throw new MyEntityExistsException("PackageType with name: '" + name + "' already exists");
         }
-        if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("PackageType name cannot be empty");
         entityManager.lock(packageType, LockModeType.OPTIMISTIC);
-        packageType.setName(name);
+        if(name != null) packageType.setName(name);
         xlsxFileBean.saveAllPackageTypesToXlsx();
         return packageType;
     }
 
-    public void addMandatorySensor(long id, long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException {
+    public void addMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("PackageType id must be greater than 0");
         var packageType = this.find(id);
+        if(sensorTypeId == null || sensorTypeId <= 0) throw new MyIllegalArgumentException("SensorType id must be greater than 0");
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if(sensorType == null) {
             throw new MyEntityNotFoundException("Sensor with id: '" + sensorTypeId + "' not found");
@@ -97,8 +103,10 @@ public class PackageTypeBean {
         sensorType.addPackageType(packageType);
     }
 
-    public void removeMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException {
+    public void removeMandatorySensor(Long id, Long sensorTypeId) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("PackageType id must be greater than 0");
         var packageType = this.find(id);
+        if(sensorTypeId == null || sensorTypeId <= 0) throw new MyIllegalArgumentException("SensorType id must be greater than 0");
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if(sensorType == null) {
             throw new MyEntityNotFoundException("Sensor with id: '" + sensorTypeId + "' not found");

@@ -16,7 +16,8 @@ public class SensorTypeBean {
     @EJB
     private XLSXFileBean xlsxFileBean;
 
-    public SensorType find(Long id) throws MyEntityNotFoundException {
+    public SensorType find(Long id) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("SensorType id must be greater than 0");
         var sensor = entityManager.find(SensorType.class, id);
         if (sensor == null) {
             throw new MyEntityNotFoundException("SensorType with id: '" + id + "' not found");
@@ -31,17 +32,26 @@ public class SensorTypeBean {
     }
 
     public List<SensorType> findAll() {
-        return entityManager.createNamedQuery("getAllSensorTypes", SensorType.class).getResultList();
+        var sensorTypes = entityManager.createNamedQuery("getAllSensorTypes", SensorType.class).getResultList();
+        if(sensorTypes.isEmpty()){
+            throw new MyEntityNotFoundException("No SensorTypes found");
+        }
+        return sensorTypes;
     }
 
-    public SensorType create(long id, String name, String unit, double ceiling, double floor) throws MyEntityExistsException, MyIllegalArgumentException {
+    public SensorType create(Long id, String name, String unit, Double ceiling, Double floor) throws MyEntityExistsException, MyIllegalArgumentException {
+        if(id == null || id<=0) throw new MyIllegalArgumentException("Id must be greater than 0");
         if (entityManager.find(SensorType.class, id) != null) {
-            throw new MyEntityExistsException("ProductType with id: '" + id + "' already exists");
+            throw new MyEntityExistsException("SensorType with id: '" + id + "' already exists");
         }
-
-        if(id<0) throw new MyIllegalArgumentException("Id must be greater than 0");
+        if(!entityManager.createNamedQuery("getSensorTypeByName", SensorType.class)
+                .setParameter("name", name)
+                .getResultList().isEmpty()){
+            throw new MyEntityExistsException("SensorType with name: '" + name + "' already exists");
+        }
         if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("Name must be defined");
         if(unit == null || unit.isEmpty()) throw new MyIllegalArgumentException("Unit must be defined");
+        if(ceiling == null || floor == null) throw new MyIllegalArgumentException("Ceiling and floor must be defined");
         if(ceiling<floor) throw new MyIllegalArgumentException("Ceiling must be greater than floor");
         var sensorType = new SensorType(id, name, unit, ceiling, floor);
         entityManager.persist(sensorType);
@@ -49,15 +59,15 @@ public class SensorTypeBean {
         return sensorType;
     }
 
-    public SensorType update(Long id, String name, String unit, double ceiling, double floor) throws MyEntityNotFoundException, MyIllegalArgumentException {
+    public SensorType update(Long id, String name, String unit, Double ceiling, Double floor) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        if(id == null || id<=0) throw new MyIllegalArgumentException("Id must be greater than 0");
         var sensorType = this.find(id);
         entityManager.lock(sensorType, LockModeType.OPTIMISTIC);
 
         if(name != null && !name.isEmpty()) sensorType.setName(name);
         if(unit != null && !unit.isEmpty()) sensorType.setUnit(unit);
-        if(ceiling<floor) throw new MyIllegalArgumentException("Ceiling must be greater than floor");
-        sensorType.setCeiling(ceiling);
-        sensorType.setFloor(floor);
+        if(ceiling != null && ceiling>sensorType.getFloor()) sensorType.setCeiling(ceiling);
+        if(floor != null && floor<sensorType.getCeiling()) sensorType.setFloor(floor);
         xlsxFileBean.saveAllSensorTypesToXlsx();
         return sensorType;
     }

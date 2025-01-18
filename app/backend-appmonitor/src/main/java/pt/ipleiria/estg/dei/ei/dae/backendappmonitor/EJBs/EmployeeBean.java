@@ -33,10 +33,12 @@ public class EmployeeBean extends UserBean {
         }
         return employee;
     }
-
-    public List<Employee> findAll(String username) throws MyEntityNotFoundException {
-        // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
-        return entityManager.createNamedQuery("getAllEmployees", Employee.class).getResultList();
+    public List<Employee> findAllEmployees(){
+        var employees = entityManager.createNamedQuery("getAllEmployees", Employee.class).getResultList();
+        if(employees.isEmpty()) {
+            throw new MyEntityNotFoundException("No employees found");
+        }
+        return employees;
     }
 
     public Employee create(String username, String password, String name, String email, String warehouse) throws MyEntityExistsException, MyIllegalArgumentException {
@@ -60,7 +62,6 @@ public class EmployeeBean extends UserBean {
         entityManager.lock(employee, LockModeType.OPTIMISTIC);
 
         if(warehouse != null) employee.setWarehouse(warehouse);
-        if(warehouse != null && warehouse.isEmpty()) throw new MyIllegalArgumentException("Warehouse cannot be empty");
         userBean.update(username, name, email);
 
         xlsxFileBean.saveAllUsersToXlsx();

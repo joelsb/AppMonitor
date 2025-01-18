@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Consumes("application/json")
 @Produces("application/json")
 @Authenticated
+@RolesAllowed({"Admin"})
 public class PackageTypeService {
     @EJB
     private PackageTypeBean packageTypeBean;
@@ -31,16 +32,16 @@ public class PackageTypeService {
         return Response.ok(packageTypesDTO).build();
     }
 
-//    @GET
-//    @Path("/{id}")
-//    public Response getPackageType(@PathParam("id") long id) throws MyEntityNotFoundException {
-//        var packageType = packageTypeBean.findWithMandatorySensors(id);
-//        var packageTypeDTO = PackageTypeDTO.from(packageType);
-//        //for each productTypeDTO in productTypesDTO, set excludeMandatorySensors to true if the productType.getMandatorySensors() is empty
-//        var mandatorySensors = packageType.getMandatorySensors();
-//        packageTypeDTO.setMandatorySensors(SensorTypeDTO.from(mandatorySensors));
-//        return Response.ok(packageTypeDTO).build();
-//    }
+    @GET
+    @Path("/{id}")
+    public Response getPackageType(@PathParam("id") long id) throws MyEntityNotFoundException {
+        var packageType = packageTypeBean.findWithMandatorySensors(id);
+        var packageTypeDTO = PackageTypeDTO.from(packageType);
+        //for each productTypeDTO in productTypesDTO, set excludeMandatorySensors to true if the productType.getMandatorySensors() is empty
+        var mandatorySensors = packageType.getMandatorySensors();
+        packageTypeDTO.setMandatorySensors(SensorTypeDTO.from(mandatorySensors));
+        return Response.ok(packageTypeDTO).build();
+    }
 
     @GET
     @Path("/{id}/mandatory-sensors")
@@ -53,8 +54,7 @@ public class PackageTypeService {
 
     @POST
     @Path("/{id}/add-mandatory-sensor/{sensorTypeId}")
-    @RolesAllowed({"Employee"})
-    public Response addMandatorySensors(@PathParam("id") long id, @PathParam("sensorTypeId") long sensorId) throws MyEntityNotFoundException, MyEntityExistsException {
+    public Response addMandatorySensors(@PathParam("id") long id, @PathParam("sensorTypeId") long sensorId) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         packageTypeBean.addMandatorySensor(id, sensorId);
         var packageType = packageTypeBean.findWithMandatorySensors(id);
         var packageTypeDTO = PackageTypeDTO.from(packageType);
@@ -64,7 +64,6 @@ public class PackageTypeService {
 
     @POST
     @Path("/")
-    @RolesAllowed({"Employee"})
     public Response createPackageType(PackageTypeDTO packageTypeDTO) throws MyEntityExistsException, MyEntityNotFoundException, MyIllegalArgumentException {
         packageTypeBean.create(packageTypeDTO.getId(), packageTypeDTO.getName());
         var packageType = packageTypeBean.find(packageTypeDTO.getId());
@@ -74,7 +73,6 @@ public class PackageTypeService {
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Employee"})
     public Response updatePackageType(@PathParam("id") long id, PackageTypeDTO packageTypeDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyIllegalArgumentException {
         var packageType = packageTypeBean.update(id, packageTypeDTO.getName());
         return Response.ok(PackageTypeDTO.from(packageType)).build();

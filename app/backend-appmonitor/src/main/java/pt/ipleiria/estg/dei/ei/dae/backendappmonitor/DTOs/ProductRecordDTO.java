@@ -8,12 +8,6 @@ import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductRecordDTO {
-    /*
-    id: long
-    product: ProductType
-    quantity: long
-    volume: Volume
-     */
 
     private Long id;
     private Long productId;

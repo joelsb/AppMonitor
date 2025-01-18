@@ -51,16 +51,18 @@ public class SensorBean implements Serializable {
         return sensors;
     }
 
-    public Sensor create(long id, long sensorTypeId, Long volumeId) throws MyEntityNotFoundException, MyIllegalArgumentException {
+    public Sensor create(Long id, Long sensorTypeId, Long volumeId) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        if(sensorTypeId == null || sensorTypeId <= 0) throw new MyIllegalArgumentException("SensorType id must be greater than 0");
         var sensorType = entityManager.find(SensorType.class, sensorTypeId);
         if (sensorType == null) {
             throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found");
         }
+        if(volumeId == null || volumeId <= 0) throw new MyIllegalArgumentException("Volume id must be greater than 0");
         var volume = entityManager.find(Volume.class, volumeId);
         if(volume == null) {
             throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' not found");
         }
-        if(id<=0) throw new MyIllegalArgumentException("Sensor id must be greater than 0");
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("Sensor id must be greater than 0");
         var sensor = new Sensor(id, sensorType, volume);
         sensorType.addSensor(sensor);
         volume.addSensor(sensor);
@@ -68,25 +70,34 @@ public class SensorBean implements Serializable {
         return sensor;
     }
 
-    //NAO FAZ SENTIDO FAZER UPDATE DE UM SENSOR
-//    public Sensor update(long id, long sensorTypeId, long volumeId) throws MyEntityNotFoundException {
+    //NAO FAZ SENTIDO POIS TERIA DE SE DEIXAR UM VOLUME COM UM SENSOR OBRIGATORIO A MENOS
+//    public Sensor update(Long id, Long sensorTypeId, Long volumeId) throws MyEntityNotFoundException, MyIllegalArgumentException {
+//        if(sensorTypeId == null || sensorTypeId <= 0) throw new MyIllegalArgumentException("SensorType id must be greater than 0");
 //        var sensorType = entityManager.find(SensorType.class, sensorTypeId);
 //        if(sensorType == null) {
 //            throw new MyEntityNotFoundException("SensorType with id: '" + sensorTypeId + "' not found");
 //        }
+//        if(volumeId == null || volumeId <= 0) throw new MyIllegalArgumentException("Volume id must be greater than 0");
 //        var volume = entityManager.find(Volume.class, volumeId);
 //        if (volume == null) {
 //            throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' not found");
 //        }
+//        if(id == null || id <= 0) throw new MyIllegalArgumentException("Sensor id must be greater than 0");
 //        var sensor = this.find(id);
 //        entityManager.lock(sensor, LockModeType.OPTIMISTIC);
+//        sensor.getVolume().removeSensor(sensor);
+//        sensor.setVolume(volume);
+//        volume.addSensor(sensor);
+//
+//        sensor.getSensorType().removeSensor(sensor);
 //        sensor.setSensorType(sensorType);
 //        sensorType.addSensor(sensor);
-//        sensor.setVolume(volume);
 //        return sensor;
 //    }
 
-    public void addValue(Long sensorId, SensorRecordDTO sensorRecordDTO) throws MyEntityNotFoundException {
+    public void addValue(Long sensorId, SensorRecordDTO sensorRecordDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        if (sensorId == null || sensorId <= 0) throw new MyIllegalArgumentException("Sensor id must be greater than 0");
+
         var sensor = this.find(sensorId);
         var date = new Date();
         var value = sensorRecordDTO.getValue();
@@ -104,7 +115,8 @@ public class SensorBean implements Serializable {
                 "The sensor with id: '" + sensorId + "' has a new value: '" + value + "' at: '" + date.toString() + "'");
     }
 
-    public void removeValue(Long sensorId, Long recordId) throws MyEntityNotFoundException {
+    public void removeValue(Long sensorId, Long recordId) throws MyEntityNotFoundException, MyIllegalArgumentException {
+        if (sensorId == null || sensorId <= 0) throw new MyIllegalArgumentException("Sensor id must be greater than 0");
         var sensor = this.find(sensorId);
         sensorRecordBean.delete(recordId);
     }

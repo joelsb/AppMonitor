@@ -31,9 +31,13 @@ public class UserBean {
         }
         return user;
     }
-    public List<User> findAll() {
-        // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
-        return entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
+
+    public List<User> findAll() throws MyEntityNotFoundException {
+        var users = entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
+        if(users.isEmpty()) {
+            throw new MyEntityNotFoundException("No users found");
+        }
+        return users;
     }
     public User findOrFail(String username) {
         var user = entityManager.getReference(User.class, username);
@@ -66,11 +70,9 @@ public class UserBean {
         if(email == null || email.isEmpty()) throw new MyIllegalArgumentException("Email cannot be empty");
     }
 
-    public void update(String username, String name, String email) throws MyEntityNotFoundException, MyIllegalArgumentException {
+    public void update(String username, String name, String email) {
         var user = this.find(username);
         if(name != null) user.setName(name);
-        if(name != null && name.isEmpty()) throw new MyIllegalArgumentException("Name cannot be empty");
         if(email != null) user.setEmail(email);
-        if(email != null && email.isEmpty()) throw new MyIllegalArgumentException("Email cannot be empty");
     }
 }
