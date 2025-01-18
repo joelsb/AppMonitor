@@ -1,6 +1,11 @@
 <template>
     <div class="card">
+        
         <div class="card-body">
+            <div class="mb-4 flex-row justify-between flex items-center">
+                <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                Voltar
+            </button>
             <!-- Edit Mode Toggle Switch -->
             <div v-if="!isCreate" class="flex justify-end items-center">
                 <label for="editProfileSwitch" class="block font-semibold text-lg mr-3">Edit Mode</label>
@@ -13,6 +18,8 @@
                 </label>
                 <span class="ml-4 text-lg">{{ isEditing ? 'Editing' : 'View' }}</span>
             </div>
+            
+        </div>
             <form class="form" @submit.prevent="isCreate ? createProfile() : updateProfile()">
                 <!-- Role -->
                 <div class="form-group">

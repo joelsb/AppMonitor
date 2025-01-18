@@ -2,7 +2,13 @@
     <NavBar />
     <div class="card">
         <div class="card-header">
+            <div class="mb-4 flex-row justify-between flex items-center">
             <h2>Change Password</h2>
+
+                <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                Voltar
+            </button>
+            </div>
         </div>
         <div class="card-body">
             <form @submit.prevent="handleChangePassword">
@@ -45,9 +51,11 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/store/auth-store';
 import Popup from '@/components/Popup.vue'; // Import the Popup component
 
+const router = useRouter();
 // PopUp state
 const showPopup = ref(false);
 const popupTitle = ref('');
