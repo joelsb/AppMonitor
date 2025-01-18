@@ -114,11 +114,21 @@ const links = [
     name: 'Admin',
     route: '/admin',
     active: false,
-    roles: ['Manager','Admin'], // Apenas usuários com role 'admin' podem acessar
+    roles: ['Admin'], // Apenas usuários com role 'admin' podem acessar
     submenu: [
       { name: 'Users', route: '/users' },
       { name: 'Package Types', route: '/package-type' , submenu: [
       ]},
+    ],
+  },
+  {
+    name: 'Sensor',
+    route: '/sensor',
+    active: false,
+    roles: ['Admin'], // Apenas usuários com role 'admin' podem acessar
+    submenu: [
+      { name: 'Show Sensors', route: '/sensor/sensors' },
+      { name: 'Add Value', route: '/sensor/newValue' },
     ],
   }
 ];
