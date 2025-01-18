@@ -26,15 +26,6 @@ import java.util.List;
 
 @Entity
 public class SensorType extends Versionable implements Serializable {
-    /*
-    Id é criado pelo sistema
-    name-String
-    unit-String
-    porducts-List<ProductType>
-    sensors-List<Sensor>
-    packageTypes-List<PackageType>
-     */
-
     @Id
     private long id;
     @NotNull

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 @Authenticated
+@RolesAllowed({"Admin"})
 public class VolumeService {
     @EJB
     private VolumeBean volumeBean;
@@ -33,9 +34,7 @@ public class VolumeService {
     @RolesAllowed({"Customer","Manager"})
     public Response getAllVolumes() {
         var volumes = volumeBean.findAllWithSensorsProducts();
-        logger.info("Volumes: " + volumes.get(0).getSentDate());
         var volumeDTOs = VolumeDTO.fromEmployee(volumes);
-        logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
         return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
         }
 
@@ -70,7 +69,7 @@ public class VolumeService {
         }
         //build an Answer with the DTO and a property containing the volumeId
         //Respond with the answer
-        GenericDTO<List<SensorDTO>> answer = new GenericDTO<>("volumeId",volume.getId(),"sensors",sensorsDTO);
+        GenericDTO<Long, List<SensorDTO>> answer = new GenericDTO<>("volumeId",volume.getId(),"sensors",sensorsDTO);
         return Response.ok(answer).build();
 
     }
@@ -85,7 +84,7 @@ public class VolumeService {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         var productsDTO = ProductRecordDTO.fromSimple(volume.getProducts());
-        GenericDTO<List<ProductRecordDTO>> answer = new GenericDTO<>("volumeId",volume.getId(),"products",productsDTO);
+        GenericDTO<Long, List<ProductRecordDTO>> answer = new GenericDTO<>("volumeId",volume.getId(),"products",productsDTO);
         return Response.ok(answer).build();
     }
 

@@ -8,13 +8,6 @@ import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SensorTypeDTO {
-    /*
-    id: long
-    name: String
-    unit: String
-    ceiling: double
-    floor: double
-     */
 
     private Long id;
     private String name;

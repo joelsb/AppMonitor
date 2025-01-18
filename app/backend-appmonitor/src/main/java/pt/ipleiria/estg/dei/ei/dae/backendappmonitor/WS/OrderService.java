@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 @Authenticated
+@RolesAllowed({"Admin"})
 public class OrderService {
     @EJB
     private OrderBean orderBean;
@@ -48,7 +49,7 @@ public class OrderService {
             }
             return Response.ok(ordersDTO).build();
         }
-        if (securityContext.isUserInRole("Manager")) {
+        if (securityContext.isUserInRole("Manager") || securityContext.isUserInRole("Admin")) {
             var orders = orderBean.findAll();
             var ordersDTO = OrderDTO.from(orders);
 
@@ -71,17 +72,15 @@ public class OrderService {
         var order = orderBean.findWithVolumes(id);
         var orderDTO = OrderDTO.from(order);
 
-        if (securityContext.isUserInRole("Customer")) {
-            var principal = securityContext.getUserPrincipal();
-            if (!principal.getName().equals(order.getCustomer().getUsername())) {
-                // write to the log the principal.getName() and the username
-                return Response.status(Response.Status.FORBIDDEN).build();
-            }
-            orderDTO.setCustomerUsername(null);
+        if (securityContext.isUserInRole("Customer") &&
+                !securityContext.getUserPrincipal().getName().equals(order.getCustomer().getUsername())) {
+            // write to the log the principal.getName() and the username
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
+        orderDTO.setCustomerUsername(null);
 
         var volumesDTO = VolumeDTO.from(order.getVolumes());
-        for(VolumeDTO volumeDTO : volumesDTO) {
+        for (VolumeDTO volumeDTO : volumesDTO) {
             volumeDTO.setOrderId(null);
         }
         orderDTO.setVolumes(volumesDTO);
@@ -117,14 +116,14 @@ public class OrderService {
             volumeDTO.setPackageTypeId(null);
             volumeDTO.setOrderId(null);
         }
-        GenericDTO<List<VolumeDTO>> answer = new GenericDTO<>("orderId", id, "volumes", volumesDTO);
+        GenericDTO<Long, List<VolumeDTO>> answer = new GenericDTO<>("orderId", id, "volumes", volumesDTO);
         return Response.ok(answer).build();
     }
 
     @PATCH
     @Path("{id}/deliver")
     @RolesAllowed({"Employee"})
-    public Response setVolumeDelivered(@PathParam("id") long id) throws MyEntityNotFoundException, MyEntityExistsException {
+    public Response setOrderDelivered(@PathParam("id") long id) throws MyEntityNotFoundException, MyEntityExistsException {
         var order = orderBean.deliver(id);
         var orderDTO = OrderDTO.from(order);
         orderDTO.setCustomerUsername(null);
@@ -140,7 +139,7 @@ public class OrderService {
         Order order = orderBean.findWithVolumesProductsSensors(orderCreateDTO.getId());
         var orderDTO = OrderDTO.from(order);
         var volumesDTO = VolumeDTO.from(order.getVolumes());
-        for(VolumeDTO volumeDTO : volumesDTO) {
+        for (VolumeDTO volumeDTO : volumesDTO) {
             volumeDTO.setOrderId(null);
             volumeDTO.setPackageTypeId(null);
         }

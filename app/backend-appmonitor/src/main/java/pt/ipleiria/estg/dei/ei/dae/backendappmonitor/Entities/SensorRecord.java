@@ -9,12 +9,6 @@ import java.util.Date;
 @Table(name = "sensorRecords")
 @Entity
 public class SensorRecord extends Versionable implements Serializable {
-    /*
-    Id é criado pelo sistema
-    time-Date
-    value-double
-    sensor-Sensor
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

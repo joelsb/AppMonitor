@@ -18,12 +18,6 @@ import java.util.List;
 
 @Entity
 public class PackageType extends Versionable implements Serializable {
-    /*
-    Id é criado pelo sistema
-    name-String
-    mandatorySensors-List<SensorType>
-    volume-Volume
-     */
     @Id
     private long id;
     @NotNull

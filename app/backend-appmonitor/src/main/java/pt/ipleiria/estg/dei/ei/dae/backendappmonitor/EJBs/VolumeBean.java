@@ -227,8 +227,8 @@ public class VolumeBean {
             for (SensorType mandatorySensor : productType.getMandatorySensors()) {
                 Long sensorTypeId = mandatorySensor.getId();
 
-                // If the sensorTypeId already exists in the map, increment its quantity by 1
-                allMandatorySensors.merge(sensorTypeId, 1, Integer::sum);
+                // If the sensorTypeId already exists in the map, increment its quantity by the quantity in the productRecord
+                allMandatorySensors.merge(sensorTypeId, productDTO.getQuantity(), Integer::sum);
             }
             if (productType.isMandatoryPackage()) {
                 mandatoryPackage = true;

@@ -17,12 +17,6 @@ import java.util.List;
 
 @Entity
 public class Sensor extends Versionable implements Serializable {
-    /*
-    Id é inserido pelo empregado no momento da criação
-    sensorType-SensorType
-    volume-Volume
-    history-List<SensorRecord>
-     */
     @Id
     private long id;
     @NotNull

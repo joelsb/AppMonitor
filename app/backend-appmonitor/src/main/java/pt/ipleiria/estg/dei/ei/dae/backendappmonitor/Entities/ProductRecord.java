@@ -1,19 +1,19 @@
 package pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities;
 
 import jakarta.persistence.*;
+import jdk.jfr.Name;
 
 import java.io.Serializable;
 
 @Table(name = "productRecords")
+@NamedQueries({
+        @NamedQuery(
+                name = "getAllProductRecords",
+                query = "SELECT pr FROM ProductRecord pr ORDER BY pr.id"
+        )
+})
 @Entity
 public class ProductRecord extends Versionable implements Serializable {
-    /*
-    Id é criado pelo sistema
-    id-long
-    product-ProductType
-    quantity-int
-    volume-Volume
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
