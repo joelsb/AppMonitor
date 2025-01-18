@@ -9,7 +9,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderCreateDTO {
 
-    private long id;
+    private Long id;
     private String customerUsername;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Your/Timezone")
     private Date createdDate;
@@ -18,18 +18,18 @@ public class OrderCreateDTO {
     public OrderCreateDTO() {
     }
 
-    public OrderCreateDTO(long id, String customerUsername, Date createdDate, VolumeCreateDTO volume) {
+    public OrderCreateDTO(Long id, String customerUsername, Date createdDate, VolumeCreateDTO volume) {
         this.id = id;
         this.customerUsername = customerUsername;
         this.createdDate = createdDate;
         this.volume = volume;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -6,22 +6,28 @@ import jakarta.persistence.EntityManager;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductRecord;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.ProductType;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.Volume;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
+
+import java.util.List;
 
 @Stateless
 public class ProductRecordBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public ProductRecord create(long productTypeId, int quantity, long volumeId) {
+    public ProductRecord create(Long productTypeId, Integer quantity, Long volumeId) throws MyIllegalArgumentException {
+        if(productTypeId == null || productTypeId <= 0) throw new MyIllegalArgumentException("ProductType id must be greater than 0");
         var productType = entityManager.find(ProductType.class, productTypeId);
         if(productType == null) {
-            throw new RuntimeException("ProductType with id: '" + productTypeId + "' not found");
+            throw new MyEntityNotFoundException("ProductType with id: '" + productTypeId + "' not found");
         }
+        if(volumeId == null || volumeId <= 0) throw new MyIllegalArgumentException("Volume id must be greater than 0");
         var volume = entityManager.find(Volume.class, volumeId);
         if(volume == null) {
-            throw new RuntimeException("Volume with id: '" + volumeId + "' not found");
+            throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' not found");
         }
-        if(quantity <= 0) throw new RuntimeException("Quantity must be greater than 0");
+        if(quantity == null || quantity <= 0) throw new MyIllegalArgumentException("Quantity must be greater than 0");
         var productRecord = new ProductRecord(productType, quantity, volume);
         productType.addProductRecord(productRecord);
         volume.addProduct(productRecord);
@@ -29,28 +35,38 @@ public class ProductRecordBean {
         return productRecord;
     }
 
-    public ProductRecord find(long id) {
+    public ProductRecord find(Long id) {
+        if(id == null || id <= 0) throw new RuntimeException("ProductRecord id must be greater than 0");
         var productRecord = entityManager.find(ProductRecord.class, id);
         if (productRecord == null) {
-            throw new RuntimeException("ProductRecord with id: '" + id + "' not found");
+            throw new MyEntityNotFoundException("ProductRecord with id: '" + id + "' not found");
         }
         return productRecord;
     }
 
-    public ProductRecord update(long id, long productTypeId, int quantity, long volumeId) {
+    public List<ProductRecord> findAll() {
+        var productRecords = entityManager.createNamedQuery("getAllProductRecords", ProductRecord.class).getResultList();
+        if(productRecords.isEmpty()){
+            throw new MyEntityNotFoundException("No ProductRecords found");
+        }
+        return productRecords;
+    }
+
+    public ProductRecord update(Long id, Long productTypeId, Integer quantity, Long volumeId) throws MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("ProductRecord id must be greater than 0");
         var productRecord = find(id);
+        if(productTypeId == null || productTypeId <= 0) throw new MyIllegalArgumentException("ProductType id must be greater than 0");
         var productType = entityManager.find(ProductType.class, productTypeId);
         if(productType == null) {
-            throw new RuntimeException("ProductType with id: '" + productTypeId + "' not found");
+            throw new MyEntityNotFoundException("ProductType with id: '" + productTypeId + "' not found");
         }
+        if(volumeId == null || volumeId <= 0) throw new MyIllegalArgumentException("Volume id must be greater than 0");
         var volume = entityManager.find(Volume.class, volumeId);
-        if(volume == null) {
-            throw new RuntimeException("Volume with id: '" + volumeId + "' not found");
-        }
+        if(volume == null) throw new MyEntityNotFoundException("Volume with id: '" + volumeId + "' not found");
         productRecord.getProduct().removeProductRecord(productRecord);
         productRecord.setProduct(productType);
         productType.addProductRecord(productRecord);
-        if(quantity <= 0) throw new RuntimeException("Quantity must be greater than 0");
+        if(quantity == null || quantity <= 0) throw new MyIllegalArgumentException("Quantity must be greater than 0");
         productRecord.setQuantity(quantity);
         productRecord.getVolume().removeProduct(productRecord);
         productRecord.setVolume(volume);
@@ -59,7 +75,8 @@ public class ProductRecordBean {
         return productRecord;
     }
 
-    public void delete(long id) {
+    public void delete(Long id) throws MyIllegalArgumentException {
+        if(id == null || id <= 0) throw new MyIllegalArgumentException("ProductRecord id must be greater than 0");
         var productRecord = find(id);
         entityManager.remove(productRecord);
     }

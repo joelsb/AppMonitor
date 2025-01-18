@@ -30,7 +30,7 @@ public class EmployeeDTO extends UserDTO{
         );
     }
 
-    public List<EmployeeDTO> from (List<Employee> employees) {
+    public static List<EmployeeDTO> from(List<Employee> employees) {
         return employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
     }
 

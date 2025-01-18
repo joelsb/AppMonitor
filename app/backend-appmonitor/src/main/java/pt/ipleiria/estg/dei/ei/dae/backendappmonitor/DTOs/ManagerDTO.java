@@ -30,7 +30,7 @@ public class ManagerDTO extends UserDTO{
         );
     }
 
-    public List<ManagerDTO> from(List<Manager> managers) {
+    public static List<ManagerDTO> from(List<Manager> managers) {
         return managers.stream().map(ManagerDTO::from).collect(Collectors.toList());
     }
 

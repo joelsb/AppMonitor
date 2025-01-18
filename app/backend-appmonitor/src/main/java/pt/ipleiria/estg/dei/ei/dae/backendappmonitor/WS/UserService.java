@@ -14,7 +14,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 @Authenticated
-@RolesAllowed({"Manager","Employee","Customer"})
+@RolesAllowed({"Admin","Manager","Employee","Customer"})
 public class UserService {
     @EJB
     private UserBean userBean;

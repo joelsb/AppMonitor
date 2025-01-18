@@ -1,6 +1,7 @@
 @url= http://localhost:8080/appmonitor/api
+@username = Ana
 
-### LOGIN MANAGER
+### LOGIN EMPLOYEE
 POST {{url}}/auth/login
 Content-Type: application/json
 Accept: application/json
@@ -14,57 +15,79 @@ GET {{url}}/auth/user
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-############## MANAGER SERVICE
-
-### CREATE A MANAGER
-POST {{url}}/managers
+### CHANGE PASSWORD
+POST {{url}}/auth/{{username}}/change-password
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 {
-  "username": "JR",
-  "password": 123,
-  "name": "Rodrigo",
-  "email": "jr@mail",
-  "office": "Porto"
+  "currentPassword": "123",
+  "newPassword": "1234",
+  "newPasswordConfirmation": "1234"
 }
 
-### EDIT A MANAGER
+
+### GET CUSTOMER'S ORDERS (MANAGER AND ADMIN)
+GET {{url}}/customers/Joel/orders
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### Get Manager by Username (ADMIN AND MANAGER)
+GET {{url}}/managers/Ana
+Authorization: Bearer {{jwt-token}}
+
+### Update Manager (ADMIN AND MANAGER)
 PUT {{url}}/managers/Ana
-Content-Type: application/json
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
 
 {
-  "office": "Lisboa-UPDATED"
+  "name": "Updated Manager Name",
+  "email": "updated.manager@example.com",
+  "office": "Updated Office"
 }
 
-############ ORDER SERVICE (MANAGER)
-
-### GET ALL ORDERS
+### GET ALL ORDERS (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-### GET A SINGLE ORDER
+### GET ORDER BY ID (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders/28
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-### GET VOLUMES OF ORDER
+### GET VOLUMES FOR ORDER (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders/28/volumes
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-############ VOLUME SERVICE (MANAGER)
+### GET Sensor by Id (MANAGER, CUSTOMER AND ADMIN)
+GET {{url}}/sensors/3
+Authorization: Bearer {{jwt-token}}
 
-### GET ALL VOLUMES
+### GET ALL USERS (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
+GET {{url}}/users
+Authorization: Bearer {{jwt-token}}
+
+### GET USER BY USERNAME (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
+GET {{url}}/users/Ana
+Authorization: Bearer {{jwt-token}}
+
+### GET All Volumes (CUSTOMER AND MANAGER AND ADMIN)
 GET {{url}}/volumes
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
 
-### GET A SPECIFIC VOLUME
+### GET Volume by ID (CUSTOMER AND MANAGER AND ADMIN)
 GET {{url}}/volumes/103
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+### GET Sensors of Volume (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes/103/sensors
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+### GET Products of Volume (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes/103/products
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json

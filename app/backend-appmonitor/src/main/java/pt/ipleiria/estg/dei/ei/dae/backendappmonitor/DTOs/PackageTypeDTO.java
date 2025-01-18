@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PackageTypeDTO {
 
-    private long id;
+    private Long id;
     private String name;
     private List<SensorTypeDTO> mandatorySensors = new ArrayList<>();
 
     public PackageTypeDTO() {
     }
 
-    public PackageTypeDTO(long id, String name) {
+    public PackageTypeDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -33,11 +33,11 @@ public class PackageTypeDTO {
         return packageTypes.stream().map(PackageTypeDTO::from).collect(Collectors.toList());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

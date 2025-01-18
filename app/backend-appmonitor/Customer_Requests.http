@@ -1,72 +1,106 @@
-@url= http://localhost:8080/appmonitor/api
+@url = http://localhost:8080/appmonitor/api
+@username = Joel
 
-### LOGIN CUSTOMER
+### LOGIN (ALL USERS)
 POST {{url}}/auth/login
 Content-Type: application/json
 Accept: application/json
 
-{ "username": "Joel", "password": "123"}
+{
+  "username": "Joel",
+  "password": "123"
+}
 
 > {% client.global.set('jwt-token', response.body) %}
 
-### REQUEST USER INFO
+### GET AUTHENTICATED USER
 GET {{url}}/auth/user
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-############ CUSTOMER SERVICE
+### CHANGE PASSWORD
+POST {{url}}/auth/{{username}}/change-password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
-### GET A SINGLE CUSTOMER
+{
+  "currentPassword": "123",
+  "newPassword": "1234",
+  "newPasswordConfirmation": "1234"
+}
+
+### GET A SINGLE CUSTOMER (CUSTOMER AND ADMIN)
 GET {{url}}/customers/Joel
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-### EDIT A CUSTOMER
-PUT {{url}}/customers/Joel
+### UPDATE AN EXISTING CUSTOMER (ADMIN AND CUSTOMER)
+PUT {{url}}/customers/newCUSTOMER
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 {
-  "name": "Rodrigo",
-  "email": "rodrigo@mail"
+  "name": "Jane Doe Updated",
+  "email": "jane.doe.updated@example.com"
 }
 
-############ ORDER SERVICE (CUSTOMER)
 
-### GET ALL ORDERS
+
+
+### GET ALL ORDERS (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-### GET A SINGLE ORDER
+### GET ORDER BY ID (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders/28
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-### GET VOLUMES OF ORDER
+### GET VOLUMES FOR ORDER (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders/28/volumes
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-############ VOLUME SERVICE (CUSTOMER)
 
-### GET ALL VOLUMES
+
+
+### GET Sensor by Id (MANAGER, CUSTOMER AND ADMIN)
+GET {{url}}/sensors/3
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+
+### GET ALL USERS (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
+GET {{url}}/users
+Authorization: Bearer {{jwt-token}}
+
+### GET USER BY USERNAME (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
+GET {{url}}/users/Ana
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+### GET All Volumes (CUSTOMER AND MANAGER AND ADMIN)
 GET {{url}}/volumes
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
-
-### GET A SPECIFIC VOLUME
-GET {{url}}/volumes/103
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-### EMAIL SERVICE
-POST {{url}}/emails/Joel
 Content-Type: application/json
-Accept: application/json
 
-{
-  "subject": "Teste",
-  "body": "Teste body"
-}
+### GET Volume by ID (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes/103
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+### GET Sensors of Volume (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes/103/sensors
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+### GET Products of Volume (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes/103/products
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json

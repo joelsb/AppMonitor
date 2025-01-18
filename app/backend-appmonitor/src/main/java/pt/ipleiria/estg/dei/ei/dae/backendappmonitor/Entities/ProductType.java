@@ -25,13 +25,6 @@ import java.util.List;
 
 @Entity
 public class ProductType extends Versionable implements Serializable {
-    /*
-    id é criado pelo sistema
-    name-String
-    mandatoryPackage-boolean
-    mandatorySensors-List<SensorType>
-    volume-Volume
-     */
     @Id
     private long id;
     @NotNull

@@ -7,13 +7,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GenericDTO<T> {
-    private String parentName;    // Dynamic name for the first property
-    private Long parentValue;     // Value for the first property
-    private String listName;  // Dynamic name for the second property
-    private T listValue;      // Value for the second property
+public class GenericDTO<P, T> {
+    private String parentName; // Dynamic name for the first property
+    private P parentValue;     // Value for the first property (String or Long)
+    private String listName;   // Dynamic name for the second property
+    private T listValue;       // Value for the second property
 
-    public GenericDTO(String parentName, Long parentValue, String listName, T listValue) {
+    public GenericDTO(String parentName, P parentValue, String listName, T listValue) {
         this.parentName = parentName;
         this.parentValue = parentValue;
         this.listName = listName;

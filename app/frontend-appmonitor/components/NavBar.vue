@@ -3,7 +3,16 @@
     <nav class="navbar">
       <!-- Login Button (Left-aligned) -->
       <ul class="nav-links">
-        <div class="profile-item">
+        <div class="profile-item left">
+          <li class="nav-item">
+            <button class="nav-button profile-button" @click="navigate('/homepage')">
+              <svg xmlns="http://www.w3.org/2000/svg" class="user-avatar" height="24px" viewBox="0 -960 960 960"
+                width="24px" fill="#3b82f6">
+                <path
+                  d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+              </svg>
+            </button>
+          </li>
         </div>
         <!-- Regular links (excluding Profile) -->
         <li v-for="(link, index) in filteredLinks" :key="index" class="nav-item">
@@ -24,7 +33,7 @@
         </li>
 
         <!-- Profile link -->
-        <div class="profile-item">
+        <div class="profile-item right">
           <!-- Profile link (the 4th link in the array) -->
           <li v-if="linkProfile" class="nav-item">
             <button :class="[
@@ -32,7 +41,7 @@
               (activeIndex === 3 || linkProfile.active) ? 'active' : ''
             ]" @click="navigate(linkProfile.route)">
               <svg xmlns="http://www.w3.org/2000/svg" class="user-avatar" height="24px" viewBox="0 -960 960 960"
-                width="24px" fill="#5f6368">
+                width="24px" fill="#3b82f6">
                 <path
                   d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
               </svg>
@@ -165,8 +174,7 @@ function onLogout() {
 .user-avatar {
   width: 24px;
   height: 24px;
-  fill: #5f6368;
-  margin-right: 8px;
+  fill: #3b82f6;
 }
 
 /* Username styling */
@@ -263,12 +271,28 @@ function onLogout() {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.right {
   justify-content: flex-end;
+}
+
+.profile-item {
+  flex-basis: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.left {
+  justify-content: flex-start;
 }
 
 .profile-button {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-button {
@@ -285,8 +309,8 @@ function onLogout() {
   background-color: #bfdbfe;
   /* blue-100 */
   border-radius: 9999px;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .nav-button.active {
@@ -295,15 +319,17 @@ function onLogout() {
   background-color: #bfdbfe;
   /* blue-100 */
   border-radius: 9999px;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 /* Submenu */
 .submenu {
   position: absolute;
-  left: 50%; /* Start positioning from the horizontal center of the parent */
-  transform: translateX(-50%); /* Shift the submenu to center */
+  left: 50%;
+  /* Start positioning from the horizontal center of the parent */
+  transform: translateX(-50%);
+  /* Shift the submenu to center */
   top: 90%;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -316,7 +342,7 @@ function onLogout() {
   /* w-40 */
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   z-index: 50;
 }
 
@@ -332,10 +358,12 @@ function onLogout() {
 }
 
 .nav-item:hover .nav-button {
-  background-color: #bfdbfe; /* blue-100 */
+  background-color: #bfdbfe;
+  /* blue-100 */
   border-radius: 9999px;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+  scale: 1.05;
 }
 
 .submenu-item {

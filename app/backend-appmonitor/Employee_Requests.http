@@ -1,4 +1,5 @@
 @url= http://localhost:8080/appmonitor/api
+@username = Jose
 
 ### LOGIN EMPLOYEE
 POST {{url}}/auth/login
@@ -14,75 +15,54 @@ GET {{url}}/auth/user
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-############## EMPLOYEE SERVICE
+### CHANGE PASSWORD
+POST {{url}}/auth/{{username}}/change-password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
 
-### GET EMPLOYEE INFO
+{
+  "currentPassword": "123",
+  "newPassword": "1234",
+  "newPasswordConfirmation": "1234"
+}
+
+### GET ALL CUSTOMERS (EMPLOYEE AND ADMIN)
+GET {{url}}/customers/
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### Get Employee by Username (ADMIN AND EMPLOYEE)
 GET {{url}}/employees/Jose
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
-
-### CREATE A EMPLOYEE
-POST {{url}}/employees
 Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
 
-{
-  "username": "Rodrigo",
-  "password": 123,
-  "name": "Rodrigo",
-  "email": "rodrigo@mail",
-  "warehouse": "Lisboa"
-}
-
-### EDIT A EMPLOYEE
+### Update Employee (ADMIN AND EMPLOYEE)
 PUT {{url}}/employees/Jose
-Content-Type: application/json
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
 
 {
-  "warehouse": "Lisboa-UPDATED"
+  "name": "Updated Employee Name",
+  "email": "updated.email@example.com",
+  "warehouse": "Updated Warehouse Location"
 }
 
-############ CUSTOMER SERVICE (EMPLOYEE)
-
-### GET ALL CUSTOMERS
-GET {{url}}/customers
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-### CREATE A CUSTOMER
-POST {{url}}/customers
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-{
-  "username": "Joao",
-  "password": 123,
-  "name": "Joao",
-  "email": "joao@mail"
-}
-
-############ ORDER SERVICE (EMPLOYEE)
-
-### GET AVAILABLE ORDERS
+### GET AVAILABLE ORDERS (EMPLOYEE AND ADMIN)
 GET {{url}}/orders/available
-Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
-### POST A NEW ORDER
+### CREATE ORDER (ADMIN AND EMPLOYEE)
 POST {{url}}/orders
-Content-Type: application/json
 Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
 
 {
-  "id": 29,
+  "id": 30,
   "customerUsername": "Tiago",
   "createdDate": "2024-11-20 21:00:00",
   "volume": {
-    "id": 120,
+    "id": 121,
     "sentDate": "2024-11-21 21:00:00",
     "packageTypeId": 2,
     "products": [
@@ -92,44 +72,70 @@ Authorization: Bearer {{jwt-token}}
       },
       {
         "productId": 1,
-        "quantity": 3
+        "quantity": 1
       }
     ],
     "sensors": [
       {
-        "id": 10,
+        "id": 21,
         "sensorTypeId": 1
       },
       {
-        "id": 9,
+        "id": 20,
         "sensorTypeId": 2
       }
     ]
   }
 }
 
-### DELIVER ORDER
-PATCH {{url}}/orders/28/deliver
-Accept: application/json
+### DELIVER ORDER (ADMIN AND EMPLOYEE)
+PATCH {{url}}/orders/30/deliver
 Authorization: Bearer {{jwt-token}}
 
-############ VOLUME SERVICE (EMPLOYEE)
-
-### DELIVER VOLUME (103 & 120)
-PATCH {{url}}/volumes/103/deliver
-Accept: application/json
+### GET ALL PACKAGE TYPES (ADMIN AND EMPLOYEE)
+GET {{url}}/package-types/
 Authorization: Bearer {{jwt-token}}
 
-### POST A NEW VOLUME
-POST {{url}}/volumes
+### GET MANDATORY SENSORS FOR PACKAGE TYPE (ADMIN AND EMPLOYEE)
+GET {{url}}/package-types/1/mandatory-sensors
+Authorization: Bearer {{jwt-token}}
+
+### GET ALL PRODUCT TYPES (ADMIN AND EMPLOYEE)
+GET {{url}}/product-types/
+Authorization: Bearer {{jwt-token}}
+
+### GET MANDATORY SENSORS FOR PRODUCT TYPE (ADMIN AND EMPLOYEE)
+GET {{url}}/product-types/1/mandatory-sensors
+Authorization: Bearer {{jwt-token}}
+
+### GET All Sensor Types (EMPLOYEE AND ADMIN)
+GET {{url}}/sensor-types
+Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
+
+### GET ALL USERS (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
+GET {{url}}/users
 Authorization: Bearer {{jwt-token}}
+
+### GET USER BY USERNAME (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
+GET {{url}}/users/Ana
+Authorization: Bearer {{jwt-token}}
+
+### PATCH Set Volume Delivered (EMPLOYEE AND ADMIN)
+PATCH {{url}}/volumes/103/deliver
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+### POST Add New Volume (EMPLOYEE AND ADMIN)
+POST {{url}}/volumes
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
 
 {
   "id": 108,
   "sentDate": "2021-06-01 00:00:00",
   "orderId": 28,
-  "packageTypeId": 1,
+  "packageTypeId": 2,
   "products": [
     {
       "productId": 1,
@@ -137,7 +143,7 @@ Authorization: Bearer {{jwt-token}}
     },
     {
       "productId": 2,
-      "quantity": 3
+      "quantity": 1
     }
   ],
   "sensors": [
@@ -150,36 +156,4 @@ Authorization: Bearer {{jwt-token}}
       "sensorTypeId": 2
     }
   ]
-}
-
-############ SENSOR SERVICE (EMPLOYEE)
-
-### GET ALL SENSORS
-GET {{url}}/sensors
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-### POST A NEW VALUE
-POST {{url}}/sensors/3/add-value
-Content-Type: application/json
-Accept: application/json
-
-{
-  "value": 10
-}
-
-### SENSOR-TYPE SERVICE (EMPLOYEE)
-
-### CREATE A SENSOR-TYPE
-POST {{url}}/sensor-types
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-{
-  "id" : 4,
-  "name": "",
-  "unit": "m/s",
-  "ceiling": 10,
-  "floor": 0
 }

@@ -16,6 +16,7 @@ import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.CustomerBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.EmailBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.EJBs.SensorBean;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Authenticated;
 
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.List;
 @Path("sensors")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
+@Authenticated
+@RolesAllowed({"Admin"})
 public class SensorService {
 
     @EJB
@@ -36,26 +39,19 @@ public class SensorService {
     private SecurityContext securityContext;
 
 
-    //TODO: VERIFICAR SE ESTE MÉTODO É NECESSÁRIO
     @GET
     @Path("/")
-    @Authenticated
-    @RolesAllowed({"Employee"})
     public Response getAllSensors() {
         var sensors = sensorBean.findAllWithHistory();
         var sensorsDTO = SensorDTO.fromSimple(sensors);
         for (int i = 0; i < sensors.size(); i++) {
             sensorsDTO.get(i).setHistory(SensorRecordDTO.fromSimple(sensors.get(i).getHistory()));
         }
-        //get the volumeId
-//        var volumeId = sensors.get(0).getVolume().getId();
-//        GenericDTO<List<SensorDTO>> answer = new GenericDTO<>("volumeId", volumeId, "sensors", sensorsDTO);
         return Response.ok(sensorsDTO).build();
     }
 
     @GET
     @Path("/{id}")
-    @Authenticated
     @RolesAllowed({"Manager", "Customer"})
     public Response getSensorData(@PathParam("id") long id) throws MyEntityNotFoundException {
         var sensor = sensorBean.findWithHistory(id);
@@ -70,7 +66,7 @@ public class SensorService {
 
     @POST
     @Path("/{sensorId}/add-value")
-    public Response addValueToSensor(@PathParam("sensorId") Long sensorId, SensorRecordDTO sensorRecordDTO) throws MyEntityNotFoundException {
+    public Response addValueToSensor(@PathParam("sensorId") Long sensorId, SensorRecordDTO sensorRecordDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
         sensorBean.addValue(sensorId, sensorRecordDTO);
         var sensor = sensorBean.findWithHistory(sensorId);
         var sensorDTO = SensorDTO.from(sensor);
@@ -79,13 +75,14 @@ public class SensorService {
         return Response.ok(sensorDTO).build();
     }
 
-//    @POST
-//    @Path("/{username}/email")
-//    public Response sendEmail(@PathParam("username") String username, EmailDTO email) throws MyEntityNotFoundException, MessagingException {
-//        var customer = customerBean.find(username);
-//        emailBean.send(customer.getEmail(), email.getSubject(), email.getBody());
-//        return Response.status(Response.Status.OK).entity("E-mail sent").build();
+    //NAO FAZ SENTIDO POIS TERIA DE SE DEIXAR UM VOLUME COM UM SENSOR OBRIGATORIO A MENOS
+//    @PUT
+//    @Path("/{sensorId}")
+//    public Response updateSensor(@PathParam("sensorId") Long sensorId, SensorDTO sensorDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {
+//        sensorBean.update(sensorId, sensorDTO.getSensorTypeId(), sensorDTO.getVolumeId());
+//        var sensor = sensorBean.findWithHistory(sensorId);
+//        var sensorDTO1 = SensorDTO.from(sensor);
+//        sensorDTO1.setHistory(SensorRecordDTO.fromSimple(sensor.getHistory()));
+//        return Response.ok(sensorDTO1).build();
 //    }
-
-
 }

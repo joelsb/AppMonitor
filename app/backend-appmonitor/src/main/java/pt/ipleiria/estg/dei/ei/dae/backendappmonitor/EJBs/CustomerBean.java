@@ -36,9 +36,13 @@ public class CustomerBean {
         return customer;
     }
 
-    public List<Customer> findAll() {
+    public List<Customer> findAllCustomers() {
+        var customers = entityManager.createNamedQuery("getAllCustomers", Customer.class).getResultList();
+        if(customers.isEmpty()) {
+            throw new MyEntityNotFoundException("No customers found");
+        }
         // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
-        return entityManager.createNamedQuery("getAllCustomers", Customer.class).getResultList();
+        return customers;
     }
 
     public Customer findWithOrders(String username) throws MyEntityNotFoundException {
@@ -53,7 +57,7 @@ public class CustomerBean {
     }
 
     public List<Customer> findAllWithOrders() {
-        var customers = this.findAll();
+        var customers = this.findAllCustomers();
         customers.forEach(customer -> Hibernate.initialize(customer.getOrders()));
         return customers;
     }

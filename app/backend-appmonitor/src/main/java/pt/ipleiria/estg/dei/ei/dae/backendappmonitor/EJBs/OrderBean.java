@@ -51,6 +51,9 @@ public class OrderBean {
 
     public List<Order> findAll() {
         var orders = entityManager.createNamedQuery("getAllOrders", Order.class).getResultList();
+        if(orders.isEmpty()){
+            throw new MyEntityNotFoundException("No Orders found");
+        }
         for (Order order : orders) {
             Hibernate.initialize(order.getVolumes());
         }
