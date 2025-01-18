@@ -1,12 +1,9 @@
 <template>
     <NavBar />
     <ProductTypeForm 
-        :productTypeData="productTypeForm" 
-        @createProductType="createProductType"
-        :editProductType="editProductType" 
         :create="true"
+        :edit="true"
     />
-    
     <Popup 
         :show="showPopup" 
         :title="popupTitle" 
@@ -22,7 +19,9 @@ import { ref } from 'vue';
 import NavBar from '~/components/NavBar.vue';
 import ProductTypeForm from '~/components/ProductTypeForm.vue';
 import Popup from '~/components/Popup.vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 
@@ -58,6 +57,7 @@ const createProductType = async (formValue) => {
             popupTitle.value = 'Success';
             popupMessages.value.push('Product type created successfully!');
             popupType.value = 'success';
+            router.go(-1);
         }
     } catch (error) {
         showPopup.value = true;
