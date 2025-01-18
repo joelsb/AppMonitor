@@ -32,7 +32,7 @@ Authorization: Bearer {{jwt-token}}
 
 
 ### GET CUSTOMER'S ORDERS (MANAGER AND ADMIN)
-GET {{url}}/customers/Joel/orders
+GET {{url}}/customers/b/orders
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 

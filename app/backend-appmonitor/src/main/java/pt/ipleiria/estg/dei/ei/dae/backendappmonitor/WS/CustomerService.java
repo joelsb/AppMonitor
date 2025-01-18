@@ -83,6 +83,9 @@ public class CustomerService {
     @Path("/{username}/orders")
     @RolesAllowed({"Manager"})
     public Response getAllOrdersByCustomerId(@PathParam("username") String username) throws MyEntityNotFoundException {
+        if(customerBean.find(username) == null) {
+            return Response.status(Response.Status.OK).entity("Username is not a Client").build();
+        }
         var orders = orderBean.findAllCustomerOrders(username);
         var ordersDTO = OrderDTO.fromCustomer(orders);
         for (int i = 0; i < orders.size(); i++) {
