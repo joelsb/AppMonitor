@@ -13,6 +13,22 @@ Accept: application/json
 
 > {% client.global.set('jwt-token', response.body) %}
 
+### SEND EMAIL TO A USER (FOR TESTING PURPOSES)
+POST {{url}}/emails/Jose
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "subject": "Test Email",
+  "body": "This is a test email sent via the API."
+}
+
+### GET ROLES FOR USER (ONLY ADMIN)
+GET {{url}}/users/roles
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
 ### GET AUTHENTICATED USER (FOR ALL USERS - MANAGER, EMPLOYEE, CUSTOMER, ADMIN)
 GET {{url}}/auth/user
 Accept: application/json
@@ -166,7 +182,7 @@ GET {{url}}/employees/Jose
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
 
-### Get All Employees (ADMIN ONLY)
+### Get All Employees (ONLY FOR ADMINS)
 GET {{url}}/employees/
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -182,6 +198,10 @@ Content-Type: application/json
   "warehouse": "Updated Warehouse Location"
 }
 
+### Create Employee (ONLY FOR ADMINS)
+POST {{url}}/employees/
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
 
 
 ########## MANAGER SERVICE
@@ -271,7 +291,7 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/package-types/
 Authorization: Bearer {{jwt-token}}
 
-### GET PACKAGE TYPE BY ID (ADMIN ONLY)
+### GET PACKAGE TYPE BY ID (ONLY FOR ADMINS)
 GET {{url}}/package-types/1
 Authorization: Bearer {{jwt-token}}
 
@@ -279,7 +299,7 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/package-types/1/mandatory-sensors
 Authorization: Bearer {{jwt-token}}
 
-### CREATE PACKAGE TYPE (ADMIN ONLY)
+### CREATE PACKAGE TYPE (ONLY FOR ADMINS)
 POST {{url}}/package-types
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -289,7 +309,7 @@ Content-Type: application/json
   "name": "Standard Package"
 }
 
-### UPDATE PACKAGE TYPE (ADMIN ONLY)
+### UPDATE PACKAGE TYPE (ONLY FOR ADMINS)
 PUT {{url}}/package-types/9
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -298,7 +318,7 @@ Content-Type: application/json
   "name": "Updated Package Type"
 }
 
-### ADD MANDATORY SENSOR TO PACKAGE TYPE (ADMIN ONLY)
+### ADD MANDATORY SENSOR TO PACKAGE TYPE (ONLY FOR ADMINS)
 POST {{url}}/package-types/9/add-mandatory-sensor/1
 Authorization: Bearer {{jwt-token}}
 
@@ -308,7 +328,7 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/product-types/
 Authorization: Bearer {{jwt-token}}
 
-### GET PRODUCT TYPE BY ID (ADMIN ONLY)
+### GET PRODUCT TYPE BY ID (ONLY FOR ADMINS)
 GET {{url}}/product-types/1
 Authorization: Bearer {{jwt-token}}
 
@@ -316,7 +336,7 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/product-types/1/mandatory-sensors
 Authorization: Bearer {{jwt-token}}
 
-### CREATE PRODUCT TYPE (ADMIN ONLY)
+### CREATE PRODUCT TYPE (ONLY FOR ADMINS)
 POST {{url}}/product-types
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -327,7 +347,7 @@ Content-Type: application/json
   "mandatoryPackage": false
 }
 
-### UPDATE PRODUCT TYPE (ADMIN ONLY)
+### UPDATE PRODUCT TYPE (ONLY FOR ADMINS)
 PUT {{url}}/product-types/1
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -336,13 +356,13 @@ Content-Type: application/json
   "name": "Updated Product Type2"
 }
 
-### ADD MANDATORY SENSOR TO PRODUCT TYPE (ADMIN ONLY)
+### ADD MANDATORY SENSOR TO PRODUCT TYPE (ONLY FOR ADMINS)
 POST {{url}}/product-types/1/add-mandatory-sensor/2
 Authorization: Bearer {{jwt-token}}
 
 ########## SENSOR SERVICE
 
-### GET All s (ADMIN ONLY)
+### GET All Sensors (ONLY FOR ADMINS)
 GET {{url}}/sensors
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -351,7 +371,7 @@ Content-Type: application/json
 GET {{url}}/sensors/3
 Authorization: Bearer {{jwt-token}}
 
-### Add Value to Sensor (ADMIN ONLY)
+### Add Value to Sensor (ONLY FOR ADMINS)
 POST {{url}}/sensors/3/add-value
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -360,7 +380,7 @@ Content-Type: application/json
   "value": 25.5
 }
 
-#### Update Sensor (ADMIN ONLY)
+#### Update Sensor (ONLY FOR ADMINS)
 #PUT {{url}}/sensors/3
 #Authorization: Bearer {{jwt-token}}
 #Content-Type: application/json
@@ -372,7 +392,7 @@ Content-Type: application/json
 
 ########## SENSOR-TYPE SERVICE
 
-### GET Sensor Type by ID (ADMIN ONLY)
+### GET Sensor Type by ID (ONLY FOR ADMINS)
 GET {{url}}/sensor-types/1
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -382,7 +402,7 @@ GET {{url}}/sensor-types
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
 
-### Create Sensor Type (ADMIN ONLY)
+### Create Sensor Type (ONLY FOR ADMINS)
 POST {{url}}/sensor-types
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
@@ -395,7 +415,7 @@ Content-Type: application/json
   "floor": -10
 }
 
-### Update Sensor Type (ADMIN ONLY)
+### Update Sensor Type (ONLY FOR ADMINS)
 PUT {{url}}/sensor-types/10
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json

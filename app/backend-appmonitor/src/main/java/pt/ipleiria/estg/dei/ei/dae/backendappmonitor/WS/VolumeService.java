@@ -39,7 +39,7 @@ public class VolumeService {
             var volumesDTO = VolumeDTO.fromSimple(volumes);
             return Response.ok(volumesDTO).build();
         }
-        if(securityContext.isUserInRole("Manager")){
+        if(securityContext.isUserInRole("Manager") || securityContext.isUserInRole("Admin")){
             var volumes = volumeBean.findAllWithSensorsProducts();
             var volumeDTOs = VolumeDTO.fromEmployee(volumes);
             return Response.ok(VolumeDTO.fromEmployee(volumes)).build();

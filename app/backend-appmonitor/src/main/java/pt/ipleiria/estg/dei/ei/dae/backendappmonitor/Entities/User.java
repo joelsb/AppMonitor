@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NamedQueries({
         //JPQL query to get all users
         @NamedQuery(name = "getAllUsers", query = "SELECT u FROM User u ORDER BY u.username") ,
-        @NamedQuery(name = "getUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
+        @NamedQuery(name = "getUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
 })
 // “single table per class hierarchy” strategy
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

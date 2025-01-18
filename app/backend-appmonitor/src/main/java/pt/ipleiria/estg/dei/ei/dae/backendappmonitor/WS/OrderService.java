@@ -93,9 +93,6 @@ public class OrderService {
     public Response getAvailableOrders() {
         var orders = orderBean.findAvailableOrdersWithVolumes();
         var ordersDTO = OrderDTO.from(orders);
-        for (OrderDTO orderDTO : ordersDTO) {
-            orderDTO.setCustomerUsername(null);
-        }
         return Response.ok(ordersDTO).build();
     }
 
