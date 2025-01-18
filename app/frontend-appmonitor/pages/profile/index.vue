@@ -32,7 +32,7 @@ const profilePage = () => {
     router.push('/profile/view-edit');
 };
 const passwordPage = () => {
-    router.push('/profile/password');
+    router.push('/profile/new-password');
 };
 
 </script>

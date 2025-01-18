@@ -141,7 +141,7 @@ const linkProfile =
   active: false,
   submenu: [
     { name: 'Profile', route: '/profile/view-edit' },
-    { name: 'Change Password', route: '/profile/password' },
+    { name: 'Change Password', route: '/profile/new-password' },
     { name: 'Logout', route: '/login/logout' },
   ],
 }
