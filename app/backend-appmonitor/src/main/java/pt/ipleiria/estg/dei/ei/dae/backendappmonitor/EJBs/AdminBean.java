@@ -37,12 +37,7 @@ public class AdminBean {
     }
 
     public List<Admin> findAll() {
-        // remember, maps to: “SELECT a FROM User a ORDER BY a.name”
-        var admins = entityManager.createNamedQuery("getAllAdmins", Admin.class).getResultList();
-        if(admins.isEmpty()){
-            throw new MyEntityNotFoundException("No Admins found");
-        }
-        return admins;
+        return entityManager.createNamedQuery("getAllAdmins", Admin.class).getResultList();
     }
 
     public Admin create(String username, String password, String name, String email) throws MyIllegalArgumentException, MyEntityExistsException {

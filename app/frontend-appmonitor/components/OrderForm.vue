@@ -4,7 +4,7 @@
             <!-- Order ID -->
             <div class="mb-4">
                 <label for="orderId" class="block font-semibold">Order ID:</label>
-                <input id="orderId" v-model="form.id" type="number" class="w-full p-2 border border-gray-300 rounded" />
+                <input id="orderId" v-model="form.id" type="number" class="w-full p-2 border border-gray-300 rounded"  />
             </div>
 
             <!-- Created Date -->
@@ -32,7 +32,7 @@
                 <div class="mb-2">
                     <label for="volumeId" class="block">Volume ID:</label>
                     <input id="volumeId" v-model="form.volume.id" type="number"
-                        class="w-full p-2 border border-gray-300 rounded" />
+                        class="w-full p-2 border border-gray-300 rounded"   />
                 </div>
 
                 <!-- Sent Date -->
@@ -123,20 +123,44 @@ const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 const emit = defineEmits(['formSubmitted', 'infoMandatorySensors', 'infoMandatoryPackage']);
 
-const { customers, packageTypes, products, sensorTypes } = defineProps({
+const { customers, packageTypes, sensors,products, sensorTypes,orders,volumes } = defineProps({
     customers: { type: Array, required: true },
     packageTypes: { type: Array, required: true },
     products: { type: Array, required: true },
     sensorTypes: { type: Array, required: true },
+    sensors: { type: Array, required: true },
+    orders: { type: Array, required: true },
+    volumes: { type: Array, required: true },
 });
 
+const nextVolumeId = computed(() => {
+    // Get the highest volume ID from volumes
+    const lastId = volumes.reduce((max, volume) => Math.max(max, volume.id), 0);
+    return lastId + 1;
+});
+
+const nextOrderId = computed(() => {
+    // Get the highest volume ID from orders
+    const lastId = orders.reduce((max, order) => Math.max(max, order.id), 0);
+    return lastId + 1;
+});
+
+const nextSensorId = computed(() => {
+    // Get the highest volume ID from orders
+    const lastId = sensors.reduce((max, sensor) => Math.max(max, sensor.id), 0);
+    return lastId + 1;
+});
+
+
 const form = ref({
-    id: 28, customerUsername: 'Tiago', createdDate: '2024-11-20T21:00:00',
+    id: nextOrderId, customerUsername: 'Tiago', createdDate: '2024-11-20T21:00:00',
     volume: {
-        id: 103, sentDate: '2024-11-21T21:00:00', packageTypeId: 1,
-        products: [{ productId: 2, quantity: 1 }], sensors: [{ id: 1, sensorTypeId: 2 }]
+        id: nextVolumeId, sentDate: '2024-11-21 21:00:00', packageTypeId: 1,
+        products: [{ productId: 2, quantity: 1 }], sensors: [{ id: nextSensorId, sensorTypeId: 2 }]
     },
 });
+
+
 
 const requiresMandatoryPackage = computed(() => form.value.volume.products.some(product => products.find(p => p.id === product.productId)?.mandatoryPackage));
 
@@ -212,9 +236,19 @@ const validatedForm = () => {
     return errors.length > 0 ? errors : false;
 };
 
+const formatDateToBackend = (dateString) => {
+    if (!dateString) return null; // Retorna null se a data não estiver definida
+    const date = new Date(dateString);
+    const pad = (num) => num.toString().padStart(2, '0'); // Garante dois dígitos
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+};
+
 
 const handleSubmit = async () => {
     const validationErrors = validatedForm();
+    // Formatar datas para o backend
+    form.value.createdDate = formatDateToBackend(form.value.createdDate);
+    form.value.volume.sentDate = formatDateToBackend(form.value.volume.sentDate);
 
     if (validationErrors) {
         // Display all validation errors

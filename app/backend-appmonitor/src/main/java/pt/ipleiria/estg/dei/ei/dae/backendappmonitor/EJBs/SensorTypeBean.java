@@ -32,11 +32,7 @@ public class SensorTypeBean {
     }
 
     public List<SensorType> findAll() {
-        var sensorTypes = entityManager.createNamedQuery("getAllSensorTypes", SensorType.class).getResultList();
-        if(sensorTypes.isEmpty()){
-            throw new MyEntityNotFoundException("No SensorTypes found");
-        }
-        return sensorTypes;
+        return entityManager.createNamedQuery("getAllSensorTypes", SensorType.class).getResultList();
     }
 
     public SensorType create(Long id, String name, String unit, Double ceiling, Double floor) throws MyEntityExistsException, MyIllegalArgumentException {

@@ -45,11 +45,7 @@ public class ProductRecordBean {
     }
 
     public List<ProductRecord> findAll() {
-        var productRecords = entityManager.createNamedQuery("getAllProductRecords", ProductRecord.class).getResultList();
-        if(productRecords.isEmpty()){
-            throw new MyEntityNotFoundException("No ProductRecords found");
-        }
-        return productRecords;
+        return entityManager.createNamedQuery("getAllProductRecords", ProductRecord.class).getResultList();
     }
 
     public ProductRecord update(Long id, Long productTypeId, Integer quantity, Long volumeId) throws MyIllegalArgumentException {

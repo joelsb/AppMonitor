@@ -96,10 +96,10 @@ Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 {
-  "username": "Rodrigo",
+  "username": "Rordigo",
   "password": 123,
   "name": "Rodrigo",
-  "email": "rodrigo@mail",
+  "email": "rordigo@mail",
   "warehouse": "Lisboa"
 }
 
@@ -197,7 +197,7 @@ Authorization: Bearer {{jwt-token}}
 }
 
 ### GET A SINGLE ORDER (CUSTOMER, MANAGER)
-GET {{url}}/orders/29
+GET {{url}}/orders/28
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
@@ -218,6 +218,12 @@ Authorization: Bearer {{jwt-token}}
 ############ VOLUME SERVICE
 ### GET ALL VOLUMES (CUSTOMER, MANAGER)
 GET {{url}}/volumes
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+### GET AVAILABLE VOLUMES (EMPLOYEE)
+GET {{url}}/volumes/available
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
@@ -285,17 +291,17 @@ Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 ### GET A SINGLE SENSOR (MANAGER, CUSTOMER)
-GET {{url}}/sensors/1
+GET {{url}}/sensors/4
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 ### POST A NEW VALUE
-POST {{url}}/sensors/1/add-value
+POST {{url}}/sensors/4/add-value
 Content-Type: application/json
 Accept: application/json
 
 {
-  "value": 10
+  "value": 2
 }
 
 

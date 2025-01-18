@@ -40,7 +40,7 @@ public class AuthService {
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
-    @POST
+    @PATCH
     @Path("{username}/change-password")
     @Authenticated
     public Response changePassword(@PathParam("username") String username, @Valid NewPasswordDTO newPasswordDTO) throws MyEntityNotFoundException, MyIllegalArgumentException {

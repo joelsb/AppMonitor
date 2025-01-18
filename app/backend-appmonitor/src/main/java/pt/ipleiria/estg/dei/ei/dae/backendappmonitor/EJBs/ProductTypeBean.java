@@ -36,11 +36,7 @@ public class ProductTypeBean {
     }
 
     public List<ProductType> findAll() {
-        var productTypes = entityManager.createNamedQuery("getAllProductTypes", ProductType.class).getResultList();
-        if(productTypes.isEmpty()){
-            throw new MyEntityNotFoundException("No ProductTypes found");
-        }
-        return productTypes;
+        return entityManager.createNamedQuery("getAllProductTypes", ProductType.class).getResultList();
     }
 
     public ProductType findWithMandatorySensors(Long id) throws MyEntityNotFoundException {

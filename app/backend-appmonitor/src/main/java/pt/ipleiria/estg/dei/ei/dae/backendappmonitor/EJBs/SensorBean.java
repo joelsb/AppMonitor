@@ -31,11 +31,7 @@ public class SensorBean implements Serializable {
     }
 
     public List<Sensor> findAll() {
-        var sensors = entityManager.createNamedQuery("getAllSensors", Sensor.class).getResultList();
-        if(sensors.isEmpty()){
-            throw new MyEntityNotFoundException("No sensors found");
-        }
-        return sensors;
+        return entityManager.createNamedQuery("getAllSensors", Sensor.class).getResultList();
     }
 
     public Sensor findWithHistory(Long id) throws MyEntityNotFoundException {
