@@ -46,25 +46,10 @@ Authorization: Bearer {{jwt-token}}
   "newPasswordConfirmation": "1234"
 }
 
-### GET ALL ADMINS (ONLY FOR ADMINS)
-GET {{url}}/admins/
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
 ### GET A SINGLE ADMIN (ONLY FOR ADMINS)
 GET {{url}}/admins/Admin
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
-
-### UPDATE ADMIN DETAILS (ONLY FOR ADMINS)
-PUT {{url}}/admins/Admin
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-{
-  "name": "John Updated"
-}
 
 ### CREATE A NEW ADMIN (ONLY FOR ADMINS)
 POST {{url}}/admins/
@@ -79,18 +64,6 @@ Authorization: Bearer {{jwt-token}}
   "email": "john.doe@example.com"
 }
 
-########## CUSTOMER SERVICE
-
-### GET A SINGLE CUSTOMER (CUSTOMER AND ADMIN)
-GET {{url}}/customers/Joel
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-### GET ALL CUSTOMERS (EMPLOYEE AND ADMIN)
-GET {{url}}/customers/
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
 ### CREATE A NEW CUSTOMER (ONLY FOR ADMINS)
 POST {{url}}/customers/
 Content-Type: application/json
@@ -103,6 +76,87 @@ Authorization: Bearer {{jwt-token}}
   "name": "Jane Doe",
   "email": "jane.doe@example.com"
 }
+
+### Create Employee (ADMIN ONLY)
+POST {{url}}/employees/
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+{
+  "username": "new_employee",
+  "password": "securepassword",
+  "name": "New Employee",
+  "email": "new.employee@example.com",
+  "warehouse": "Main Warehouse"
+}
+
+### Create Manager (ONLY ADMIN)
+POST {{url}}/managers/
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+{
+  "username": "new_manager",
+  "password": "securepassword",
+  "name": "New Manager",
+  "email": "new.manager@example.com",
+  "office": "Main Office"
+}
+
+
+
+
+
+
+
+### SEND EMAIL TO A USER (FOR TESTING PURPOSES)
+POST {{url}}/emails/Jose
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "subject": "Test Email",
+  "body": "This is a test email sent via the API."
+}
+
+### UPDATE ADMIN DETAILS (ONLY FOR ADMINS)
+PUT {{url}}/admins/Admin
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "name": "John Updated"
+}
+
+
+
+
+### GET ALL ADMINS (ONLY FOR ADMINS)
+GET {{url}}/admins/
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
+
+
+
+
+
+########## CUSTOMER SERVICE
+
+### GET A SINGLE CUSTOMER (CUSTOMER AND ADMIN)
+GET {{url}}/customers/Joel
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### GET ALL CUSTOMERS (EMPLOYEE AND ADMIN)
+GET {{url}}/customers/
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+
 
 ### UPDATE AN EXISTING CUSTOMER (ADMIN AND CUSTOMER)
 PUT {{url}}/customers/newCUSTOMER
@@ -149,28 +203,10 @@ POST {{url}}/employees/
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
 
-{
-  "username": "new_employee",
-  "password": "securepassword",
-  "name": "New Employee",
-  "email": "new.employee@example.com",
-  "warehouse": "Main Warehouse"
-}
 
 ########## MANAGER SERVICE
 
-### Create Manager (ONLY ADMIN)
-POST {{url}}/managers/
-Authorization: Bearer {{jwt-token}}
-Content-Type: application/json
 
-{
-  "username": "new_manager",
-  "password": "securepassword",
-  "name": "New Manager",
-  "email": "new.manager@example.com",
-  "office": "Main Office"
-}
 
 ### Get All Managers (ONLY ADMIN)
 GET {{url}}/managers/
