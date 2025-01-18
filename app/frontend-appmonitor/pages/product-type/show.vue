@@ -5,8 +5,13 @@
 
         <!-- productType Table Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">User Page</h2>
-            <p class="mb-4 text-lg text-gray-600">See all the productTypes.</p>
+            <h2 class="text-2xl font-semibold mb-4">Product Type Page</h2>
+            <div class="flex-row justify-between flex items-center mb-4">
+            <span class="text-lg text-gray-600">See all the Product Types available in the app.</span>
+            <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                Voltar
+            </button>
+        </div>
 
             <!-- Loading Indicator -->
             <div v-if="loading" class="flex justify-center items-center">
@@ -29,6 +34,7 @@
                         <tr>
                             <th class="p-3 font-semibold text-left">Id</th>
                             <th class="p-3 font-semibold text-left">Name</th>
+                            <th class="p-3 font-semibold text-left">Mandatory Package</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +47,17 @@
                                 </button>
                             </td>
                             <td class="p-3">{{ productType.name }}</td>
+                            <td class="p-3">{{ productType.mandatoryPackage ? "Yes" : "No" }}</td>
+                        </tr>
+                        <!-- CREATE A NEW PRODUCT TYPE -->
+                        <tr>
+                            <td class="p-3 flex-row justify-end" colspan="3">
+                                <button 
+                                    @click="router.push('/product-type/create')" 
+                                    class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">
+                                    Create a new Product Type
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -97,7 +114,7 @@ const totalPages = computed(() => Math.ceil(productTypes.value.length / pageSize
 
 // Função para ver os detalhes do pedido e redirecionar
 const viewproductTypeDetails = (id) => {
-    router.push({ name: 'productType-id', params: { id: id } });
+    router.push({ name: 'product-type-id', params: { id: id } });
 };
 
 
@@ -146,13 +163,13 @@ onMounted(() => {
 }
 
 .table {
-    bproductType-collapse: collapse;
+    border-collapse: collapse;
     width: 100%;
 }
 
 .table th,
 .table td {
-    bproductType: 1px solid #ccc;
+    border: 1px solid #ccc;
     padding: 0.75rem;
 }
 
@@ -162,5 +179,13 @@ onMounted(() => {
 
 .table td {
     text-align: left;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
 }
 </style>

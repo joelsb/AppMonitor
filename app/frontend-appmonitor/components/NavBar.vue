@@ -116,11 +116,11 @@ const links = [
     active: false,
     roles: ['Admin'], // Apenas usuários com role 'admin' podem acessar
     submenu: [
-      { name: 'Users', route: '/users' },
-      { name: 'Package Types', route: '/package-type' , submenu: [
-      ]},
-    ],
-  },
+      { name: 'Users', route: '/user' },
+      { name: 'Package Types', route: '/package-type' },
+      { name: 'Product Types', route: '/product-type' },
+    ]
+  },    
   {
     name: 'Sensor',
     route: '/sensor',

@@ -1,120 +1,226 @@
 <template>
     <div class="card">
-        <div class="card-header">
-            <h2>{{ create ? 'Create Product Type' : 'Edit Product Type' }}</h2>
+        <div class="mb-4 flex-row justify-between flex items-center">
+            <button @click="router.go(-1)"
+                class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                Voltar
+            </button>
+            <div v-if="!isCreating" class="flex justify-end items-center">
+                <label for="editProfileSwitch" class="block font-semibold text-lg mr-3">Edit Mode</label>
+                <label for="editProfileSwitch" class="inline-flex relative items-center cursor-pointer">
+                    <input type="checkbox" id="editProfileSwitch" v-model="isEditing" class="sr-only" />
+                    <div class="w-14 h-6 rounded-full transition-colors"
+                        :class="isEditing ? 'bg-blue-500' : 'bg-gray-200'"></div>
+                    <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform"
+                        :class="isEditing ? 'transform translate-x-7' : ''"></div>
+                </label>
+                <span class="ml-4 text-lg">{{ isEditing ? 'Editing' : 'View' }}</span>
+            </div>
         </div>
+
         <div class="card-body">
-            <form class="form" @submit.prevent="onSubmit">
+            <form class="form" @submit.prevent="handleSubmit">
                 <!-- ID -->
-                <div class="form-group">
-                    <label for="id" class="form-label">ID</label>
-                    <input 
-                        type="text" 
-                        id="id" 
-                        v-model="form.id" 
-                        class="form-control" 
-                        required 
-                        :disabled="!create" 
-                    />
+                <div class="mb-4">
+                    <label for="id" class="block text-gray-700">ID</label>
+                    <input type="number" min="1" id="id" v-model="form.id" class="form-control" required
+                        :disabled="!isCreating && isEditing" />
                 </div>
 
                 <!-- Name -->
-                <div class="form-group">
-                    <label for="name" class="form-label">Name</label>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        v-model="form.name" 
-                        class="form-control" 
-                        required 
-                    />
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700">Name</label>
+                    <input type="text" id="name" v-model="form.name" class="form-control" required
+                        :disabled="!isEditing && !isCreating" />
                 </div>
 
                 <!-- Mandatory Package -->
-                <div class="form-group">
-                    <label class="form-label">
-                        <input 
-                            type="checkbox" 
-                            v-model="form.mandatoryPackage" 
-                            class="form-checkbox"
-                        />
+                <div class="mb-4">
+                    <label class="block text-gray-700">
+                        <input type="checkbox" v-model="form.mandatoryPackage" class="form-checkbox"
+                            :disabled="!isEditing && !isCreating" />
                         Mandatory Package
                     </label>
                 </div>
 
                 <!-- Mandatory Sensors -->
-                <div class="form-group">
-                    <label for="mandatorySensors" class="form-label">Mandatory Sensors</label>
-                    <input 
-                        type="text" 
-                        id="mandatorySensors" 
-                        v-model="newSensor" 
-                        class="form-control" 
-                        @keyup.enter="addSensor" 
-                        placeholder="Add sensor and press Enter" 
-                    />
-                    <ul class="sensor-list">
-                        <li 
-                            v-for="(sensor, index) in form.mandatorySensors" 
-                            :key="index" 
-                            class="sensor-item"
-                        >
+                <div class="mb-4" v-if="form.mandatorySensors && form.mandatorySensors.length > 0">
+                    <label for="mandatorySensors" class="block text-gray-700">Mandatory Sensors</label>
+                    <input type="text" id="mandatorySensors" v-model="newSensor" class="form-control"
+                        @keyup.enter="addSensor" placeholder="Add sensor and press Enter"
+                        :disabled="!isEditing && !isCreating" />
+                    <ul class="sensor-list mt-3">
+                        <li v-for="(sensor, index) in form.mandatorySensors" :key="index" class="sensor-item">
                             {{ sensor }}
-                            <button 
-                                type="button" 
-                                class="btn btn-secondary" 
-                                @click="removeSensor(index)"
-                            >
-                                Remove
-                            </button>
+                            <button type="button" class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
+                                @click="removeSensor(index)">Remove</button>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Submit Button -->
-                <div class="edit-button">
-                    <button 
-                        type="submit" 
-                        class="btn btn-primary"
-                    >
-                        {{ create ? 'Create Product Type' : 'Save Changes' }}
+                <!-- Create Button (Only in Create Mode) -->
+                <!-- Save Button (Only in Edit Mode) -->
+                <div v-if="isEditing && isCreating" class="edit-button">
+                    <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                        Create new Product Type
+                    </button>
+                </div>
+                <!-- Create Button (Only in Create Mode) -->
+                <div v-if="isEditing && !isCreating" class="edit-button">
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                        Save Changes
                     </button>
                 </div>
             </form>
         </div>
     </div>
+    <Popup :show="showPopup" :title="popupTitle" :messages="popupMessages" :type="popupType" @close="closePopup" />
 </template>
 
-<script>
-export default {
-    props: {
-        productTypeData: Object,
-        create: Boolean,
-    },
-    emits: ['createProductType'],
-    data() {
-        return {
-            form: { 
-                ...this.productTypeData,
-                mandatoryPackage: this.productTypeData.mandatoryPackage || false,
+
+<script setup>
+// Keep the script logic unchanged
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useRuntimeConfig } from '#imports';
+
+const route = useRoute();
+// Define props
+const props = defineProps({
+    productTypeData: Object,
+    create: Boolean,
+    edit: Boolean,
+});
+
+const config = useRuntimeConfig();
+const apiUrl = config.public.API_URL;
+
+const showPopup = ref(false);
+const popupTitle = ref('');
+const popupMessages = ref([]);
+const popupType = ref('info');
+
+// Define emits
+const emit = defineEmits(['createProductType']);
+
+// Vue Router instance
+const router = useRouter();
+
+// Reactive form data
+const form = ref({});
+
+
+// Fetch Package Type Data (if editing)
+const fetchProductType = async (id) => {
+    try {
+        const response = await fetch(`${apiUrl}/product-types/${id}`);
+        if (!response.ok) {
+            let messages = await response.text()
+            popupTitle.value = 'Error';
+            popupMessages.value.push(messages);
+            popupType.value = 'failure';
+            showPopup.value = true;
+        }
+        form.value = await response.json();
+
+    } catch (err) {
+        popupTitle.value = 'Error';
+        popupMessages.value.push(err.message);
+        popupType.value = 'failure';
+        showPopup.value = true;
+    }
+};
+
+// On component mount, check if editing or creating
+onMounted(() => {
+    if (route.params.id) {
+        // Editing mode
+        fetchProductType(route.params.id);
+    } else {
+        // Creating a new package type
+        isCreating.value = true;
+        form.value = { id: null, name: '', mandatoryPackage: false, mandatorySensors: [] };
+    }
+});
+
+
+// Ensure `mandatorySensors` is always an array
+if (!form.mandatorySensors) {
+    form.mandatorySensors = [];
+}
+
+// New sensor input
+const newSensor = ref('');
+const isEditing = ref(props.edit);
+const isCreating = ref(props.create);
+
+// Add sensor to the list
+const addSensor = () => {
+    if (newSensor.value.trim()) {
+        form.mandatorySensors.push(newSensor.value.trim());
+        newSensor.value = '';
+    }
+};
+
+// Remove sensor from the list
+const removeSensor = (index) => {
+    form.mandatorySensors.splice(index, 1);
+};
+
+// Create or Edit Package Type
+const handleSubmit = async () => {
+    try {
+        const method = isEditing.value && isCreating.value ? 'POST' : 'PUT';
+        const url = isEditing.value && isCreating.value
+            ? `${apiUrl}/product-types`
+            : `${apiUrl}/product-types/${form.value.id}`;
+
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
             },
-            newSensor: '',
-        };
+            body: JSON.stringify(form.value),
+        });
+
+        if (!response.ok) {
+            let messages = await response.text()
+            popupTitle.value = 'Error';
+            popupMessages.value.push(messages);
+            popupType.value = 'failure';
+            showPopup.value = true;
+        }
+        else {
+            popupTitle.value = 'Success';
+            popupMessages.value.push('Product Type saved successfully');
+            popupType.value = 'success';
+            showPopup.value = true;
+        }
+
+    } catch (err) {
+        popupTitle.value = 'Error';
+        popupMessages.value.push(err.message);
+        popupType.value = 'failure';
+        showPopup.value = true;
+    }
+};
+
+// Watch for prop changes and update form reactively
+watch(
+    () => props.productTypeData,
+    (newData) => {
+        console.log('Updating form data: ', newData);
+        Object.assign(form, newData);
     },
-    methods: {
-        addSensor() {
-            if (this.newSensor.trim()) {
-                this.form.mandatorySensors.push(this.newSensor.trim());
-                this.newSensor = '';
-            }
-        },
-        removeSensor(index) {
-            this.form.mandatorySensors.splice(index, 1);
-        },
-        onSubmit() {
-            this.$emit('createProductType', this.form);
-        },
-    },
+    { deep: true }
+);
+
+// Close Popup
+const closePopup = () => {
+    showPopup.value = false;
+    popupMessages.value = [];
+    router.go(-1);
 };
 </script>
 
@@ -122,15 +228,14 @@ export default {
 .card {
     max-width: 600px;
     margin: 2rem auto;
-    padding: 2rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
 }
 
 .card-header {
     text-align: center;
-    margin-bottom: 1.5rem;
 }
 
 .card-header h2 {
@@ -142,45 +247,25 @@ export default {
 .card-body {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.form-label {
-    font-weight: 600;
-    color: #4a4a4a;
+.mb-4 {
+    margin-bottom: 1rem;
 }
 
 .form-control {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
     font-size: 1rem;
-    color: #333333;
 }
 
 .form-checkbox {
     margin-right: 0.5rem;
     transform: scale(1.2);
     cursor: pointer;
-}
-
-.form-control:disabled {
-    background-color: #f8f8f8;
-    color: #aaaaaa;
-}
-
-.sensor-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    margin-top: 0.5rem;
 }
 
 .sensor-item {
@@ -199,38 +284,11 @@ export default {
     justify-content: flex-end;
 }
 
-.btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary {
-    background-color: #4caf50;
-    color: #ffffff;
-}
-
-.btn-primary:hover {
+.bg-green-500:hover {
     background-color: #45a049;
 }
 
-.btn-secondary {
-    background-color: #f44336;
-    color: #ffffff;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: 0.375rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-secondary:hover {
+.bg-red-500:hover {
     background-color: #d32f2f;
 }
 </style>
