@@ -13,41 +13,11 @@ Accept: application/json
 
 > {% client.global.set('jwt-token', response.body) %}
 
-### GET AUTHENTICATED USER
-GET {{url}}/auth/user
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-### CHANGE PASSWORD
-PATCH {{url}}/auth/{{username}}/change-password
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-{
-  "currentPassword": "123",
-  "newPassword": "1234",
-  "newPasswordConfirmation": "1234"
-}
 
 ### GET A SINGLE CUSTOMER (CUSTOMER AND ADMIN)
 GET {{url}}/customers/Joel
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
-
-### UPDATE AN EXISTING CUSTOMER (ADMIN AND CUSTOMER)
-PUT {{url}}/customers/newCUSTOMER
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-{
-  "name": "Jane Doe Updated",
-  "email": "jane.doe.updated@example.com"
-}
-
-
-
 
 ### GET ALL ORDERS (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders
@@ -61,20 +31,17 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/orders/28/volumes
 Authorization: Bearer {{jwt-token}}
 
-
-
+### GET Sensors of Volume (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes/103/sensors
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
 
 ### GET Sensor by Id (MANAGER, CUSTOMER AND ADMIN)
 GET {{url}}/sensors/3
 Authorization: Bearer {{jwt-token}}
 
-
-
-
-
-
-### GET All Volumes (CUSTOMER AND MANAGER AND ADMIN)
-GET {{url}}/volumes
+### GET Products of Volume (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes/103/products
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
 
@@ -83,12 +50,39 @@ GET {{url}}/volumes/103
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
 
-### GET Sensors of Volume (CUSTOMER AND MANAGER AND ADMIN)
-GET {{url}}/volumes/103/sensors
+### GET AUTHENTICATED USER
+GET {{url}}/auth/user
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### UPDATE AN EXISTING CUSTOMER (ADMIN AND CUSTOMER)
+PUT {{url}}/customers/Joel
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "name": "Jane Doe Updated",
+  "email": "jane.doe.updated@example.com"
+}
+
+### CHANGE PASSWORD
+PATCH {{url}}/auth/{{username}}/change-password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "currentPassword": "123",
+  "newPassword": "1234",
+  "newPasswordConfirmation": "1234"
+}
+
+### GET All Volumes (CUSTOMER AND MANAGER AND ADMIN)
+GET {{url}}/volumes
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
 
-### GET Products of Volume (CUSTOMER AND MANAGER AND ADMIN)
-GET {{url}}/volumes/103/products
-Authorization: Bearer {{jwt-token}}
-Content-Type: application/json
+
+
+
