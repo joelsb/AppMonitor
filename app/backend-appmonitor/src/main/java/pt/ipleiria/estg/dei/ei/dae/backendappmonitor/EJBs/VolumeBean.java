@@ -43,41 +43,6 @@ public class VolumeBean {
     private static final Logger logger = Logger.getLogger("VolumeBean");
 
 
-//    public Volume create(Date sentDate , PackageType pack, List<ProductRecord> products,List<Sensor> sensors, Order order) {
-//        var volume = new Volume(sentDate,pack,order);
-//        pack.addVolume(volume);
-//        order.addVolume(volume);
-//        //Precorrer a lista products e set o volume ao product
-//        for (ProductRecord product : products) {
-//            product.setVolume(volume);
-//        }
-//        //Precorrer a lista sensors e set o volume ao sensor
-//        for (Sensor sensor : sensors) {
-//            sensor.setVolume(volume);
-//        }
-//
-//        entityManager.persist(volume);
-//        return volume;
-//    }
-//    public Volume addSensor(long id, Sensor sensor) throws MyEntityNotFoundException {
-//        var volume = entityManager.find(Volume.class, id);
-//        if(volume == null) {
-//            throw new MyEntityNotFoundException("Volume (" + id + ") not found");
-//        }
-//        volume.addSensor(sensor);
-//        sensor.setVolume(volume);
-//        return volume;
-//    }
-//    public Volume addProduct(long id, ProductRecord productRecord) throws MyEntityNotFoundException {
-//        var volume = entityManager.find(Volume.class, id);
-//        if(volume == null) {
-//            throw new MyEntityNotFoundException("Volume (" + id + ") not found");
-//        }
-//        volume.addProduct(productRecord);
-//        productRecord.setVolume(volume);
-//        return volume;
-//    }
-
     public Volume find(long id) throws MyEntityNotFoundException {
         var volume = entityManager.find(Volume.class, id);
         if (volume == null) {
@@ -87,8 +52,6 @@ public class VolumeBean {
     }
 
     public List<Volume> findAll() {
-        var volume = entityManager.createNamedQuery("getAllVolumes", Volume.class).getResultList().get(0);
-        logger.info("Volume Date: " + volume.getSentDate());
         return entityManager.createNamedQuery("getAllVolumes", Volume.class).getResultList();
     }
 
