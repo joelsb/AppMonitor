@@ -20,11 +20,6 @@
         @close="closePopup" 
     />
 
-    <div class="mt-6 text-center">
-        <button @click="goBack" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-            Voltar
-        </button>
-    </div>
 </template>
 
 <script setup>

@@ -6,12 +6,15 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
+import org.reflections.Reflections;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities.User;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Exceptions.MyIllegalArgumentException;
 import pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Security.Hasher;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class UserBean {
@@ -34,6 +37,10 @@ public class UserBean {
 
     public List<User> findAll() throws MyEntityNotFoundException {
         return entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
+    }
+
+    public List<User> findByEmail(String email) throws MyEntityNotFoundException {
+        return entityManager.createNamedQuery("getUserByEmail", User.class).setParameter("email", email).getResultList();
     }
 
     public User findOrFail(String username) {
@@ -65,11 +72,31 @@ public class UserBean {
         if(password == null || password.isEmpty()) throw new MyIllegalArgumentException("Password cannot be empty");
         if(name == null || name.isEmpty()) throw new MyIllegalArgumentException("Name cannot be empty");
         if(email == null || email.isEmpty()) throw new MyIllegalArgumentException("Email cannot be empty");
+        if(!findByEmail(email).isEmpty()) throw new MyIllegalArgumentException("Email already in use");
+        //username cannot have spaces
+        if(username.contains(" ")) throw new MyIllegalArgumentException("Username cannot have spaces");
+        //email must be a valid email
+        if(!email.contains("@") || !email.contains(".") || email.contains(" ")) throw new MyIllegalArgumentException("Email must be a valid email");
     }
 
     public void update(String username, String name, String email) {
         var user = this.find(username);
         if(name != null) user.setName(name);
         if(email != null) user.setEmail(email);
+    }
+
+    public List<String> getRoles() {
+        List<String> roles = new ArrayList<>();
+
+        // Using Reflections to find subclasses of User
+        Reflections reflections = new Reflections("pt.ipleiria.estg.dei.ei.dae.backendappmonitor.Entities"); // Specify your base package
+
+        // Find all subclasses of User
+        Set<Class<? extends User>> roleClasses = reflections.getSubTypesOf(User.class);
+        for (Class<? extends User> roleClass : roleClasses) {
+            roles.add(roleClass.getSimpleName()); // Add the simple name of the role class
+        }
+
+        return roles;
     }
 }
