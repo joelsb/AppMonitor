@@ -1,79 +1,39 @@
 <template>
-    <NavBar />
-    <ProfileForm v-if="userForm.username" :userData="userForm" @updateProfile="updateProfile"
-        :editProfile="editProfile" />
-    <Popup :show="showPopup" :title="popupTitle" :messages="popupMessages" :type="popupType" @close="closePopup" />
-    <!-- TODO: FAlta rever o editProfile sent to the profileFrom -->
-    <!-- TODO: falta rever a logic de update profile, nao funciona -->
+    <div>
+        <!-- NavBar (if necessary) -->
+        <NavBar />
+
+        <!-- Card to choose delivery type (Volume or Order) -->
+        
+
+        <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md gap-6 flex flex-col">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-4">See Profile</h2>
+                <p class="mb-4 text-lg text-gray-600">See my profile details</p>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="profilePage">
+                    Profile</button>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-4">Change Password</h2>
+                <p class="mb-4 text-lg text-gray-600">Change my password login</p>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="passwordPage">
+                    Change-Password</button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { useAuthStore } from '~/store/auth-store';
-import { useRuntimeConfig } from '#imports';
-import { ref, onMounted } from 'vue';
-import NavBar from '~/components/NavBar.vue';
-import ProfileForm from '~/components/ProfileForm.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
-const config = useRuntimeConfig();
-const apiUrl = config.public.API_URL;
-const user = useAuthStore().user;
-const userRole = user.role.toLowerCase() + 's';
-
-const showPopup = ref(false);
-const popupTitle = ref('');
-const popupMessages = ref([]);
-const popupType = ref('info');
-
-const userForm = ref({});
-
-const messages = ref([]);
-
-const editProfile = ref(false)
-
-onMounted(async () => {
-    try {
-        const response = await fetch(`${apiUrl}/${userRole}/${user.username}`);
-        userForm.value = await response.json();
-    } catch (error) {
-        console.error(`Error fetching ${userRole}/${user.username}:`, error);
-    }
-});
-
-const updateProfile = async (formValue) => {
-    editProfile.value = true;
-    popupMessages.value = [];
-    try {
-        const response = await fetch(`${apiUrl}/${userRole}/${user.username}`, {
-            method: 'PUT',
-            body: JSON.stringify(formValue),  // Use formValue here
-        });
-        const data = response.ok ? await response.json() : await response.text();
-        if (!response.ok) {
-            showPopup.value = true;
-            popupTitle.value = 'Error';
-            popupMessages.value.push(data.message || 'Failed to update profile.');
-            popupType.value = 'error';
-            editProfile.value = true;
-        } else {
-            showPopup.value = true;
-            popupTitle.value = 'Success';
-            popupMessages.value.push('Profile updated successfully!');
-            popupType.value = 'success';
-            editProfile.value = false;
-        }
-    } catch (error) {
-        showPopup.value = true;
-        popupTitle.value = 'Error';
-        popupMessages.value.push('An error occurred during the update.');
-        popupType.value = 'error';
-    }
+// Navigate to the delivery page
+const profilePage = () => {
+    router.push('/profile/view-edit');
 };
-
-const closePopup = () => {
-    showPopup.value = false;
-    popupMessages.value = [];
+const passwordPage = () => {
+    router.push('/profile/password');
 };
 
 </script>
-
 <style scoped></style>

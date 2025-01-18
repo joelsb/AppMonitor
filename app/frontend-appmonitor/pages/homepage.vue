@@ -1,23 +1,7 @@
 <template>
     <NavBar />
-    <!-- Question inside a Card -->
-    <div class="max-w-md mx-auto mt-6 p-5 bg-white rounded-lg shadow-md flex flex-col items-center">
-        <label for="orderCreated" class="block font-semibold text-lg">Is the order already created?</label>
-        <div class="mt-4 flex items-center">
-            <!-- Switch (Toggle) -->
-            <label for="orderCreatedSwitch" class="inline-flex relative items-center cursor-pointer">
-                <input type="checkbox" id="orderCreatedSwitch" v-model="isOrderCreated" class="sr-only" />
-                <div class="w-14 h-6 rounded-full transition-colors"
-                    :class="isOrderCreated ? 'bg-blue-500' : 'bg-gray-200'"></div> <!-- Dynamic background color -->
-                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform"
-                    :class="isOrderCreated ? 'transform translate-x-7' : ''"></div> <!-- Adjusted for larger size -->
-            </label>
-            <span class="ml-4 text-lg">{{ isOrderCreated ? 'Yes' : 'No' }}</span>
-        </div>
+    <div class="container">
     </div>
-
-
-
 </template>
 
 
@@ -26,9 +10,6 @@ import { ref, onMounted } from 'vue';
 import { useRuntimeConfig } from '#imports';
 import { useAuthStore } from '~/store/auth-store';
 import NavBar from '@/components/NavBar.vue'; // Import the NavBar component
-import VolumeForm from '@/components/VolumeForm.vue'; // Import the CombinedForm component
-import OrderForm from '@/components/OrderForm.vue'; // Import the OrderForm component
-import Popup from '@/components/Popup.vue'; // Import the Popup component
 
 // API and Router Setup
 const config = useRuntimeConfig();

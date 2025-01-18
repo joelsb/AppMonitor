@@ -129,7 +129,7 @@ const linkProfile =
   route: '/profile',
   active: false,
   submenu: [
-    { name: 'Profile', route: '/profile' },
+    { name: 'Profile', route: '/profile/view-edit' },
     { name: 'Change Password', route: '/profile/password' },
     { name: 'Logout', route: '/login/logout' },
   ],
