@@ -16,7 +16,7 @@ Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 ### CHANGE PASSWORD
-POST {{url}}/auth/{{username}}/change-password
+PATCH {{url}}/auth/{{username}}/change-password
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
@@ -28,10 +28,18 @@ Authorization: Bearer {{jwt-token}}
 }
 
 
+
+
+
 ### GET CUSTOMER'S ORDERS (MANAGER AND ADMIN)
 GET {{url}}/customers/Joel/orders
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
+
+
+
+
+
 
 ### Get Manager by Username (ADMIN AND MANAGER)
 GET {{url}}/managers/Ana
@@ -48,6 +56,11 @@ Content-Type: application/json
   "office": "Updated Office"
 }
 
+
+
+
+
+
 ### GET ALL ORDERS (CUSTOMER, MANAGER AND ADMIN)
 GET {{url}}/orders
 Authorization: Bearer {{jwt-token}}
@@ -60,17 +73,17 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/orders/28/volumes
 Authorization: Bearer {{jwt-token}}
 
+
+
+
+
 ### GET Sensor by Id (MANAGER, CUSTOMER AND ADMIN)
 GET {{url}}/sensors/3
 Authorization: Bearer {{jwt-token}}
 
-### GET ALL USERS (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
-GET {{url}}/users
-Authorization: Bearer {{jwt-token}}
 
-### GET USER BY USERNAME (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
-GET {{url}}/users/Ana
-Authorization: Bearer {{jwt-token}}
+
+
 
 ### GET All Volumes (CUSTOMER AND MANAGER AND ADMIN)
 GET {{url}}/volumes

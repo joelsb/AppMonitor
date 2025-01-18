@@ -41,9 +41,7 @@ public class VolumeService {
         }
         if(securityContext.isUserInRole("Manager")){
             var volumes = volumeBean.findAllWithSensorsProducts();
-            logger.info("Volumes: " + volumes.get(0).getSentDate());
             var volumeDTOs = VolumeDTO.fromEmployee(volumes);
-            logger.info("VolumeDTOs: " + volumeDTOs.get(0).getSentDate());
             return Response.ok(VolumeDTO.fromEmployee(volumes)).build();
         }
         return Response.status(Response.Status.FORBIDDEN).build();

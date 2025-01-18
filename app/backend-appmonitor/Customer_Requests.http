@@ -19,7 +19,7 @@ Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 ### CHANGE PASSWORD
-POST {{url}}/auth/{{username}}/change-password
+PATCH {{url}}/auth/{{username}}/change-password
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
@@ -68,18 +68,6 @@ Authorization: Bearer {{jwt-token}}
 GET {{url}}/sensors/3
 Authorization: Bearer {{jwt-token}}
 
-
-
-
-
-
-### GET ALL USERS (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
-GET {{url}}/users
-Authorization: Bearer {{jwt-token}}
-
-### GET USER BY USERNAME (ADMIN, CUSTOMER, EMPLOYEE, MANAGER)
-GET {{url}}/users/Ana
-Authorization: Bearer {{jwt-token}}
 
 
 

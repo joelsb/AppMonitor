@@ -30,15 +30,15 @@ Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 ### CHANGE PASSWORD (FOR ALL USERS - MANAGER, EMPLOYEE, CUSTOMER, ADMIN)
-POST {{url}}/auth/{{username}}/change-password
+PATCH {{url}}/auth/{{username}}/change-password
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 {
-  "currentPassword": "1234",
-  "newPassword": "123",
-  "newPasswordConfirmation": "123"
+  "currentPassword": "123",
+  "newPassword": "1234",
+  "newPasswordConfirmation": "1234"
 }
 
 ### GET ALL ADMINS (ONLY FOR ADMINS)

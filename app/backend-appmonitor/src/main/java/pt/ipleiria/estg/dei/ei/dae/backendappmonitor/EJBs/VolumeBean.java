@@ -44,53 +44,14 @@ public class VolumeBean {
 
     private static final Logger logger = Logger.getLogger("VolumeBean");
 
-
-//    public Volume create(Date sentDate , PackageType pack, List<ProductRecord> products,List<Sensor> sensors, Order order) {
-//        var volume = new Volume(sentDate,pack,order);
-//        pack.addVolume(volume);
-//        order.addVolume(volume);
-//        //Precorrer a lista products e set o volume ao product
-//        for (ProductRecord product : products) {
-//            product.setVolume(volume);
-//        }
-//        //Precorrer a lista sensors e set o volume ao sensor
-//        for (Sensor sensor : sensors) {
-//            sensor.setVolume(volume);
-//        }
-//
-//        entityManager.persist(volume);
-//        return volume;
-//    }
-//    public Volume addSensor(long id, Sensor sensor) throws MyEntityNotFoundException {
-//        var volume = entityManager.find(Volume.class, id);
-//        if(volume == null) {
-//            throw new MyEntityNotFoundException("Volume (" + id + ") not found");
-//        }
-//        volume.addSensor(sensor);
-//        sensor.setVolume(volume);
-//        return volume;
-//    }
-//    public Volume addProduct(long id, ProductRecord productRecord) throws MyEntityNotFoundException {
-//        var volume = entityManager.find(Volume.class, id);
-//        if(volume == null) {
-//            throw new MyEntityNotFoundException("Volume (" + id + ") not found");
-//        }
-//        volume.addProduct(productRecord);
-//        productRecord.setVolume(volume);
-//        return volume;
-//    }
-
     public List<Volume> findAvailableVolumes() {
-        var volumes = entityManager.createNamedQuery("getAvailableVolumes", Volume.class).getResultList();
-
-        return volumes;
+        return entityManager.createNamedQuery("getAvailableVolumes", Volume.class).getResultList();
     }
 
     public List<Volume> findAllCustomerVolumes(String username) {
-        var volumes = entityManager.createNamedQuery("getVolumesByCustomer", Volume.class)
+        return entityManager.createNamedQuery("getVolumesByCustomer", Volume.class)
                 .setParameter("username", username)
                 .getResultList();
-        return volumes;
     }
 
     public Volume find(long id) throws MyEntityNotFoundException {
@@ -102,8 +63,6 @@ public class VolumeBean {
     }
 
     public List<Volume> findAll() {
-        var volume = entityManager.createNamedQuery("getAllVolumes", Volume.class).getResultList().get(0);
-        logger.info("Volume Date: " + volume.getSentDate());
         return entityManager.createNamedQuery("getAllVolumes", Volume.class).getResultList();
     }
 
@@ -288,7 +247,7 @@ public class VolumeBean {
                             .count();
                     return actualCount < requiredCount; // Check if the count is insufficient
                 })
-                .map(entry -> "<br>{ SensorTypeName: '" + sensorTypeBean.find(entry.getKey()).getName()  + "' " +
+                .map(entry -> "<br>{ SensorTypeName: '" + entityManager.find(SensorType.class, entry.getKey()).getName()  + "' " +
                         ", Actual: '" + result.getSensorTypes().stream().filter(sensor -> sensor.getId()==entry.getKey()).count() + "' " +
                         ", Required: '" + entry.getValue() + "' }<br>")
 

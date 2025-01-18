@@ -33,12 +33,9 @@ public class UserBean {
     }
 
     public List<User> findAll() throws MyEntityNotFoundException {
-        var users = entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
-        if(users.isEmpty()) {
-            throw new MyEntityNotFoundException("No users found");
-        }
-        return users;
+        return entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
     }
+
     public User findOrFail(String username) {
         var user = entityManager.getReference(User.class, username);
         Hibernate.initialize(user);

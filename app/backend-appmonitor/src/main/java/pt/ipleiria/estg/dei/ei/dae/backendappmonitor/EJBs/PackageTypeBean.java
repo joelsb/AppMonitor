@@ -33,11 +33,7 @@ public class PackageTypeBean {
     }
 
     public List<PackageType> findAll() {
-        var packageTypes = entityManager.createNamedQuery("getAllPackageTypes", PackageType.class).getResultList();
-        if(packageTypes.isEmpty()){
-            throw new MyEntityNotFoundException("No PackageTypes found");
-        }
-        return packageTypes;
+        return entityManager.createNamedQuery("getAllPackageTypes", PackageType.class).getResultList();
     }
 
     public PackageType findWithMandatorySensors(Long id) throws MyEntityNotFoundException {
