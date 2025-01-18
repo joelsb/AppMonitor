@@ -1,8 +1,21 @@
 <template>
   <div>
-    <nav class="navbar">
-      <!-- Login Button (Left-aligned) -->
-      <ul class="nav-links">
+    <nav class="navbar" :class="{ 'nav-bar-when-sm': hide }">
+      <!-- Hamburger Button for Mobile (Visible on screens smaller than 540px) -->
+      <div class="hamburger-menu" @click="toggleMenu">
+        <div class="hamburger-icon" :class="{ 'open': !menuOpen }">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+      
+      <!-- Navbar Links (Only show on larger screens) -->
+      <ul class="nav-links" :class="{ 'hidden': menuOpen }">
+        <li class="nav-item" :class="{ 'hidden': !hide }">
+          <button class="nav-button nav-button-hidden">
+          </button>
+        </li>
         <div class="profile-item left">
           <li class="nav-item">
             <button class="nav-button profile-button" @click="navigate('/homepage')">
@@ -14,9 +27,10 @@
             </button>
           </li>
         </div>
+        
         <!-- Regular links (excluding Profile) -->
         <li v-for="(link, index) in filteredLinks" :key="index" class="nav-item">
-          <button v-if="link.name !== 'Profile'" :class="[
+          <button v-if="link.name !== 'Profile'" :class="[ 
             'nav-button',
             (activeIndex === index || link.active) ? 'active' : ''
           ]" @click="navigate(link.route)">
@@ -33,10 +47,10 @@
         </li>
 
         <!-- Profile link -->
-        <div class="profile-item right">
+        <div class="profile-item right" :class="{ 'profile-when-sm': hide }">
           <!-- Profile link (the 4th link in the array) -->
           <li v-if="linkProfile" class="nav-item">
-            <button :class="[
+            <button :class="[ 
               'nav-button profile-button',
               (activeIndex === 3 || linkProfile.active) ? 'active' : ''
             ]" @click="navigate(linkProfile.route)">
@@ -62,6 +76,7 @@
 
 
 
+
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
@@ -71,13 +86,14 @@ import { useAuthStore } from "~/store/auth-store.js"
 const router = useRouter();
 const activeIndex = ref(null);
 const route = useRoute();
+const menuOpen = ref(false); // Reactive state for menu visibility on small screens
+const hide = ref(false);
 
 const user = useAuthStore().user;// Obter o utilizador logado
 const filteredLinks = computed(() => {
   if (!user || !user.role) return []; // Nenhum usuário ou sem role
   return links.filter(link => link.roles.includes(user.role));
 });
-
 
 const links = [
   {
@@ -119,18 +135,9 @@ const links = [
       { name: 'Users', route: '/user' },
       { name: 'Package Types', route: '/package-type' },
       { name: 'Product Types', route: '/product-type' },
+      { name: 'Sensors', route: '/sensor' },
     ]
-  },    
-  {
-    name: 'Sensor',
-    route: '/sensor',
-    active: false,
-    roles: ['Admin'], // Apenas usuários com role 'admin' podem acessar
-    submenu: [
-      { name: 'Show Sensors', route: '/sensor/sensors' },
-      { name: 'Add Value', route: '/sensor/newValue' },
-    ],
-  }
+  } 
 ];
 
 
@@ -146,11 +153,10 @@ const linkProfile =
   ],
 }
 
-// Update active index for both parent and submenu items
-function setActiveIndex(index) {
-  activeIndex.value = index;
+// Toggle menu visibility for small screens
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value;
 }
-
 // Navigate handler
 function navigate(route) {
   router.push(route);
@@ -162,7 +168,10 @@ watch(route, (newRoute) => {
     link.active = newRoute.path.includes(link.route);
   });
 });
-
+//watch hide value
+watch(hide, (newHide) => {
+  console.log(newHide);
+  });
 // Login button handler
 function onLogin() {
   router.push('/login');
@@ -171,6 +180,35 @@ function onLogin() {
 function onLogout() {
   useAuthStore().logout();
 }
+
+// Window resize handler to close menu when screen width is small
+function handleResize() {
+  if (window.innerWidth > 540) {
+    menuOpen.value = false;
+    hide.value = false;
+  }
+  if(window.innerWidth < 540){
+    menuOpen.value = true;
+    hide.value = true;
+  }
+}
+// Ensure window resize handler is attached when the component is mounted
+onMounted(() => {
+  if (window.innerWidth > 540) {
+    menuOpen.value = false;
+    hide.value = false;
+  }
+  if(window.innerWidth < 540){
+    menuOpen.value = true;
+    hide.value = true;
+  }
+  window.addEventListener('resize', handleResize);
+});
+
+// Cleanup the resize listener when the component is destroyed
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 
 
@@ -316,6 +354,10 @@ function onLogout() {
   /* blue-500 */
 }
 
+.nav-button-hidden {
+  background-color: transparent !important;
+}
+
 .nav-button:hover {
   background-color: #bfdbfe;
   /* blue-100 */
@@ -388,5 +430,86 @@ function onLogout() {
 .submenu-item:hover {
   background-color: #f3f4f6;
   /* gray-100 */
+}
+
+/* Hamburger Icon */
+.hamburger-menu {
+  z-index: 200;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  display: none;
+  cursor: pointer;
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar {
+  width: 20px;
+  height: 3px;
+  background-color: #000000;
+  transition: 0.3s;
+}
+
+.hamburger-icon.open .bar:nth-child(1) {
+  transform: rotate(45deg) translateY(9.5px);
+}
+
+.hamburger-icon.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-icon.open .bar:nth-child(3) {
+  transform: rotate(-45deg) translateY(-10px);
+}
+
+/* Navbar links visibility on small screens */
+.nav-links.hidden {
+  display: none;
+}
+.hidden {
+  display: none !important;
+}
+
+.nav-bar-when-sm {
+  background-color: white;
+  border: #000000;
+}
+
+.profile-when-sm {
+  justify-content: flex-start !important;
+}
+
+
+@media (max-width: 540px) {
+  /* Show hamburger icon on smaller screens */
+  .hamburger-menu {
+    display: block;
+  }
+
+  /* Hide nav-links by default */
+  .nav-links {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: all 0.3s ease;
+  }
+
+  /* Show nav-links when menuOpen is true */
+  .nav-links:not(.hidden) {
+    transform: translateX(0);
+  }
 }
 </style>

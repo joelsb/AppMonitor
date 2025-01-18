@@ -9,7 +9,7 @@
             <div class="flex-row justify-between flex items-center mb-4">
             <span class="text-lg text-gray-600">See all the Product Types available in the app.</span>
             <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                Voltar
+              🔙 Back
             </button>
         </div>
 
@@ -27,7 +27,7 @@
             <!-- productTypes Table -->
             <div v-if="!loading && !error" class="table-container">
                 <div v-if="productTypes.length === 0" class="text-center text-gray-500">
-                    Ainda sem productTypes 
+                    No produtos yet
                 </div>
                 <table v-if="productTypes.length > 0" aria-label="productTypes table" class="table w-full">
                     <thead>

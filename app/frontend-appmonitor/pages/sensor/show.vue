@@ -22,7 +22,7 @@
             <!-- sensors Table -->
             <div v-if="!loading && !error" class="table-container">
                 <div v-if="sensors.length === 0" class="text-center text-gray-500">
-                    Ainda sem sensors 
+                    No sensors yet
                 </div>
                 <table v-if="sensors.length > 0" aria-label="sensors table" class="table w-full">
                     <thead>
@@ -148,13 +148,13 @@ onMounted(() => {
 }
 
 .table {
-    bsensor-collapse: collapse;
+    border-collapse: collapse;
     width: 100%;
 }
 
 .table th,
 .table td {
-    bsensor: 1px solid #ccc;
+    border: 1px solid #ccc;
     padding: 0.75rem;
 }
 

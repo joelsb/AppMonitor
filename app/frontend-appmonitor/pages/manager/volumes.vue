@@ -22,7 +22,7 @@
             <!-- volumes Table -->
             <div v-if="!loading && !error" class="table-container">
                 <div v-if="volumes.length === 0" class="text-center text-gray-500">
-                    Ainda sem volumes
+                    No volumes yet
                 </div>
                 <table v-if="volumes.length > 0" aria-label="volumes table" class="table w-full">
                     <thead>

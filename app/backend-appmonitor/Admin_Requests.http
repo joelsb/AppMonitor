@@ -41,9 +41,9 @@ Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
 {
-  "currentPassword": "123",
-  "newPassword": "1234",
-  "newPasswordConfirmation": "1234"
+  "currentPassword": "1234",
+  "newPassword": "123",
+  "newPasswordConfirmation": "123"
 }
 
 ### GET A SINGLE ADMIN (ONLY FOR ADMINS)

@@ -4,7 +4,7 @@
             <!-- Order ID -->
             <div class="mb-4">
                 <label for="orderId" class="block font-semibold">Order ID:</label>
-                <input id="orderId" v-model="form.id" type="number" class="w-full p-2 border border-gray-300 rounded"  />
+                <input id="orderId" v-model="form.id" type="number"  min="1" class="w-full p-2 border border-gray-300 rounded"  />
             </div>
 
             <!-- Created Date -->
@@ -31,7 +31,7 @@
                 <!-- Volume ID -->
                 <div class="mb-2">
                     <label for="volumeId" class="block">Volume ID:</label>
-                    <input id="volumeId" v-model="form.volume.id" type="number"
+                    <input id="volumeId" v-model="form.volume.id" type="number" min="1"
                         class="w-full p-2 border border-gray-300 rounded"   />
                 </div>
 
@@ -53,7 +53,7 @@
                                 productType.name }}</option>
                         </select>
                         <label :for="'quantity-' + index" class="block">Quantity:</label>
-                        <input :id="'quantity-' + index" v-model="product.quantity" type="number"
+                        <input :id="'quantity-' + index" v-model="product.quantity" type="number" min="1"
                             class="w-full p-2 border border-gray-300 rounded" />
                         <button type="button" @click="removeItem('product', index)"
                             class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
@@ -97,7 +97,7 @@
                             <option v-for="type in sensorTypes" :key="type.id" :value="type.id">{{ type.name }}</option>
                         </select>
                         <label :for="'sensorId-' + index" class="block">Sensor ID:</label>
-                        <input :id="'sensorId-' + index" v-model="sensor.id" type="number"
+                        <input :id="'sensorId-' + index" v-model="sensor.id" type="number" min="1"
                             class="w-full p-2 border border-gray-300 rounded" />
                         <button type="button" @click="removeItem('sensor', index)"
                             class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
@@ -153,10 +153,10 @@ const nextSensorId = computed(() => {
 
 
 const form = ref({
-    id: nextOrderId, customerUsername: 'Tiago', createdDate: '2024-11-20T21:00:00',
+    id: null, customerUsername: null, createdDate: null,
     volume: {
-        id: nextVolumeId, sentDate: '2024-11-21 21:00:00', packageTypeId: 1,
-        products: [{ productId: 2, quantity: 1 }], sensors: [{ id: nextSensorId, sensorTypeId: 2 }]
+        id: null, sentDate: null, packageTypeId:null,
+        products: [{ productId: null, quantity: null }], sensors: [{ id: null, sensorTypeId: null }]
     },
 });
 
@@ -169,10 +169,28 @@ const removeItem = (type, index) => form.value.volume[type + 's'].splice(index, 
 const mandatorySensors = ref([]);
 
 const fetchMandatorySensors = async (productTypeId, packageTypeId) => {
-    const productSensors = await fetch(`${apiUrl}/product-types/${productTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []);
-    const packageSensors = packageTypeId ? await fetch(`${apiUrl}/package-types/${packageTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []) : [];
-    mandatorySensors.value = [...productSensors, ...packageSensors];
+    const productSensors = ref([]);
+    if(productTypeId!=null) {
+        productSensors.value = await fetch(`${apiUrl}/product-types/${productTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []);
+    }
+    const packageSensors = ref([]);
+    if(packageTypeId!=null) {
+        packageSensors.value = await fetch(`${apiUrl}/package-types/${packageTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []);
+    }
+    if(productSensors.value.length === 0 && packageSensors.value.length > 0) {
+        mandatorySensors.value = packageSensors.value;
+    }
+    if(productSensors.value.length > 0 && packageSensors.value.length === 0) {
+        mandatorySensors.value = productSensors.value;
+    }
+    if(productSensors.value.length > 0 && packageSensors.value.length > 0) {
+        mandatorySensors.value = productSensors.value.filter(sensor => packageSensors.value.some(pSensor => pSensor.sensorTypeId === sensor.sensorTypeId));
+    }
+    else {
+        mandatorySensors.value = [];
+    }
 };
+
 
 const showMandatorySensors = () => {
     // Call fetchMandatorySensors and use .then() to wait for it to resolve

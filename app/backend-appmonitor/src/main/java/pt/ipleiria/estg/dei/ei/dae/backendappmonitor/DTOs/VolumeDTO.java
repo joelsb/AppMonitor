@@ -76,6 +76,17 @@ public class VolumeDTO {
         );
     }
 
+    public static VolumeDTO fromCustomer(Volume volume){
+        return new VolumeDTO(
+                volume.getId(),
+                volume.getSentDate(),
+                volume.getDeliveredDate(),
+                null,
+                volume.getOrder().getId(),
+                null
+                );
+    }
+
     public static List<VolumeDTO> fromEmployee(List<Volume> volumes){
         return volumes.stream().map(VolumeDTO::fromEmployee).collect(Collectors.toList());
     }
@@ -90,6 +101,10 @@ public class VolumeDTO {
 
     public static List<VolumeDTO> fromSimple(List<Volume> volumes) {
         return volumes.stream().map(VolumeDTO::fromSimple).collect(Collectors.toList());
+    }
+
+    public static List<VolumeDTO> fromCustomer(List<Volume> volumes) {
+        return volumes.stream().map(VolumeDTO::fromCustomer).collect(Collectors.toList());
     }
 
     public Long getId() {

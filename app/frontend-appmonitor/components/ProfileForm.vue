@@ -1,89 +1,86 @@
 <template>
-    <div class="card">
-        
+    <div class="card shadow-lg p-6 rounded-lg bg-white">
+
         <div class="card-body">
-            <div class="mb-4 flex-row justify-between flex items-center">
-                <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                Voltar
-            </button>
-            <!-- Edit Mode Toggle Switch -->
-            <div v-if="!isCreate" class="flex justify-end items-center">
-                <label for="editProfileSwitch" class="block font-semibold text-lg mr-3">Edit Mode</label>
-                <label for="editProfileSwitch" class="inline-flex relative items-center cursor-pointer">
-                    <input type="checkbox" id="editProfileSwitch" v-model="isEditing" class="sr-only" />
-                    <div class="w-14 h-6 rounded-full transition-colors"
-                        :class="isEditing ? 'bg-blue-500' : 'bg-gray-200'"></div>
-                    <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform"
-                        :class="isEditing ? 'transform translate-x-7' : ''"></div>
-                </label>
-                <span class="ml-4 text-lg">{{ isEditing ? 'Editing' : 'View' }}</span>
+            <div class="mb-6 flex justify-between items-center">
+                <button @click="router.go(-1)" class="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all ease-in-out">
+                    🔙 Back
+                </button>
+
+                <!-- Edit Mode Toggle Switch -->
+                <div v-if="!isCreate" class="flex justify-end items-center">
+                    <label for="editProfileSwitch" class="text-lg font-semibold mr-4">🖋️ Edit Mode</label>
+                    <label for="editProfileSwitch" class="inline-flex relative items-center cursor-pointer">
+                        <input type="checkbox" id="editProfileSwitch" v-model="isEditing" class="sr-only" />
+                        <div class="w-14 h-7 rounded-full transition-colors"
+                            :class="isEditing ? 'bg-blue-500' : 'bg-gray-300'"></div>
+                        <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform"
+                            :class="isEditing ? 'transform translate-x-7' : ''"></div>
+                    </label>
+                    <span class="ml-4 text-lg">{{ isEditing ? '📝 Editing' : '👀 View' }}</span>
+                </div>
             </div>
-            
-        </div>
-            <form class="form" @submit.prevent="isCreate ? createProfile() : updateProfile()">
+
+            <form class="form space-y-6" @submit.prevent="isCreate ? createProfile() : updateProfile()">
+                
                 <!-- Role -->
                 <div class="form-group">
-                    <label for="role">Role</label>
-                    <select id="role" v-model="form.role" class="form-control" :disabled="!isEditing || !isCreate">
-                        <!-- Populate roles dynamically -->
-                        <option v-if="form.role && !isCreate" :value="form.role" >{{ form.role }}</option>
+                    <label for="role" class="text-lg font-medium">🧑‍💼 Role</label>
+                    <select id="role" v-model="form.role" class="form-control rounded-lg border-gray-300 w-full p-3 transition-all ease-in-out" :disabled="!isEditing || !isCreate">
+                        <option v-if="form.role && !isCreate" :value="form.role">{{ form.role }}</option>
                         <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
                     </select>
                 </div>
 
-
                 <!-- Username -->
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" v-model="form.username" class="form-control"
-                        :disabled="!isEditing || !isCreate" />
-                </div>
-                <!-- Password if isCreate -->
-                <div v-if="isCreate" class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" v-model="form.password" class="form-control"
-                        :disabled="!isEditing || !isCreate" />
+                    <label for="username" class="text-lg font-medium">👤 Username</label>
+                    <input type="text" id="username" v-model="form.username" class="form-control rounded-lg border-gray-300 w-full p-3 transition-all ease-in-out" :disabled="!isEditing || !isCreate" />
                 </div>
 
+                <!-- Password (if isCreate) -->
+                <div v-if="isCreate" class="form-group">
+                    <label for="password" class="text-lg font-medium">🔒 Password</label>
+                    <input type="password" id="password" v-model="form.password" class="form-control rounded-lg border-gray-300 w-full p-3 transition-all ease-in-out" :disabled="!isEditing || !isCreate" />
+                </div>
 
                 <!-- Email -->
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" v-model="form.email" class="form-control" :disabled="!isEditing" />
+                    <label for="email" class="text-lg font-medium">📧 Email</label>
+                    <input type="email" id="email" v-model="form.email" class="form-control rounded-lg border-gray-300 w-full p-3 transition-all ease-in-out" :disabled="!isEditing" />
                 </div>
 
                 <!-- Name -->
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" v-model="form.name" class="form-control" :disabled="!isEditing" />
+                    <label for="name" class="text-lg font-medium">📝 Name</label>
+                    <input type="text" id="name" v-model="form.name" class="form-control rounded-lg border-gray-300 w-full p-3 transition-all ease-in-out" :disabled="!isEditing" />
                 </div>
 
                 <!-- Office for Manager -->
                 <div v-if="userRole === 'Manager'" class="form-group">
-                    <label for="office">Office</label>
-                    <input type="text" id="office" v-model="form.office" class="form-control" :disabled="!isEditing" />
+                    <label for="office" class="text-lg font-medium">🏢 Office</label>
+                    <input type="text" id="office" v-model="form.office" class="form-control rounded-lg border-gray-300 w-full p-3 transition-all ease-in-out" :disabled="!isEditing" />
                 </div>
 
                 <!-- Warehouse for Employee -->
                 <div v-if="userRole === 'Employee'" class="form-group">
-                    <label for="warehouse">Warehouse</label>
-                    <input type="text" id="warehouse" v-model="form.warehouse" class="form-control"
-                        :disabled="!isEditing" />
+                    <label for="warehouse" class="text-lg font-medium">🏭 Warehouse</label>
+                    <input type="text" id="warehouse" v-model="form.warehouse" class="form-control rounded-lg border-gray-300 w-full p-3 transition-all ease-in-out" :disabled="!isEditing" />
                 </div>
 
                 <!-- Messages -->
-                <div v-if="messages.length" class="form-messages">
+                <div v-if="messages.length" class="form-messages space-y-2">
                     <ul>
-                        <li v-for="(message, index) in messages" :key="index" class="message-item">
-                            {{ message }}
+                        <li v-for="(message, index) in messages" :key="index" class="message-item bg-red-100 p-3 rounded-lg text-red-600">
+                            ⚠️ {{ message }}
                         </li>
                     </ul>
                 </div>
 
-                <!-- Save Button (Only in Edit Mode) -->
+                <!-- 💾 Save Button (Only in Edit Mode) -->
                 <div v-if="isEditing" class="edit-button">
-                    <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-                        {{ isCreate ? 'Create '+form.role : 'Save changes' }}
+                    <button type="submit" class="bg-green-500 text-white py-3 px-6 rounded-full hover:bg-green-600 transition-all ease-in-out">
+                        {{ isCreate ? '🆕 Create ' + form.role : '💾 Save changes' }}
                     </button>
                 </div>
             </form>

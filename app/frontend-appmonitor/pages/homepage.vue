@@ -22,6 +22,8 @@ const packageTypes = ref([]);
 const products = ref([]);
 const sensorTypes = ref([]);
 
+const role = useAuthStore().user.role;
+
 // PopUp state
 const showPopup = ref(false);
 const popupTitle = ref('');
@@ -55,9 +57,12 @@ const fetchData = async (url, targetRef) => {
 
 
 onMounted(() => {
-    fetchData('/package-types', packageTypes);
-    fetchData('/product-types', products);
-    fetchData('/sensor-types', sensorTypes);
+    if (role === 'admin') {
+        fetchData('/package-types', packageTypes);
+        fetchData('/product-types', products);
+        fetchData('/sensor-types', sensorTypes);
+    }
+
 });
 
 // Handle form submission

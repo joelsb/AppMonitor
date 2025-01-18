@@ -36,7 +36,8 @@ public class VolumeService {
     public Response getAllVolumes() {
         if (securityContext.isUserInRole("Customer")) {
             var volumes = volumeBean.findAllCustomerVolumes(securityContext.getUserPrincipal().getName());
-            var volumesDTO = VolumeDTO.fromSimple(volumes);
+            var volumesDTO = VolumeDTO.fromCustomer(volumes);
+
             return Response.ok(volumesDTO).build();
         }
         if(securityContext.isUserInRole("Manager") || securityContext.isUserInRole("Admin")){

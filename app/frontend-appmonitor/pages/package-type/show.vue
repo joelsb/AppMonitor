@@ -8,7 +8,7 @@
         <div class="flex-row justify-between flex items-center">
             <span class="text-lg text-gray-600">View all package types available in the app.</span>
             <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                Voltar
+              🔙 Back
             </button>
         </div>
 
