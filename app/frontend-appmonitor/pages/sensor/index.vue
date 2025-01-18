@@ -8,18 +8,18 @@
 
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h2 class="text-2xl font-semibold mb-4">User Page</h2>
-                <p class="mb-4 text-lg text-gray-600">See all the users.</p>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="userPage">
-                    Users</button>
+                <h2 class="text-2xl font-semibold mb-4">Sensor Page</h2>
+                <p class="mb-4 text-lg text-gray-600">See all the sensors.</p>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="sensorPage">
+                    Sensors</button>
             </div>
         </div>
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h2 class="text-2xl font-semibold mb-4">New User Page</h2>
-                <p class="mb-4 text-lg text-gray-600">See all the users.</p>
-                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="newUserPage">
-                    New User</button>
+                <h2 class="text-2xl font-semibold mb-4">Add Value Page</h2>
+                <p class="mb-4 text-lg text-gray-600">Add value to a sensor.</p>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="addValuePage">
+                    Add Value</button>
                 </div>
         </div>
     </div>
@@ -29,10 +29,10 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // Navigate to the delivery page
-const userPage = () => {
-    router.push('/admin/users');
+const sensorPage = () => {
+    router.push('/sensor/sensors');
 };
-const newUserPage = () => {
-    router.push('/admin/newUser');
+const addValuePage = () => {
+    router.push('/sensor/addValue');
 };
 </script>
