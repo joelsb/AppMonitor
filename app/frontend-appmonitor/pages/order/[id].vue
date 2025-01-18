@@ -1,10 +1,10 @@
 <template>
     <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-4">Order Details</h2>
+        
         <p v-if="loading">Loading...</p>
         <p v-if="error" class="text-red-500">{{ error }}</p>
         <div v-if="order">
-            <p><strong>Order ID:</strong> {{ order.id }}</p>
+            <h2 class="text-2xl font-semibold mb-4">Order {{ order.id }} Details</h2>
             <p><strong>Customer Name:</strong> {{ order.customerUsername }}</p>
             <p><strong>Created Date:</strong> {{ order.createdDate }}</p>
             <p><strong>Delivered Date:</strong> {{ order.deliveredDate || 'Por entregar' }}</p>

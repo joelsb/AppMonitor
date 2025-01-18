@@ -39,6 +39,8 @@ public class VolumeBean {
     @EJB
     private ProductRecordBean productRecordBean;
 
+    @EJB
+    private SensorTypeBean sensorTypeBean;
 
     private static final Logger logger = Logger.getLogger("VolumeBean");
 
@@ -77,6 +79,19 @@ public class VolumeBean {
 //        productRecord.setVolume(volume);
 //        return volume;
 //    }
+
+    public List<Volume> findAvailableVolumes() {
+        var volumes = entityManager.createNamedQuery("getAvailableVolumes", Volume.class).getResultList();
+
+        return volumes;
+    }
+
+    public List<Volume> findAllCustomerVolumes(String username) {
+        var volumes = entityManager.createNamedQuery("getVolumesByCustomer", Volume.class)
+                .setParameter("username", username)
+                .getResultList();
+        return volumes;
+    }
 
     public Volume find(long id) throws MyEntityNotFoundException {
         var volume = entityManager.find(Volume.class, id);
@@ -261,6 +276,7 @@ public class VolumeBean {
     }
 
     // Extracted helper method for clarity and reusability
+
     private void validateMandatorySensors(VolumeValidationResult result, HashMap<Long, Integer> mandatorySensors) throws MyEntityNotFoundException {
         // Check for missing or insufficient sensors
         var missingSensors = mandatorySensors.entrySet().stream()
@@ -272,9 +288,9 @@ public class VolumeBean {
                             .count();
                     return actualCount < requiredCount; // Check if the count is insufficient
                 })
-                .map(entry -> "{ SensorTypeId: '" + entry.getKey() + "' " +
+                .map(entry -> "<br>{ SensorTypeName: '" + sensorTypeBean.find(entry.getKey()).getName()  + "' " +
                         ", Actual: '" + result.getSensorTypes().stream().filter(sensor -> sensor.getId()==entry.getKey()).count() + "' " +
-                        ", Required: '" + entry.getValue() + "' }")
+                        ", Required: '" + entry.getValue() + "' }<br>")
 
                 .collect(Collectors.toList());
 

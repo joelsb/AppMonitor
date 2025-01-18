@@ -12,7 +12,9 @@ import java.util.List;
 @NamedQueries(
         {
                 @NamedQuery(name = "getAllVolumes", query = "SELECT v FROM Volume v ORDER BY v.id, v.sentDate"),
-                @NamedQuery(name = "getVolumesByOrder", query = "SELECT v FROM Volume v WHERE v.order = :order ORDER BY v.id, v.sentDate")
+                @NamedQuery(name = "getVolumesByOrder", query = "SELECT v FROM Volume v WHERE v.order = :order ORDER BY v.id, v.sentDate"),
+                @NamedQuery(name = "getAvailableVolumes", query = "SELECT v FROM Volume v WHERE v.deliveredDate = null ORDER BY v.sentDate"),
+                @NamedQuery(name = "getVolumesByCustomer", query = "SELECT v FROM Volume v WHERE v.order.customer.username = :username ORDER BY v.id, v.sentDate"),
         }
 )
 @Entity

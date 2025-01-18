@@ -24,12 +24,12 @@
 
     <!-- Conditionally render OrderForm or VolumeForm based on isOrderCreated -->
     <div v-if="isOrderCreated === true">
-        <VolumeForm :orders="orders" :packageTypes="packageTypes" :products="products" :sensorTypes="sensorTypes"
+        <VolumeForm :sensors = "sensors" :orders="orders" :volumes="volumes" :packageTypes="packageTypes" :products="products" :sensorTypes="sensorTypes"
             @formSubmitted="handleFormSubmission" @infoMandatorySensors="handleInfoMandatorySensors" @infoMandatoryPackage="handleInfoMandatoryPackage" />
     </div>
 
     <div v-if="isOrderCreated === false">
-        <OrderForm :customers="customers" :packageTypes="packageTypes" :products="products" :sensorTypes="sensorTypes"
+        <OrderForm :sensors = "sensors"  :customers="customers" :orders="orders" :volumes="volumes" :packageTypes="packageTypes" :products="products" :sensorTypes="sensorTypes"
             @formSubmitted="handleFormSubmission" @infoMandatorySensors="handleInfoMandatorySensors" @infoMandatoryPackage="handleInfoMandatoryPackage"/>
     </div>
 
@@ -58,6 +58,8 @@ const packageTypes = ref([]);
 const products = ref([]);
 const sensorTypes = ref([]);
 const orders = ref([]);
+const volumes = ref([]);
+const sensors = ref([]);
 
 // PopUp state
 const showPopup = ref(false);
@@ -79,10 +81,12 @@ const fetchData = async (url, targetRef) => {
 
 const fetchAll = async () => {
     fetchData('/customers', customers);
-    fetchData('/orders', orders);
+    fetchData('/volumes/available', volumes);
+    fetchData('/orders/available', orders);
     fetchData('/package-types', packageTypes);
     fetchData('/product-types', products);
     fetchData('/sensor-types', sensorTypes);
+    fetchData('/sensors', sensors);
 };
 
 onMounted(() => {

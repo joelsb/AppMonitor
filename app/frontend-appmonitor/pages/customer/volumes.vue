@@ -21,7 +21,10 @@
 
             <!-- volumes Table -->
             <div v-if="!loading && !error" class="table-container">
-                <table aria-label="volumes table" class="table w-full">
+                <div v-if="volumes.length === 0" class="text-center text-gray-500">
+                    Ainda sem volumes
+                </div>
+                <table v-if="volumes.length > 0" aria-label="volumes table" class="table w-full">
                     <thead>
                         <tr>
                             <th class="p-3 font-semibold text-left">Volume ID</th>
@@ -50,7 +53,7 @@
                 </table>
 
                 <!-- Pagination -->
-                <div class="flex justify-between items-center mt-4">
+                <div v-if="volumes.length > 0"  class="flex justify-between items-center mt-4">
                     <button 
                         @click="prevPage" 
                         :disabled="currentPage === 1" 
