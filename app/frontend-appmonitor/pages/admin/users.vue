@@ -101,7 +101,6 @@ const totalPages = computed(() => Math.ceil(users.value.length / pageSize));
 
 // Função para ver os detalhes do pedido e redirecionar
 const viewuserDetails = (username) => {
-    console.log("Navigating to userDetails with id:", username);  // Verifique se o id está correto
     router.push({ name: 'user-username', params: { username: username } });
 };
 

@@ -14,7 +14,7 @@
         </div>
 
         <div v-if="filteredItems.length === 0" class="text-center text-gray-500">
-                    Sem {{ deliveryType }} para entregar
+                    Sem {{ deliveryType }}s para entregar
                 </div>
                 <table v-if=" filteredItems.length > 0" class="min-w-full table-auto border-collapse mt-4">
             <thead>
@@ -74,7 +74,7 @@ const errorMessage = ref(null);
 // Filtered items computed property
 const filteredItems = computed(() => {
     const items = deliveryType === 'Volume' ? volumes : orders;
-
+    console.log(items);
     return items
         .filter(item => filter.value === 'all' || !item.deliveredDate)
         .sort((a, b) => {

@@ -1,11 +1,8 @@
 <template>
     <div class="card">
-        <!-- <div class="card-header">
-            <h2>{{ isEditing ? "Edit Profile" : "Profile" }}</h2>
-        </div> -->
         <div class="card-body">
             <!-- Edit Mode Toggle Switch -->
-            <div class="flex justify-end items-center">
+            <div v-if="!isCreate" class="flex justify-end items-center">
                 <label for="editProfileSwitch" class="block font-semibold text-lg mr-3">Edit Mode</label>
                 <label for="editProfileSwitch" class="inline-flex relative items-center cursor-pointer">
                     <input type="checkbox" id="editProfileSwitch" v-model="isEditing" class="sr-only" />
@@ -16,18 +13,31 @@
                 </label>
                 <span class="ml-4 text-lg">{{ isEditing ? 'Editing' : 'View' }}</span>
             </div>
-            <form class="form" @submit.prevent="updateProfile">
+            <form class="form" @submit.prevent="isCreate ? createProfile() : updateProfile()">
                 <!-- Role -->
                 <div class="form-group">
                     <label for="role">Role</label>
-                    <input type="text" id="role" v-model="userRole" class="form-control" disabled />
+                    <select id="role" v-model="form.role" class="form-control" :disabled="!isEditing || !isCreate">
+                        <!-- Populate roles dynamically -->
+                        <option v-if="form.role && !isCreate" :value="form.role" >{{ form.role }}</option>
+                        <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
+                    </select>
                 </div>
+
 
                 <!-- Username -->
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" v-model="form.username" class="form-control" disabled />
+                    <input type="text" id="username" v-model="form.username" class="form-control"
+                        :disabled="!isEditing || !isCreate" />
                 </div>
+                <!-- Password if isCreate -->
+                <div v-if="isCreate" class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" v-model="form.password" class="form-control"
+                        :disabled="!isEditing || !isCreate" />
+                </div>
+
 
                 <!-- Email -->
                 <div class="form-group">
@@ -63,12 +73,10 @@
                     </ul>
                 </div>
 
-
-
                 <!-- Save Button (Only in Edit Mode) -->
                 <div v-if="isEditing" class="edit-button">
                     <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-                        Save Changes
+                        {{ isCreate ? 'Create '+form.role : 'Save changes' }}
                     </button>
                 </div>
             </form>
@@ -77,20 +85,27 @@
 </template>
 
 <script setup>
+import { useRuntimeConfig } from '#imports';
 import { ref, defineProps, defineEmits, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/store/auth-store';
 
+const config = useRuntimeConfig();
+const apiUrl = config.public.API_URL;
+
 const props = defineProps({
     userData: Object, // Initial data
-    editProfile: Boolean
+    editProfile: Boolean,
+    create: Boolean // New prop to handle user creation
 });
 
-const userRole = useAuthStore().user.role;
+const userRole = ref(null);
+const isEditing = ref(props.editProfile);
 
-const isEditing = ref(false);
+const isCreate = ref(props.create); // Flag to determine if we're creating a new user
 
-const emit = defineEmits(["updateProfile"]);
+const roles = ref([]); // To store the fetched roles
+const emit = defineEmits(["updateProfile", "createProfile"]);
 
 const router = useRouter();
 const user = useAuthStore().user;
@@ -98,9 +113,32 @@ const messages = ref([]);
 
 const form = ref({ ...props.userData });
 
+// Fetch available roles from the API
+onMounted(async () => {
+    if (!isCreate.value) return; // Don't fetch roles if we're not creating a new user
+    try {
+        const response = await fetch(`${apiUrl}/users/roles`);
+        const data = await response.json();
+        userRole.value = data.roles[0];
+        form.value.role = userRole; // Set the role to the user's role by default
+        roles.value = data.roles; // Assuming the API returns a list of roles
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+    }
+});
+
+// Watch for changes in the passed userData and create prop
 watch(() => props.userData, (newData) => {
     form.value = { ...newData };
 }, { deep: true });
+
+watch(() => props.create, (newCreate) => {
+    isCreate.value = newCreate;
+    if (newCreate) {
+        form.value.role = ''; // Ensure role is empty when creating a user
+        form.value.username = ''; // Ensure username is empty when creating a user
+    }
+});
 
 watch(() => props.editProfile, (newEditProfile) => {
     isEditing.value = newEditProfile;
@@ -108,6 +146,10 @@ watch(() => props.editProfile, (newEditProfile) => {
 
 function updateProfile() {
     emit("updateProfile", form.value);
+}
+
+function createProfile() {
+    emit("createProfile", form.value);
 }
 
 </script>
@@ -118,11 +160,13 @@ function updateProfile() {
     flex-direction: column;
     gap: 1rem;
 }
+
 .card-body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
+
 .edit-button {
     display: flex;
     justify-content: flex-end;

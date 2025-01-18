@@ -80,6 +80,9 @@ const closePopup = () => {
 .popup-messages {
     list-style-type: disc;
     margin-left: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 .popup-single-message {
     margin-bottom: 7px;
