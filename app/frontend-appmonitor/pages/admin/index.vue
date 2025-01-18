@@ -15,10 +15,22 @@
             </div>
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-semibold mb-4">New User Page</h2>
-                <p class="mb-4 text-lg text-gray-600">See all the users.</p>
+                <p class="mb-4 text-lg text-gray-600">New user page.</p>
                 <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="newUserPage">
                     New User</button>
-                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-4">Product Type Page</h2>
+                <p class="mb-4 text-lg text-gray-600">See all product types.</p>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="productTypePage">
+                    Product Types</button>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-4">New Product Type Page</h2>
+                <p class="mb-4 text-lg text-gray-600">New product type page.</p>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" @click="newProductTypePage">
+                    New Product Type</button>
+            </div>
         </div>
     </div>
 </template>
@@ -32,5 +44,11 @@ const userPage = () => {
 };
 const newUserPage = () => {
     router.push('/admin/newUser');
+};
+const productTypePage = () => {
+    router.push('/admin/productType');
+};
+const newProductTypePage = () => {
+    router.push('/admin/newProductType');
 };
 </script>
