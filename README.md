@@ -31,6 +31,5 @@ Este projeto visa o desenvolvimento de uma aplicação empresarial de monitoriza
   - Frontend: Interface de apresentação para simulação e interação com os sistemas externos e backend.
 
 **Requisitos**
-  A aplicação será auto-contida, não dependendo de sistemas externos.
-  
-  O backend será implementado utilizando o modelo REST Service, com foco na modularidade e boas práticas arquiteturais como MVC e ORM.
+  - A aplicação será auto-contida, não dependendo de sistemas externos.
+  - O backend será implementado utilizando o modelo REST Service, com foco na modularidade e boas práticas arquiteturais como MVC e ORM.
