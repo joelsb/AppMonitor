@@ -3,10 +3,10 @@
         <!-- NavBar -->
         <NavBar />
 
-        <!-- user Table Section -->
+        <!-- sensor Table Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">User Page</h2>
-            <p class="mb-4 text-lg text-gray-600">See all the users.</p>
+            <h2 class="text-2xl font-semibold mb-4">Sensor Page</h2>
+            <p class="mb-4 text-lg text-gray-600">See all the sensors.</p>
 
             <!-- Loading Indicator -->
             <div v-if="loading" class="flex justify-center items-center">
@@ -19,32 +19,30 @@
             <!-- Error Message -->
             <div v-if="error" class="text-red-500 text-center mb-4">{{ error }}</div>
 
-            <!-- users Table -->
+            <!-- sensors Table -->
             <div v-if="!loading && !error" class="table-container">
-                <div v-if="users.length === 0" class="text-center text-gray-500">
-                    Ainda sem users 
+                <div v-if="sensors.length === 0" class="text-center text-gray-500">
+                    No sensors yet
                 </div>
-                <table v-if="users.length > 0" aria-label="users table" class="table w-full">
+                <table v-if="sensors.length > 0" aria-label="sensors table" class="table w-full">
                     <thead>
                         <tr>
-                            <th class="p-3 font-semibold text-left">Userame</th>
-                            <th class="p-3 font-semibold text-left">Name</th>
-                            <th class="p-3 font-semibold text-left">Email</th>
-                            <th class="p-3 font-semibold text-left">Role</th>
+                            <th class="p-3 font-semibold text-left">Id</th>
+                            <th class="p-3 font-semibold text-left">Type</th>
+                            <th class="p-3 font-semibold text-left">Value</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in paginatedUsers" :key="user.id">
+                        <tr v-for="sensor in paginatedSensors" :key="sensor.id">
                             <td class="p-3">
                                 <button 
-                                    @click="viewuserDetails(user.username)" 
+                                    @click="viewsensorDetails(sensor.id)" 
                                     class="text-blue-600 hover:underline">
-                                    {{ user.username }}
+                                    {{ sensor.id }}
                                 </button>
                             </td>
-                            <td class="p-3">{{ user.name }}</td>
-                            <td class="p-3">{{ user.email }}</td>
-                            <td class="p-3">{{ user.role }}</td>
+                            <td class="p-3">{{ sensor.sensorType.name }}</td>
+                            <td class="p-3">{{ sensor.history && sensor.history.length > 0 ? sensor.history[0].value : 'Sem valor disponível'}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -85,38 +83,37 @@ const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 
 // Reactive Data
-const users = ref([]);
+const sensors = ref([]);
 const loading = ref(false);
 const error = ref(null);
 const currentPage = ref(1);
 const pageSize = 10;
 
-// Computed Paginated users
-const paginatedUsers = computed(() => 
-    users.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
+// Computed Paginated sensors
+const paginatedSensors = computed(() => 
+    sensors.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
 );
 
 // Total Pages
-const totalPages = computed(() => Math.ceil(users.value.length / pageSize));
+const totalPages = computed(() => Math.ceil(sensors.value.length / pageSize));
 
 // Função para ver os detalhes do pedido e redirecionar
-const viewuserDetails = (username) => {
-    console.log("Navigating to userDetails with id:", username);  // Verifique se o id está correto
-    router.push({ name: 'user-username', params: { username: username } });
+const viewsensorDetails = (id) => {
+    router.push({ name: 'sensor-id', params: { id: id } });
 };
 
 
 
-// Fetch users Function
-const fetchUsers = async () => {
+// Fetch sensors Function
+const fetchSensors = async () => {
     loading.value = true;
     error.value = null;
     try {
-        const response = await fetch(`${apiUrl}/users`);
+        const response = await fetch(`${apiUrl}/sensors`);
         if (!response.ok) {
             throw new Error(`Failed to fetch: ${response.statusText}`);
         }
-        users.value = await response.json();
+        sensors.value = await response.json();
     } catch (err) {
         error.value = err.message;
         console.error(err);
@@ -140,7 +137,7 @@ const prevPage = () => {
 
 // Fetch Data on Mount
 onMounted(() => {
-    fetchUsers();
+    fetchSensors();
 });
 </script>
 
@@ -151,13 +148,13 @@ onMounted(() => {
 }
 
 .table {
-    buser-collapse: collapse;
+    border-collapse: collapse;
     width: 100%;
 }
 
 .table th,
 .table td {
-    buser: 1px solid #ccc;
+    border: 1px solid #ccc;
     padding: 0.75rem;
 }
 

@@ -6,11 +6,18 @@
         <!-- volume Table Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
             <h2 class="text-2xl font-semibold mb-4">Volume Page</h2>
-            <p class="mb-4 text-lg text-gray-600">See all the volumes.</p>
+            <div class="mb-4 flex-row justify-between flex items-center">
+                <span class=" text-lg text-gray-600">See all the volumes.</span>
 
+                <button @click="router.go(-1)"
+                    class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                  🔙 Back
+                </button>
+            </div>
             <!-- Loading Indicator -->
             <div v-if="loading" class="flex justify-center items-center">
-                <svg class="animate-spin h-8 w-8 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin h-8 w-8 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                 </svg>
@@ -22,7 +29,7 @@
             <!-- volumes Table -->
             <div v-if="!loading && !error" class="table-container">
                 <div v-if="volumes.length === 0" class="text-center text-gray-500">
-                    Ainda sem volumes
+                    No volumes yet
                 </div>
                 <table v-if="volumes.length > 0" aria-label="volumes table" class="table w-full">
                     <thead>
@@ -36,9 +43,7 @@
                     <tbody>
                         <tr v-for="volume in paginatedVolumes" :key="volume.id">
                             <td class="p-3">
-                                <button 
-                                    @click="viewvolumeDetails(volume.id)" 
-                                    class="text-blue-600 hover:underline">
+                                <button @click="viewvolumeDetails(volume.id)" class="text-blue-600 hover:underline">
                                     {{ volume.id }}
                                 </button>
                             </td>
@@ -53,17 +58,13 @@
                 </table>
 
                 <!-- Pagination -->
-                <div v-if="volumes.length > 0"  class="flex justify-between items-center mt-4">
-                    <button 
-                        @click="prevPage" 
-                        :disabled="currentPage === 1" 
+                <div v-if="volumes.length > 0" class="flex justify-between items-center mt-4">
+                    <button @click="prevPage" :disabled="currentPage === 1"
                         class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
                         Previous
                     </button>
                     <span>Page {{ currentPage }}</span>
-                    <button 
-                        @click="nextPage" 
-                        :disabled="currentPage === totalPages" 
+                    <button @click="nextPage" :disabled="currentPage === totalPages"
                         class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
                         Next
                     </button>
@@ -71,7 +72,7 @@
             </div>
         </div>
     </div>
-   
+
 </template>
 
 <script setup>
@@ -95,7 +96,7 @@ const currentPage = ref(1);
 const pageSize = 10;
 
 // Computed Paginated volumes
-const paginatedVolumes = computed(() => 
+const paginatedVolumes = computed(() =>
     volumes.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
 );
 
@@ -120,6 +121,7 @@ const fetchvolumes = async () => {
             throw new Error(`Failed to fetch: ${response.statusText}`);
         }
         volumes.value = await response.json();
+        console.log("volumes", volumes.value);
     } catch (err) {
         error.value = err.message;
         console.error(err);
@@ -154,13 +156,13 @@ onMounted(() => {
 }
 
 .table {
-    bvolume-collapse: collapse;
+    border-collapse: collapse;
     width: 100%;
 }
 
 .table th,
 .table td {
-    bvolume: 1px solid #ccc;
+    border: 1px solid #ccc;
     padding: 0.75rem;
 }
 

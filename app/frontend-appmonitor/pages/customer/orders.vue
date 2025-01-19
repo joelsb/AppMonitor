@@ -6,7 +6,14 @@
         <!-- Order/User Toggle Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
             <h2 class="text-2xl font-semibold mb-4">My Orders Page</h2>
+            <div class="mb-4 flex-row justify-between flex items-center">
+                <span class=" text-lg text-gray-600">See all my orders.</span>
 
+                <button @click="router.go(-1)"
+                    class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                  🔙 Back
+                </button>
+            </div>
             <!-- Loading Indicator -->
             <div v-if="loading" class="flex justify-center items-center">
                 <svg
@@ -37,7 +44,7 @@
             <!-- Orders Table -->
             <div v-if="!loading && !error && !showUsers" class="table-container">
                 <div v-if="orders.length === 0" class="text-center text-gray-500">
-                    Ainda sem orders
+                    No orders yet
                 </div>
                 <table v-if="orders.length > 0" aria-label="Orders table" class="table w-full">
                     <thead>

@@ -86,7 +86,7 @@ const fetchAll = async () => {
     fetchData('/package-types', packageTypes);
     fetchData('/product-types', products);
     fetchData('/sensor-types', sensorTypes);
-    fetchData('/sensors', sensors);
+    //fetchData('/sensors', sensors);
 };
 
 onMounted(() => {

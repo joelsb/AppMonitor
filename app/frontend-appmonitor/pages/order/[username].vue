@@ -6,11 +6,18 @@
         <!-- User Orders Table -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
             <h2 class="text-2xl font-semibold mb-4">Orders for {{ username }}</h2>
-            <p class="mb-4 text-lg text-gray-600">All orders for this user are listed below.</p>
+            <div class="mb-3 flex-row justify-between flex items-center">
+                <span class="text-lg text-gray-600">All orders for this user are listed below.</span>
 
+                <button @click="router.go(-1)"
+                    class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                  🔙 Back
+                </button>
+            </div>
             <!-- Loading Indicator -->
             <div v-if="loading" class="flex justify-center items-center">
-                <svg class="animate-spin h-8 w-8 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin h-8 w-8 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                 </svg>
@@ -33,9 +40,7 @@
                     <tbody>
                         <tr v-for="order in userOrders" :key="order.id">
                             <td class="p-3">
-                                <button 
-                                    @click="viewOrderDetails(order.id)" 
-                                    class="text-blue-600 hover:underline">
+                                <button @click="viewOrderDetails(order.id)" class="text-blue-600 hover:underline">
                                     {{ order.id }}
                                 </button>
                             </td>
@@ -43,7 +48,7 @@
                             <td class="p-3">
                                 {{ order.deliveredDate ? 'Entregue' : 'Por entregar' }}
                             </td>
-                            <td class="p-3">{{ order.volumes.length }}</td>
+                            <td class="p-3">{{ order.volumes ? order.volumes.length : 0 }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -77,9 +82,10 @@ const fetchUserOrders = async () => {
     try {
         const response = await fetch(`${apiUrl}/customers/${username}/orders`);
         if (!response.ok) {
-            throw new Error(`Failed to fetch orders for ${username}: ${response.statusText}`);
+            console.log("Failed to fetch orders:", response.text());
         }
         userOrders.value = await response.json();
+        userOrders.value = userOrders.value.orders;
     } catch (err) {
         error.value = err.message;
     } finally {

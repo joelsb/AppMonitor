@@ -77,8 +77,9 @@ public class OrderService {
             // write to the log the principal.getName() and the username
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        orderDTO.setCustomerUsername(null);
-
+        if(securityContext.isUserInRole("Customer")){
+            orderDTO.setCustomerUsername(null);
+        }
         var volumesDTO = VolumeDTO.from(order.getVolumes());
         for (VolumeDTO volumeDTO : volumesDTO) {
             volumeDTO.setOrderId(null);
@@ -93,9 +94,6 @@ public class OrderService {
     public Response getAvailableOrders() {
         var orders = orderBean.findAvailableOrdersWithVolumes();
         var ordersDTO = OrderDTO.from(orders);
-        for (OrderDTO orderDTO : ordersDTO) {
-            orderDTO.setCustomerUsername(null);
-        }
         return Response.ok(ordersDTO).build();
     }
 

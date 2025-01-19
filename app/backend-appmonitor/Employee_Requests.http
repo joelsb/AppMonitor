@@ -10,59 +10,28 @@ Accept: application/json
 
 > {% client.global.set('jwt-token', response.body) %}
 
-### REQUEST USER INFO
-GET {{url}}/auth/user
-Accept: application/json
+### Get Employee by Username (ADMIN AND EMPLOYEE)
+GET {{url}}/employees/Jose
 Authorization: Bearer {{jwt-token}}
-
-### CHANGE PASSWORD
-PATCH {{url}}/auth/{{username}}/change-password
 Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{jwt-token}}
-
-{
-  "currentPassword": "123",
-  "newPassword": "1234",
-  "newPasswordConfirmation": "1234"
-}
-
-
-
-
-
 
 ### GET ALL CUSTOMERS (EMPLOYEE AND ADMIN)
 GET {{url}}/customers/
 Accept: application/json
 Authorization: Bearer {{jwt-token}}
 
+### GET ALL PRODUCT TYPES (ADMIN AND EMPLOYEE)
+GET {{url}}/product-types/
+Authorization: Bearer {{jwt-token}}
 
+### GET ALL PACKAGE TYPES (ADMIN AND EMPLOYEE)
+GET {{url}}/package-types/
+Authorization: Bearer {{jwt-token}}
 
-
-
-
-
-### Get Employee by Username (ADMIN AND EMPLOYEE)
-GET {{url}}/employees/Jose
+### GET All Sensor Types (EMPLOYEE AND ADMIN)
+GET {{url}}/sensor-types
 Authorization: Bearer {{jwt-token}}
 Content-Type: application/json
-
-### Update Employee (ADMIN AND EMPLOYEE)
-PUT {{url}}/employees/Jose
-Authorization: Bearer {{jwt-token}}
-Content-Type: application/json
-
-{
-  "name": "Updated Employee Name",
-  "email": "updated.email@example.com",
-  "warehouse": "Updated Warehouse Location"
-}
-
-
-
-
-
 
 ### GET AVAILABLE ORDERS (EMPLOYEE AND ADMIN)
 GET {{url}}/orders/available
@@ -78,7 +47,7 @@ Content-Type: application/json
   "customerUsername": "Tiago",
   "createdDate": "2024-11-20 21:00:00",
   "volume": {
-    "id": 121,
+    "id": 120,
     "sentDate": "2024-11-21 21:00:00",
     "packageTypeId": 2,
     "products": [
@@ -103,58 +72,6 @@ Content-Type: application/json
     ]
   }
 }
-
-### DELIVER ORDER (ADMIN AND EMPLOYEE)
-PATCH {{url}}/orders/30/deliver
-Authorization: Bearer {{jwt-token}}
-
-
-
-
-
-
-
-### GET ALL PACKAGE TYPES (ADMIN AND EMPLOYEE)
-GET {{url}}/package-types/
-Authorization: Bearer {{jwt-token}}
-
-### GET MANDATORY SENSORS FOR PACKAGE TYPE (ADMIN AND EMPLOYEE)
-GET {{url}}/package-types/1/mandatory-sensors
-Authorization: Bearer {{jwt-token}}
-
-
-
-
-
-
-
-### GET ALL PRODUCT TYPES (ADMIN AND EMPLOYEE)
-GET {{url}}/product-types/
-Authorization: Bearer {{jwt-token}}
-
-### GET MANDATORY SENSORS FOR PRODUCT TYPE (ADMIN AND EMPLOYEE)
-GET {{url}}/product-types/1/mandatory-sensors
-Authorization: Bearer {{jwt-token}}
-
-
-
-
-
-
-### GET All Sensor Types (EMPLOYEE AND ADMIN)
-GET {{url}}/sensor-types
-Authorization: Bearer {{jwt-token}}
-Content-Type: application/json
-
-
-
-
-
-
-### PATCH Set Volume Delivered (EMPLOYEE AND ADMIN)
-PATCH {{url}}/volumes/103/deliver
-Authorization: Bearer {{jwt-token}}
-Content-Type: application/json
 
 ### POST Add New Volume (EMPLOYEE AND ADMIN)
 POST {{url}}/volumes
@@ -188,6 +105,51 @@ Content-Type: application/json
   ]
 }
 
+### GET MANDATORY SENSORS FOR PRODUCT TYPE (ADMIN AND EMPLOYEE)
+GET {{url}}/product-types/1/mandatory-sensors
+Authorization: Bearer {{jwt-token}}
+
+### GET MANDATORY SENSORS FOR PACKAGE TYPE (ADMIN AND EMPLOYEE)
+GET {{url}}/package-types/1/mandatory-sensors
+Authorization: Bearer {{jwt-token}}
+
+### PATCH Set Volume Delivered (EMPLOYEE AND ADMIN)
+PATCH {{url}}/volumes/103/deliver
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+### DELIVER ORDER (ADMIN AND EMPLOYEE)
+PATCH {{url}}/orders/30/deliver
+Authorization: Bearer {{jwt-token}}
+
 ### GET ALL AVAILABLE VOLUMES (EMPLOYEE AND ADMIN)
 GET {{url}}/volumes/available
 Authorization: Bearer {{jwt-token}}
+
+### REQUEST USER INFO
+GET {{url}}/auth/user
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+### Update Employee (ADMIN AND EMPLOYEE)
+PUT {{url}}/employees/Jose
+Authorization: Bearer {{jwt-token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Employee Name",
+  "email": "updated.email@example.com",
+  "warehouse": "Updated Warehouse Location"
+}
+
+### CHANGE PASSWORD
+PATCH {{url}}/auth/{{username}}/change-password
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt-token}}
+
+{
+  "currentPassword": "123",
+  "newPassword": "1234",
+  "newPasswordConfirmation": "1234"
+}

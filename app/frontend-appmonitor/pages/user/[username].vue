@@ -1,69 +1,74 @@
 <template>
-    <div v-if="loading" class="text-center py-6">
-        <p>Loading...</p>
-    </div>
-
+    <NavBar />
+    
     <div v-if="error" class="text-center py-6 text-red-500">
         <p>{{ error }}</p>
     </div>
 
-    <div v-if="user">
-        <div class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">User {{ user.username }} Details</h2>
+    <ProfileForm 
+        v-if="userForm.username" 
+        :userData="userForm" 
+        @updateProfile="updateProfile"
+        :editProfile="editProfile"
+    />
 
-            <!-- Informações principais do user -->
-            <div class="space-y-4">
-                <p class="text-gray-700"><strong>Name:</strong> {{ user.name }}</p>
-                <p class="text-gray-700"><strong>Mail:</strong> {{ user.email }}     </p>
-                <p class="text-gray-700"><strong>Role:</strong> {{ user.role }}</p>
-            </div>
+    <Popup 
+        :show="showPopup" 
+        :title="popupTitle" 
+        :messages="popupMessages" 
+        :type="popupType" 
+        @close="closePopup" 
+    />
 
-            <!-- Botão Voltar -->
-            <div class="mt-6 text-center">
-                <button 
-                    @click="goBack"
-                    class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                    Voltar
-                </button>
-            </div>
-        </div>
-    </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#imports';
+import NavBar from '~/components/NavBar.vue';
+import ProfileForm from '~/components/ProfileForm.vue';
+import Popup from '~/components/Popup.vue';
 
-// Obter parâmetros da rota, configuração de API e roteador
+// Setup API
 const route = useRoute();
-const router = useRouter();
 const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 
-// Definição de variáveis reativas
-const user = ref(null);
+// State variables
+const userForm = ref({});
 const loading = ref(false);
 const error = ref(null);
+const showPopup = ref(false);
+const popupTitle = ref('');
+const popupMessages = ref([]);
+const popupType = ref('info');
+const editProfile = ref(false);
 
-// Função para buscar detalhes do user
+// Fetch user data
 const fetchUserDetails = async () => {
-    const username = route.params.username; // Obter o ID do user da rota
+    loading.value = true;
+    error.value = null;
+    const username = route.params.username;
+
     if (!username) {
         error.value = "User ID not found in route parameters.";
+        loading.value = false;
         return;
     }
 
-    loading.value = true;
-    error.value = null;
     try {
-        const response = await fetch(`${apiUrl}/users/${username}`);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch user: ${response.statusText}`);
-        }
-        const data = await response.json();
-        // Supondo que o backend retorna um array
-        user.value = Array.isArray(data) ? data[0] : data;
+        // Get user role dynamically
+        const authResponse = await fetch(`${apiUrl}/users/${username}`);
+        const authUser = await authResponse.json();
+        const userRole = authUser.role.toLowerCase() + "s";
+
+        // Fetch user details
+        const response = await fetch(`${apiUrl}/${userRole}/${username}`);
+        if (!response.ok) throw new Error(`Failed to fetch user: ${response.statusText}`);
+        
+        userForm.value = await response.json();
+        userForm.value.role = authUser.role;
     } catch (err) {
         error.value = err.message;
     } finally {
@@ -71,13 +76,57 @@ const fetchUserDetails = async () => {
     }
 };
 
-// Função para voltar à página anterior
-const goBack = () => {
-    window.history.back(); 
+// Update profile function
+const updateProfile = async (formValue) => {
+    editProfile.value = true;
+    popupMessages.value = [];
+    
+    try {
+        // Get user role dynamically
+        const authResponse = await fetch(`${apiUrl}/users/${formValue.username}`);
+        const authUser = await authResponse.json();
+        const userRole = authUser.role.toLowerCase() + "s";
+
+        const response = await fetch(`${apiUrl}/${userRole}/${formValue.username}`, {
+            method: 'PUT',
+            body: JSON.stringify(formValue),
+        });
+
+        const data = response.ok ? await response.json() : await response.text();
+        if (!response.ok) {
+            showPopup.value = true;
+            popupTitle.value = 'Error';
+            popupMessages.value.push(data.message || 'Failed to update profile.');
+            popupType.value = 'error';
+            editProfile.value = true;
+        } else {
+            showPopup.value = true;
+            popupTitle.value = 'Success';
+            popupMessages.value.push('Profile updated successfully!');
+            popupType.value = 'success';
+            editProfile.value = false;
+        }
+    } catch (error) {
+        showPopup.value = true;
+        popupTitle.value = 'Error';
+        popupMessages.value.push('An error occurred during the update.');
+        popupType.value = 'error';
+    }
 };
 
-// Buscar os detalhes do user ao montar o componente
-onMounted(() => {
-    fetchUserDetails();
-});
+// Close popup
+const closePopup = () => {
+    showPopup.value = false;
+    popupMessages.value = [];
+    window.history.back();
+
+};
+
+// Go back
+const goBack = () => {
+    window.history.back();
+};
+
+// Fetch user details on mount
+onMounted(fetchUserDetails);
 </script>

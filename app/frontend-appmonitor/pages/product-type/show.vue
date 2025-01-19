@@ -3,10 +3,15 @@
         <!-- NavBar -->
         <NavBar />
 
-        <!-- volume Table Section -->
+        <!-- productType Table Section -->
         <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Volume Page</h2>
-            <p class="mb-4 text-lg text-gray-600">See all the volumes.</p>
+            <h2 class="text-2xl font-semibold mb-4">Product Type Page</h2>
+            <div class="flex-row justify-between flex items-center mb-4">
+            <span class="text-lg text-gray-600">See all the Product Types available in the app.</span>
+            <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+              🔙 Back
+            </button>
+        </div>
 
             <!-- Loading Indicator -->
             <div v-if="loading" class="flex justify-center items-center">
@@ -19,35 +24,40 @@
             <!-- Error Message -->
             <div v-if="error" class="text-red-500 text-center mb-4">{{ error }}</div>
 
-            <!-- volumes Table -->
+            <!-- productTypes Table -->
             <div v-if="!loading && !error" class="table-container">
-                <div v-if="volumes.length === 0" class="text-center text-gray-500">
-                    No volumes yet
+                <div v-if="productTypes.length === 0" class="text-center text-gray-500">
+                    No produtos yet
                 </div>
-                <table v-if="volumes.length > 0" aria-label="volumes table" class="table w-full">
+                <table v-if="productTypes.length > 0" aria-label="productTypes table" class="table w-full">
                     <thead>
                         <tr>
-                            <th class="p-3 font-semibold text-left">Volume ID</th>
-                            <th class="p-3 font-semibold text-left">Order ID</th>
-                            <th class="p-3 font-semibold text-left">Volume Created Date</th>
-                            <th class="p-3 font-semibold text-left">Status</th>
+                            <th class="p-3 font-semibold text-left">Id</th>
+                            <th class="p-3 font-semibold text-left">Name</th>
+                            <th class="p-3 font-semibold text-left">Mandatory Package</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="volume in paginatedVolumes" :key="volume.id">
+                        <tr v-for="productType in paginatedUsers" :key="productType.id">
                             <td class="p-3">
                                 <button 
-                                    @click="viewvolumeDetails(volume.id)" 
+                                    @click="viewproductTypeDetails(productType.id)" 
                                     class="text-blue-600 hover:underline">
-                                    {{ volume.id }}
+                                    {{ productType.id }}
                                 </button>
                             </td>
-                            <td class="p-3">{{ volume.orderId }}</td>
-                            <td class="p-3">{{ new Date(volume.sentDate).toLocaleString() }}</td>
-                            <td class="p-3">
-                                {{ volume.deliveredDate ? 'Entregue' : 'Por entregar' }}
+                            <td class="p-3">{{ productType.name }}</td>
+                            <td class="p-3">{{ productType.mandatoryPackage ? "Yes" : "No" }}</td>
+                        </tr>
+                        <!-- CREATE A NEW PRODUCT TYPE -->
+                        <tr>
+                            <td class="p-3 flex-row justify-end" colspan="3">
+                                <button 
+                                    @click="router.push('/product-type/create')" 
+                                    class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">
+                                    Create a new Product Type
+                                </button>
                             </td>
-
                         </tr>
                     </tbody>
                 </table>
@@ -88,38 +98,37 @@ const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 
 // Reactive Data
-const volumes = ref([]);
+const productTypes = ref([]);
 const loading = ref(false);
 const error = ref(null);
 const currentPage = ref(1);
 const pageSize = 10;
 
-// Computed Paginated volumes
-const paginatedVolumes = computed(() => 
-    volumes.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
+// Computed Paginated productTypes
+const paginatedUsers = computed(() => 
+    productTypes.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
 );
 
 // Total Pages
-const totalPages = computed(() => Math.ceil(volumes.value.length / pageSize));
+const totalPages = computed(() => Math.ceil(productTypes.value.length / pageSize));
 
 // Função para ver os detalhes do pedido e redirecionar
-const viewvolumeDetails = (volumeId) => {
-    console.log("Navigating to volumeDetails with id:", volumeId);  // Verifique se o id está correto
-    router.push({ name: 'volume-id', params: { id: volumeId } });
+const viewproductTypeDetails = (id) => {
+    router.push({ name: 'product-type-id', params: { id: id } });
 };
 
 
 
-// Fetch volumes Function
-const fetchvolumes = async () => {
+// Fetch productTypes Function
+const fetchUsers = async () => {
     loading.value = true;
     error.value = null;
     try {
-        const response = await fetch(`${apiUrl}/volumes`);
+        const response = await fetch(`${apiUrl}/product-types`);
         if (!response.ok) {
             throw new Error(`Failed to fetch: ${response.statusText}`);
         }
-        volumes.value = await response.json();
+        productTypes.value = await response.json();
     } catch (err) {
         error.value = err.message;
         console.error(err);
@@ -143,7 +152,7 @@ const prevPage = () => {
 
 // Fetch Data on Mount
 onMounted(() => {
-    fetchvolumes();
+    fetchUsers();
 });
 </script>
 
@@ -154,13 +163,13 @@ onMounted(() => {
 }
 
 .table {
-    bvolume-collapse: collapse;
+    border-collapse: collapse;
     width: 100%;
 }
 
 .table th,
 .table td {
-    bvolume: 1px solid #ccc;
+    border: 1px solid #ccc;
     padding: 0.75rem;
 }
 
@@ -170,5 +179,13 @@ onMounted(() => {
 
 .table td {
     text-align: left;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
 }
 </style>

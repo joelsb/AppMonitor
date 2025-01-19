@@ -1,44 +1,61 @@
 <template>
-    <p v-if="loading">Loading...</p>
-    <p v-if="error" class="text-red-500">{{ error }}</p>
-    <div v-if="sensor">
-        <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Sensor com id {{ sensor.id }} Details</h2>
-            <p class="ml"><strong>Sensor Type:</strong> {{ sensor.sensorType.name }}</p>
-            <p class="ml"><strong>Unit:</strong> {{ sensor.sensorType.unit }}</p>
+    <NavBar />
+    <div class="max-w-4xl mx-auto mt-8 p-8 bg-white rounded-xl shadow-xl border border-gray-200">
+        <!-- Loading and Error States -->
+        <p v-if="loading" class="text-center text-xl text-gray-600 font-semibold">⏳ Loading...</p>
+        <p v-if="error" class="text-center text-red-500 font-semibold">❌ {{ error }}</p>
 
-            <!-- Exibe o valor mais recente do histórico ou uma mensagem caso não haja histórico -->
-            <p class="ml"><strong>Value:</strong> 
-                {{ sensor.history && sensor.history.length > 0 ? sensor.history[0].value : 'Sem valor disponível' }}
-            </p>
+        <!-- Sensor Details -->
+        <div v-if="sensor">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+                📡 Sensor #{{ sensor.id }} - Details
+            </h2>
 
-            <h3 class="text-xl font-semibold mt-4 mb-2">Sensor History</h3>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-300">
+                <p class="text-lg font-medium text-gray-700"><strong>🛠 Sensor Type:</strong> {{ sensor.sensorType.name }}</p>
+                <p class="text-lg font-medium text-gray-700">
+                    <strong>📊 Latest Value: </strong> 
+                    <span class="font-semibold text-blue-600">
+                        {{ sensor.history && sensor.history.length > 0 ? sensor.history[0].value + sensor.sensorType.unit : 'Sem valor disponível' }}
+                    </span>
+                </p>
+            </div>
+
+            <!-- Sensor History -->
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4 border-b pb-2">📜 Sensor History</h3>
             <div v-if="sensor.history && sensor.history.length > 0">
-                <!-- Tabela para exibir o histórico -->
-                <table class="min-w-full table-auto border-collapse border border-gray-300">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border border-gray-300 px-4 py-2 text-left">Time</th>
-                            <th class="border border-gray-300 px-4 py-2 text-left">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(history, index) in sensor.history" :key="index">
-                            <td class="border border-gray-300 px-4 py-2">{{ history.time }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ history.value }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto border-collapse shadow-lg">
+                        <thead>
+                            <tr class="bg-blue-500 text-white text-left">
+                                <th class="border border-blue-600 px-4 py-3">⏰ Time</th>
+                                <th class="border border-blue-600 px-4 py-3">📊 Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(history, index) in sensor.history" :key="index" 
+                                class="hover:bg-gray-100 transition">
+                                <td class="border border-gray-300 px-4 py-2">{{ history.time }}</td>
+                                <td class="border border-gray-300 px-4 py-2 font-semibold text-blue-600">
+                                    {{ history.value }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div v-else>
-                <p class="ml-4">Sem histórico disponível.</p>
+                <p class="text-gray-600 text-lg">⚠️ Sem histórico disponível.</p>
             </div>
 
-            <button 
-                @click="goBack"
-                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
-                Voltar
-            </button>
+            <!-- Back Button -->
+            <div class="mt-8 text-center">
+                <button 
+                    @click="goBack"
+                    class="w-full py-3 bg-blue-500 text-white font-semibold text-lg rounded-full hover:bg-blue-600 transition shadow-md">
+                    🔙 Back
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -47,37 +64,34 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useRuntimeConfig } from '#imports';
+import NavBar from '~/components/NavBar.vue';
 
-// Obter parâmetros da rota, configuração de API e roteador
 const route = useRoute();
 const router = useRouter();
 const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
 
-// Definição de variáveis reativas
 const sensor = ref(null);
 const loading = ref(false);
 const error = ref(null);
 
-// Função para buscar detalhes do sensor
 const fetchSensorDetails = async () => {
-    const sensorId = route.params.id; // Obter o ID do sensor da rota
+    const sensorId = route.params.id;
     if (!sensorId) {
-        error.value = "Sensor ID not found in route parameters.";
+        error.value = "⚠️ Sensor ID not found.";
         return;
     }
-
     loading.value = true;
     error.value = null;
-    try {
-        const response = await fetch(`${apiUrl}/sensors/${sensorId}`); // A URL deve corresponder à sua API
-        if (!response.ok) {
-            throw new Error(`Failed to fetch sensor: ${response.statusText}`);
-        }
-        const data = await response.json();
-        sensor.value = data; // Presumindo que o backend retorna um objeto de sensor
 
-        // Ordenar o histórico pelo tempo mais recente
+    try {
+        const response = await fetch(`${apiUrl}/sensors/${sensorId}`);
+        const data = response.ok ? await response.json() : await response.text();
+        if (!response.ok) {
+            error.value = `Failed to fetch sensor details: ${data}`;
+        }
+        sensor.value = data;
+
         if (sensor.value.history && sensor.value.history.length > 0) {
             sensor.value.history.sort((a, b) => new Date(b.time) - new Date(a.time));
         }
@@ -88,12 +102,10 @@ const fetchSensorDetails = async () => {
     }
 };
 
-// Função para voltar à página anterior
 const goBack = () => {
     window.history.back();
 };
 
-// Buscar os detalhes do sensor ao montar o componente
 onMounted(() => {
     fetchSensorDetails();
 });

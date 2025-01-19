@@ -59,7 +59,7 @@ public class ConfigBean {
     public void populateDB() {
         //create Entities
         try {
-            var loadFromFile = false;
+            var loadFromFile = true;
             if(loadFromFile && xlsxFileBean.isFile("Users") && xlsxFileBean.isFile("ProductTypes") && xlsxFileBean.isFile("SensorTypes") && xlsxFileBean.isFile("PackageTypes")){
                 System.out.println("Populating DB from XLSX files");
                 xlsxFileBean.loadAllFromXlsx();
