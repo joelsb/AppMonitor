@@ -5,6 +5,8 @@ Made by:
 - **Tiago Baptista**  (21919826)
 - **José Pereira** (2211033)
 
+  
+
 **Plataforma de Monitorização de Embalagens Inteligentes**
   
 **Descrição**
@@ -33,3 +35,8 @@ Este projeto visa o desenvolvimento de uma aplicação empresarial de monitoriza
 **Requisitos**
   - A aplicação será auto-contida, não dependendo de sistemas externos.
   - O backend será implementado utilizando o modelo REST Service, com foco na modularidade e boas práticas arquiteturais como MVC e ORM.
+
+
+
+**NOTION LINK:**
+https://obsidian-tile-511.notion.site/DAE-Project-152be976b0918097a072ca3b38f074c9?pvs=74
