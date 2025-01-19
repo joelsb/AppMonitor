@@ -1,57 +1,44 @@
 <template>
     <div class="login-container">
         <div class="login-card">
-            <h2 class="login-title">Login</h2>
+            <h2 class="login-title">Login 👋</h2>
             <form @submit.prevent="login" class="login-form">
                 <!-- Username Field -->
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <!-- <label for="username">Username</label> -->
                     <div class="input-group">
                         <span class="icon">
                             <i class="fas fa-user"></i> <!-- FontAwesome user icon -->
                         </span>
                         <input class="form-control" id="username" v-model="loginFormData.username"
                             placeholder="Enter your username" />
-                        <!-- Error Message for Username -->
-
                     </div>
                 </div>
 
                 <!-- Password Field -->
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <!-- <label for="password">Password</label> -->
                     <div class="input-group">
                         <span class="icon">
                             <i class="fas fa-lock"></i> <!-- FontAwesome lock icon -->
                         </span>
                         <input type="password" class="form-control" id="password" v-model="loginFormData.password"
                             placeholder="Enter your password" />
-                        <!-- Error Message for Password -->
                     </div>
                 </div>
                 
-                <!-- se a password ou username tiverem incorretos -->
+                <!-- Error Message for Invalid Login -->
                 <span v-if="messages.length > 0" class="error-text">
-                    Invalid username or password.
+                    ❌ Invalid username or password.
                 </span>
+                
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary" :disabled="!isFormValid"  >
-                    Login
+                <button type="submit" class="btn" :disabled="!isFormValid">
+                    Login 🔑
                 </button>
             </form>
-
         </div>
-        <!-- <div v-if="token">
-            <h3>Token:</h3>
-            <div>{{ token }}</div>
-        </div>
-        <div v-if="user">
-            <h3>User Info:</h3>
-            <pre>{{ user }}</pre>
-        </div> -->
-        
     </div>
-
 </template>
 
 <script setup>
@@ -69,8 +56,8 @@ const authStore = useAuthStore();
 
 // Form Fields
 const loginFormData = reactive({
-    username: "",
-    password: "",
+    username: "Admin",
+    password: "123",
 });
 
 const messages = ref([]);
@@ -105,14 +92,10 @@ async function login() {
 
 .error-text {
     color: #e74c3c;
-    /* Red for error */
     font-size: 0.875rem;
-    /* Smaller font size */
     display: block;
     text-align: center;
-    /* Center the text */
     width: 100%;
-    /* Make sure the error text spans the full width */
 }
 
 .error-text i {
@@ -124,21 +107,17 @@ async function login() {
     color: #ffffff;
     border: none;
     padding: 0.75rem 1.5rem;
-    /* Increase padding for a bigger button */
     font-size: 1.25rem;
-    /* Larger font size */
-    border-radius: 4px;
+    border-radius: 50px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    /* Optional: Limit maximum width */
-    margin: 10px 0 0 0 ;
+    transition: background-color 0.3s, transform 0.2s ease;
     width: 80%;
+    margin-top: 20px;
 }
 
 .btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
-    pointer-events: none;
 }
 
 .login-container {
@@ -146,17 +125,17 @@ async function login() {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f5f5f5;
+    background-color: #f0f4f8;
 }
 
 .login-card {
-    display:flex;
+    display: flex;
     flex-direction: column;
     gap: 20px;
     background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
     width: 100%;
     max-width: 400px;
     text-align: center;
@@ -164,15 +143,16 @@ async function login() {
 
 .login-title {
     text-align: center;
-    font-size: 2.1rem;
-    margin: 0px;
+    font-size: 2.5rem;
+    margin: 0;
     color: #333333;
     font-weight: 600;
+    margin-bottom: 20px;
 }
 
 .form-group {
     width: 100%;
-    margin: 0rem;
+    margin: 0;
     text-align: left;
 }
 
@@ -180,13 +160,14 @@ async function login() {
     display: flex;
     align-items: center;
     border: 1px solid #ced4da;
-    border-radius: 4px;
-    padding: 0.5rem;
+    border-radius: 8px;
+    padding: 0.75rem;
     background: #f9f9f9;
+    transition: all 0.3s ease;
 }
 
 .input-group .icon {
-    margin-right: 0.5rem;
+    margin-right: 1rem;
     color: #6c757d;
 }
 
@@ -195,9 +176,17 @@ async function login() {
     outline: none;
     background: none;
     flex: 1;
+    font-size: 1rem;
+    padding: 0.75rem;
+}
+
+.input-group:hover {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
 }
 
 .btn:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
 }
 </style>

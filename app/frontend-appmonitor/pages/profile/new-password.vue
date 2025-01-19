@@ -6,7 +6,7 @@
             <h2>Change Password</h2>
 
                 <button @click="router.go(-1)" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                Voltar
+              🔙 Back
             </button>
             </div>
         </div>
@@ -191,7 +191,7 @@ const closePopup = () => {
 
 .btn-primary {
     padding: 0.5rem 1rem;
-    background-color: #007bff;
+    background-color: rgb(34 197 94);
     color: white;
     border: none;
     border-radius: 0.375rem;

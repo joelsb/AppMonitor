@@ -77,8 +77,9 @@ public class OrderService {
             // write to the log the principal.getName() and the username
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        orderDTO.setCustomerUsername(null);
-
+        if(securityContext.isUserInRole("Customer")){
+            orderDTO.setCustomerUsername(null);
+        }
         var volumesDTO = VolumeDTO.from(order.getVolumes());
         for (VolumeDTO volumeDTO : volumesDTO) {
             volumeDTO.setOrderId(null);

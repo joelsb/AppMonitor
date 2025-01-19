@@ -73,6 +73,7 @@ const addSensorValue = async (formValue) => {
             popupMessages.value.push(data || 'Failed to add value to the sensor.');
             popupType.value = 'failure';
         } else {
+            
             showPopup.value = true;
             popupTitle.value = 'Success';
             popupMessages.value.push('Value added to the sensor successfully!');
@@ -89,5 +90,7 @@ const addSensorValue = async (formValue) => {
 const closePopup = () => {
     showPopup.value = false;
     popupMessages.value = [];
+    sensorForm.value.sensorId = '';
+    sensorForm.value.value = '';
 };
 </script>

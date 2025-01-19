@@ -1,47 +1,57 @@
 <template>
-    <div class="max-w-4xl mx-auto mt-6 p-5 bg-white rounded-lg shadow-md">
+    <div class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-xl">
         <!-- Header and Filters -->
-        <div class="flex justify-between mb-4">
-            <h1 class="text-3xl font-semibold">{{ deliveryType }}s</h1>
-            <div class="flex items-center space-x-6">
-                
-            </div>
+        <div class="flex justify-between mb-6">
+            <h1 class="text-3xl font-semibold text-gray-800">{{ deliveryType }}s 🚚</h1>
+            
         </div>
 
         <!-- Error Message -->
         <div v-if="errorMessage" class="mb-4 p-4 text-red-600 bg-red-100 border border-red-400 rounded">
-            {{ errorMessage }}
+            <strong>Error: </strong>{{ errorMessage }}
         </div>
 
         <div v-if="filteredItems.length === 0" class="text-center text-gray-500">
-                    Sem {{ deliveryType }}s para entregar
-                </div>
-                <table v-if=" filteredItems.length > 0" class="min-w-full table-auto border-collapse mt-4">
+            No {{ deliveryType }}s to deliver 🙅‍♂️
+        </div>
+
+        <!-- Table -->
+        <table v-if="filteredItems.length > 0" class="min-w-full table-auto border-collapse mt-6">
             <thead>
                 <tr>
-                    <th class="px-4 py-2 text-left border-b w-1/12">ID</th>
-                    <th class="px-4 py-2 text-left border-b w-2/12">{{ deliveryType === 'Volume' ? 'Order ID' :
-                        'Customer Username' }}</th>
-                    <th class="px-4 py-2 text-left border-b w-4/12">{{ deliveryType === 'Volume' ? 'Sent Date' :
-                        'Created Date' }}</th>
-                    <th class="px-4 py-2 text-left border-b w-4/12">Delivered Date</th>
-                    <th class="px-4 py-2 text-left border-b w-2/12">Actions</th>
+                    <th class="px-6 py-3 text-left border-b text-sm font-semibold text-gray-700">ID </th>
+                    <th class="px-6 py-3 text-left border-b text-sm font-semibold text-gray-700">
+                        {{ deliveryType === 'Volume' ? 'Order ID' : 'Customer Username' }}
+                    </th>
+                    <th class="px-6 py-3 text-left border-b text-sm font-semibold text-gray-700">
+                        {{ deliveryType === 'Volume' ? 'Sent Date' : 'Created Date' }}
+                    </th>
+                    <th class="px-6 py-3 text-left border-b text-sm font-semibold text-gray-700">Delivered Date </th>
+                    <th class="px-6 py-3 text-left border-b text-sm font-semibold text-gray-700">Actions </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in filteredItems" :key="index" class="hover:bg-gray-100">
-                    <td class="px-4 py-2 border-b">{{ item.id }}</td>
-                    <td class="px-4 py-2 border-b">{{ deliveryType === 'Volume' ? item.orderId : item.customerUsername
-                        }}</td>
-                    <td class="px-4 py-2 border-b">{{ deliveryType === 'Volume' ? item.sentDate || 'Not Sent' :
-                        item.createdDate || 'Not Created' }}</td>
-                    <td class="px-4 py-2 border-b">{{ item.deliveredDate || 'Not Delivered' }}</td>
-                    <td class="px-4 py-2 border-b">
-                        <button class="bg-blue-500 text-white py-1 px-3 rounded" :class="{
-                            'bg-blue-500 hover:bg-blue-600': !item.deliveredDate,
-                            'bg-gray-400 cursor-not-allowed': item.deliveredDate
-                        }" :disabled="item.deliveredDate" @click="deliver(item)">
-                            Deliver
+                <tr v-for="(item, index) in filteredItems" :key="index" class="hover:bg-gray-50 transition-all">
+                    <td class="px-6 py-4 border-b text-sm text-gray-700">{{ item.id }}</td>
+                    <td class="px-6 py-4 border-b text-sm text-gray-700">
+                        {{ deliveryType === 'Volume' ? item.orderId : item.customerUsername }}
+                    </td>
+                    <td class="px-6 py-4 border-b text-sm text-gray-700">
+                        {{ deliveryType === 'Volume' ? item.sentDate || 'Not Sent' : item.createdDate || 'Not Created' }}
+                    </td>
+                    <td class="px-6 py-4 border-b text-sm text-gray-700">
+                        {{ item.deliveredDate || 'Not Delivered' }}
+                    </td>
+                    <td class="px-6 py-4 border-b text-sm text-gray-700">
+                        <button
+                            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            :class="{
+                                'bg-blue-500 hover:bg-blue-600': !item.deliveredDate,
+                                'bg-gray-400 cursor-not-allowed': item.deliveredDate
+                            }"
+                            :disabled="item.deliveredDate"
+                            @click="deliver(item)">
+                            Deliver 📦
                         </button>
                     </td>
                 </tr>
@@ -49,9 +59,9 @@
         </table>
     </div>
 </template>
+
 <script setup>
 import { ref, computed, defineProps } from 'vue';
-
 
 const config = useRuntimeConfig();
 const apiUrl = config.public.API_URL;
@@ -74,7 +84,6 @@ const errorMessage = ref(null);
 // Filtered items computed property
 const filteredItems = computed(() => {
     const items = deliveryType === 'Volume' ? volumes : orders;
-    console.log(items);
     return items
         .filter(item => filter.value === 'all' || !item.deliveredDate)
         .sort((a, b) => {
@@ -85,7 +94,6 @@ const filteredItems = computed(() => {
             return a.id - b.id;
         });
 });
-
 
 // Deliver function
 async function deliver(item) {
@@ -116,7 +124,7 @@ async function deliver(item) {
             }
 
             // Add success message to the messages array
-            messages.value.push(`${deliveryType.slice(0, -1)} with id: '${item.id}' delivered successfully!`);
+            messages.value.push(`${deliveryType.slice(0, -1)} with id: '${item.id}' delivered successfully! ✅`);
             emit('formSubmitted', 'success', messages.value);
         } else {
             // Add error response to the messages array
@@ -125,9 +133,35 @@ async function deliver(item) {
         }
     } catch (error) {
         // Add error message to the messages array
-        messages.value.push(`An error occurred: ${error.message}`);
+        messages.value.push(`An error occurred: ${error.message} ❌`);
         emit('formSubmitted', 'error', messages.value);
     }
 }
-
 </script>
+
+<style scoped>
+/* Enhanced styles for better user experience */
+.table-auto {
+    border-collapse: collapse;
+}
+
+.table-auto th, .table-auto td {
+    padding: 0.75rem;
+}
+
+.table-auto th {
+    background-color: #f3f4f6;
+}
+
+button:disabled {
+    opacity: 0.6;
+}
+
+button:hover:not(:disabled) {
+    background-color: #3b82f6;
+}
+
+button:focus {
+    outline: none;
+}
+</style>

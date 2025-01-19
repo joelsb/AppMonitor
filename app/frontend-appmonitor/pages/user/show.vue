@@ -11,7 +11,7 @@
 
                 <button @click="router.go(-1)"
                     class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                    Voltar
+                  🔙 Back
                 </button>
             </div>
             <!-- Loading Indicator -->
@@ -29,7 +29,7 @@
             <!-- users Table -->
             <div v-if="!loading && !error" class="table-container">
                 <div v-if="users.length === 0" class="text-center text-gray-500">
-                    Ainda sem users
+                    No users yet
                 </div>
                 <table v-if="users.length > 0" aria-label="users table" class="table w-full">
                     <thead>
@@ -54,7 +54,7 @@
                         <!-- NEW PACKAGE TYPE IN A ROW -->
                         <tr>
                             <td class="p-3 flex-row justify-end" colspan="4">
-                                <button @click="router.push('/admin/new-user')"
+                                <button @click="router.push('/user/create')"
                                     class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">
                                     Create a new User
                                 </button>

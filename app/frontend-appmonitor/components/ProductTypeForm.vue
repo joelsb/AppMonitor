@@ -3,7 +3,7 @@
         <div class="mb-4 flex-row justify-between flex items-center">
             <button @click="router.go(-1)"
                 class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                Voltar
+              🔙 Back
             </button>
             <div v-if="!isCreating" class="flex justify-end items-center">
                 <label for="editProfileSwitch" class="block font-semibold text-lg mr-3">Edit Mode</label>
@@ -60,7 +60,7 @@
 
                 <!-- Submit Button -->
                 <!-- Create Button (Only in Create Mode) -->
-                <!-- Save Button (Only in Edit Mode) -->
+                <!-- 💾 Save Button (Only in Edit Mode) -->
                 <div v-if="isEditing && isCreating" class="edit-button">
                     <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
                         Create new Product Type
@@ -69,7 +69,7 @@
                 <!-- Create Button (Only in Create Mode) -->
                 <div v-if="isEditing && !isCreating" class="edit-button">
                     <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                        Save Changes
+                        💾 Save Changes
                     </button>
                 </div>
             </form>

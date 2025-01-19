@@ -2,13 +2,12 @@
     <!-- Success Popup -->
     <div v-if="type == 'success' && show" class="popup-overlay">
         <div class="popup-box popup-box-success">
-            <h2 class="popup-title popup-title-success">Success!</h2>
-            <!-- Render the message with HTML using v-html -->
+            <h2 class="popup-title popup-title-success">🎉 Success!</h2>
             <ul v-if="messages.length > 0" class="popup-messages">
                 <li v-for="(message, index) in messages" :key="index" v-html="message"></li>
             </ul>
             <button @click="closePopup" class="popup-close-button popup-close-button-success">
-                Close
+                Close 🛑
             </button>
         </div>
     </div>
@@ -16,13 +15,12 @@
     <!-- Failure Popup -->
     <div v-if="type == 'failure' && show" class="popup-overlay">
         <div class="popup-box popup-box-failure">
-            <h2 class="popup-title popup-title-failure">Error!</h2>
-            <!-- Render the message with HTML using v-html -->
+            <h2 class="popup-title popup-title-failure">⚠️ Error!</h2>
             <ul v-if="messages.length > 0" class="popup-messages">
                 <li v-for="(message, index) in messages" :key="index" v-html="message"></li>
             </ul>
             <button @click="closePopup" class="popup-close-button popup-close-button-failure">
-                Close
+                Close 🛑
             </button>
         </div>
     </div>
@@ -30,13 +28,12 @@
     <!-- Information Popup -->
     <div v-if="type == 'info' && show" class="popup-overlay">
         <div class="popup-box popup-box-info">
-            <h2 class="popup-title popup-title-info">{{ title }}</h2>
-            <!-- Render the message with HTML using v-html -->
+            <h2 class="popup-title popup-title-info">{{ title }} 🗣️</h2>
             <ul v-if="messages.length > 0" class="popup-messages">
                 <li v-for="(message, index) in messages" :key="index" v-html="message" class="popup-single-message"></li>
             </ul>
             <button @click="closePopup" class="popup-close-button popup-close-button-info">
-                Close
+                Close 🛑
             </button>
         </div>
     </div>
@@ -79,14 +76,17 @@ const closePopup = () => {
 <style scoped>
 .popup-messages {
     list-style-type: disc;
-    margin-left: 25px;
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
+    gap: 10px;
+    color: #333;
 }
+
 .popup-single-message {
     margin-bottom: 7px;
     margin-top: 7px;
+    font-size: 1rem;
 }
 
 /* Popup Overlay */
@@ -99,96 +99,115 @@ const closePopup = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     z-index: 50;
+    animation: fadeIn 0.5s ease;
 }
 
 /* Popup Box (General) */
 .popup-box {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem; /* space-y-4 */
+    gap: 1rem;
     padding: 20px;
     background-color: white;
-    border-radius: 0.5rem; /* rounded-lg */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* shadow-lg */
-    padding: 1.5rem; /* p-6 */
-    max-width: 24rem; /* max-w-sm */
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 28rem;
     width: 100%;
+    animation: popupScale 0.3s ease-in-out;
 }
 
 /* Success Popup */
 .popup-box-success {
-    background-color: #e7f9e4; /* light green background for success */
+    background-color: #e0f7e6; /* light green background */
 }
 
-.popup-title{
-    width: 100%;
-    text-align: center;
-    font-size: 1.5rem; /* text-lg */
-    font-weight: 600; /* font-semibold */
-    text-transform: uppercase;
-}
 .popup-title-success {
-    color: #16a34a; /* text-green-600 */
-}
-.popup-close-button {
-    width: 100%;
-    margin-top: 0;
-    color: white;
-    padding: 0.5rem 1rem; /* py-2 px-4 */
-    border-radius: 0.375rem; /* rounded */
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.popup-close-button-success {
-    background-color: #16a34a; /* green background */
-}
-
-.popup-close-button-success:hover {
-    background-color: #15803d; /* darker green on hover */
+    color: #16a34a; /* green text */
 }
 
 /* Failure Popup */
 .popup-box-failure {
-    background-color: #fef2f2; /* light red background for failure */
+    background-color: #fef2f2; /* light red background */
 }
 
 .popup-title-failure {
-    color: #dc2626; /* text-red-600 */
-}
-
-.popup-close-button-failure {
-    background-color: #dc2626; /* red background */
-}
-
-.popup-close-button-failure:hover {
-    background-color: #b91c1c; /* darker red on hover */
+    color: #dc2626; /* red text */
 }
 
 /* Information Popup */
 .popup-box-info {
-    background-color: #eff6ff; /* light blue background for information */
+    background-color: #eff6ff; /* light blue background */
 }
 
 .popup-title-info {
-    color: #3b82f6; /* text-blue-600 */
+    color: #3b82f6; /* blue text */
 }
 
-.popup-close-button-info {
+/* Close Button (General) */
+.popup-close-button {
     margin-top: 1rem;
-    background-color: #3b82f6; /* blue background */
-    color: white;
-    padding: 0.5rem 1rem; /* py-2 px-4 */
-    border-radius: 0.375rem; /* rounded */
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 0.375rem;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    text-align: center;
+}
+
+.popup-close-button:hover {
+    opacity: 0.8;
+}
+
+/* Success Button */
+.popup-close-button-success {
+    background-color: #16a34a;
+    color: white;
+}
+
+.popup-close-button-success:hover {
+    background-color: #15803d;
+}
+
+/* Failure Button */
+.popup-close-button-failure {
+    background-color: #dc2626;
+    color: white;
+}
+
+.popup-close-button-failure:hover {
+    background-color: #b91c1c;
+}
+
+/* Info Button */
+.popup-close-button-info {
+    background-color: #3b82f6;
+    color: white;
 }
 
 .popup-close-button-info:hover {
-    background-color: #2563eb; /* darker blue on hover */
+    background-color: #2563eb;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes popupScale {
+    0% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 </style>

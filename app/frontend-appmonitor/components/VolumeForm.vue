@@ -15,7 +15,7 @@
             <!-- Volume ID -->
             <div class="mb-4">
                 <label for="volumeId" class="block font-semibold">Volume ID:</label>
-                <input id="volumeId" v-model="form.id" type="number" class="w-full p-2 border rounded"  />
+                <input id="volumeId" v-model="form.id" type="number" min="1" class="w-full p-2 border rounded"  />
             </div>
 
             <!-- Sent Date -->
@@ -35,7 +35,7 @@
                         </option>
                     </select>
                     <label :for="'quantity-' + index" class="block">Quantity:</label>
-                    <input :id="'quantity-' + index" v-model="product.quantity" type="number"
+                    <input :id="'quantity-' + index" v-model="product.quantity" type="number" min="1"
                         class="w-full p-2 border rounded" />
                     <button type="button" @click="removeItem(form.products, index)"
                         class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 mt-2">Remove</button>
@@ -111,9 +111,9 @@ const nextSensorId = computed(() => {
 
 
 const form = ref({
-    orderId: 28, id: nextVolumeId, sentDate: '2021-06-01T00:00:00', packageTypeId: 1,
-    products: [{ productId: 1, quantity: 1 }, { productId: 2, quantity: 3 }],
-    sensors: [{ id: nextSensorId, sensorTypeId: 1 }, { id: nextSensorId+1, sensorTypeId: 2 }],
+    orderId: null, id: null, sentDate: null, packageTypeId: null,
+    products: [{ productId: null, quantity: null }],
+    sensors: [{ id: null, sensorTypeId: null }],
 });
 
 
@@ -195,9 +195,26 @@ const removeItem = (array, index) => array.splice(index, 1);
 const mandatorySensors = ref([]);
 
 const fetchMandatorySensors = async (productTypeId, packageTypeId) => {
-    const productSensors = await fetch(`${apiUrl}/product-types/${productTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []);
-    const packageSensors = packageTypeId ? await fetch(`${apiUrl}/package-types/${packageTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []) : [];
-    mandatorySensors.value = [...productSensors, ...packageSensors];
+    const productSensors = ref([]);
+    if(productTypeId!=null) {
+        productSensors.value = await fetch(`${apiUrl}/product-types/${productTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []);
+    }
+    const packageSensors = ref([]);
+    if(packageTypeId!=null) {
+        packageSensors.value = await fetch(`${apiUrl}/package-types/${packageTypeId}/mandatory-sensors`).then(r => r.ok ? r.json() : []);
+    }
+    if(productSensors.value.length === 0 && packageSensors.value.length > 0) {
+        mandatorySensors.value = packageSensors.value;
+    }
+    if(productSensors.value.length > 0 && packageSensors.value.length === 0) {
+        mandatorySensors.value = productSensors.value;
+    }
+    if(productSensors.value.length > 0 && packageSensors.value.length > 0) {
+        mandatorySensors.value = productSensors.value.filter(sensor => packageSensors.value.some(pSensor => pSensor.sensorTypeId === sensor.sensorTypeId));
+    }
+    else {
+        mandatorySensors.value = [];
+    }
 };
 
 const showMandatorySensors = () => {
