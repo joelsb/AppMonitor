@@ -1,11 +1,5 @@
 # 📦 Smart Packaging Monitoring Platform
 
-## 👥 Authors
-- **Joel Bastos** (joelsb9)  
-- **José Pereira** (JosePereira114)  
-- **Ana Martins** (a0mart)  
-- **Tiago Baptista** (tiagobaptista1)  
-
 
 ## 📝 Project Description
 
@@ -134,3 +128,21 @@ The platform exposes REST API endpoints grouped by user roles and sensor managem
 | **👷 Employee**    | ![Employee Endpoints](Endpoints/Employee_Endpoints.png) |
 | **📋 Manager**     | ![Manager Endpoints](Endpoints/Manager_Endpoints.png) |
 | **📟 Sensor**      | ![Sensor Endpoints](Endpoints/Sensor_Enpoints.png) |
+
+
+## 📅 Project Details
+
+- **Developed by:**  
+  - Joel Bastos (joelsb9)  
+  - José Pereira (JosePereira114)  
+  - Ana Martins (a0mart)  
+  - Tiago Baptista (tiagobaptista1)  
+
+- **Institution:**  
+  Polytechnic of Leiria, Portugal
+
+- **Course:**  
+  Distributed Applications Engineering (DAE)
+
+- **Degree Program:**  
+  Bachelor’s in Software Engineering
