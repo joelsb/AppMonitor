@@ -113,7 +113,7 @@ This project **fully satisfies** all the above requirements as defined in the pr
 
 - **🗃️ Database Architecture Diagram:**  
 
-  ![Database Architecture](Apentix/ClassDiagramSketch.png)
+  ![Database Architecture](Apendix/ClassDiagramSketch.png)
 
 
  
