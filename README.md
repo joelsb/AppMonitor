@@ -109,7 +109,7 @@ This project **fully satisfies** all the above requirements as defined in the pr
 
 - **🎥 Video Demonstration:**  
 
-  ![https://youtu.be/GJgeZnHyul4](https://youtu.be/GJgeZnHyul4)
+  [![Watch the video](https://img.youtube.com/vi/GJgeZnHyul4/0.jpg)](https://youtu.be/GJgeZnHyul4)
 
 - **🗃️ Database Architecture Diagram:**  
 
