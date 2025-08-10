@@ -146,3 +146,6 @@ The platform exposes REST API endpoints grouped by user roles and sensor managem
 
 - **Degree Program:**  
   Bachelor’s in Software Engineering
+
+- **Project Duration:**  
+  Approximately 3 months
