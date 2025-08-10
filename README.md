@@ -40,3 +40,47 @@ Este projeto visa o desenvolvimento de uma aplicação empresarial de monitoriza
 
 **NOTION LINK:**
 https://obsidian-tile-511.notion.site/DAE-Project-152be976b0918097a072ca3b38f074c9?pvs=74
+
+**Tecnologias Utilizadas:**
+- Docker (Instalar e ativar a tecnologia de virtualização na BIOS)
+
+### Instalar o comando MAKE
+1. Abrir a PowerShell em modo administrador
+2. Executar: 
+```
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+3. Fechar a Powershell
+4. Abrir novamente a Powershell em modo normal
+5. Executar: `choco install make`
+
+### Instalar npm
+1. Abrir o Command Prompt
+2. Executar:
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# Download and install Node.js:
+choco install nodejs --version="22.18.0"
+# Verify the Node.js version:
+node -v # Should print "v22.18.0".
+# Verify npm version:
+npm -v # Should print "10.9.3".
+```
+3. Abrir o caminho app/frontend-appmonitor no Command Prompt
+4. Executar: `npm install`
+
+### Instalar o Maven
+1. Abrir a página https://maven.apache.org/download.cgi
+2. Instalar o zip binário
+3. Adicionar o caminho do Maven ao PATH (i.e. *C:\apache-maven-3.9.4*)
+
+
+## Como Usar:
+1. No terminal abrir a pasta app/backend-appmonitor
+2. No terminal digitar: `make up` e depois `make deploy`
+3. Noutro terminal abrir a pasta app/backend-appmonitor
+4. No terminal digitar `npm run start`
+5. Abrir o navegador e ir a http://localhost:3000
