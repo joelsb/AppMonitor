@@ -109,8 +109,8 @@ This project **fully satisfies** all the above requirements as defined in the pr
 
 - **🎥 Video Demonstration:**  
 
-  ![Video Demonstration](AppMonitor-ExplainatoryVideo.mkv)  
-
+  ![https://youtu.be/GJgeZnHyul4](https://youtu.be/GJgeZnHyul4)
+  
 - **🗃️ Database Architecture Diagram:**  
 
   ![Database Architecture](ClassDiagramSketch.png)
