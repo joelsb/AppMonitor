@@ -1,86 +1,105 @@
-Made by:
+# Smart Packaging Monitoring Platform
 
-- **Joel Bastos** (2191618)
-- **Ana Martins** (2201789)
-- **Tiago Baptista**  (21919826)
-- **José Pereira** (2211033)
+## Authors
+- **Joel Bastos** (joelsb9)  
+- **José Pereira** (JosePereira114)  
+- **Ana Martins** (a0mart)  
+- **Tiago Baptista** (tiagobaptista1)  
 
-  
+---
 
-**Plataforma de Monitorização de Embalagens Inteligentes**
-  
-**Descrição**
-Este projeto visa o desenvolvimento de uma aplicação empresarial de monitorização de embalagens inteligentes, que utilizam sensores e conectividade sem fio para acompanhar parâmetros como temperatura, pressão, aceleração e posicionamento global durante o transporte de encomendas. A aplicação será composta por uma interface de backend e frontend, permitindo a comunicação entre os sistemas internos da empresa e a visualização de dados em tempo real.
+## Project Description
 
+This project aims to develop an enterprise-grade application for monitoring smart packaging, which leverages embedded sensors and wireless connectivity to track parameters such as temperature, pressure, acceleration, and global positioning during shipment. The application consists of both backend and frontend components, enabling seamless communication with the company’s internal systems and providing real-time data visualization.
 
-**Funcionalidades**
-  - Monitorização de sensores: Acompanhar dados de sensores como temperatura, aceleração e posicionamento global, integrados em embalagens de produtos.
-  - Comunicação com sistemas internos: Interagir com os sistemas de Logística, Gestão Operacional e Apoio ao Cliente da empresa XYZ.
-  - Exibição de dados: Gestores podem verificar as últimas leituras de sensores e os clientes podem visualizar o status das suas encomendas, incluindo alertas em caso de impacto ou mudanças significativas nos sensores.
-  - Inatividade de sensores após entrega: Os sensores tornam-se inativos quando a encomenda é entregue ao cliente, parando de enviar dados.
+---
 
+## Features
 
+- **Sensor Monitoring:** Continuously track sensor data including temperature, acceleration, and global positioning integrated within product packaging.
+- **Internal System Integration:** Facilitate interaction with XYZ company’s Logistics, Operational Management, and Customer Support systems.
+- **Data Visualization:** Managers can view the latest sensor readings, while customers have access to shipment status and receive alerts in cases of impacts or significant sensor changes.
+- **Sensor Deactivation Post-Delivery:** Sensors automatically deactivate once the package is delivered to the customer, ceasing data transmission.
 
-**Tecnologias Utilizadas**
-  - Backend: Desenvolvido em Jakarta EE com modelo REST.
-  - Frontend: Construído com Vue.js/NUXT.
-  - Banco de Dados: PostgreSQL.
+---
 
+## Technologies Used
 
+- **Backend:** Jakarta EE with RESTful service architecture  
+- **Frontend:** Vue.js with Nuxt.js framework  
+- **Database:** PostgreSQL  
 
-**Estrutura do Projeto**
-  - Backend: Lógica de negócios e acesso a dados via API REST.
-  - Frontend: Interface de apresentação para simulação e interação com os sistemas externos e backend.
+---
 
-**Requisitos**
-  - A aplicação será auto-contida, não dependendo de sistemas externos.
-  - O backend será implementado utilizando o modelo REST Service, com foco na modularidade e boas práticas arquiteturais como MVC e ORM.
+## Project Structure
 
+- **Backend:** Implements business logic and data access via REST API  
+- **Frontend:** Provides user interface for simulation and interaction with both external systems and backend services  
 
+---
 
-**NOTION LINK:**
-https://obsidian-tile-511.notion.site/DAE-Project-152be976b0918097a072ca3b38f074c9?pvs=74
+## Requirements
 
-**Tecnologias Utilizadas:**
-- Docker (Instalar e ativar a tecnologia de virtualização na BIOS)
+- The application is self-contained and does not rely on external systems.  
+- The backend follows RESTful service principles, emphasizing modularity and best architectural practices such as MVC and ORM.
 
-### Instalar o comando MAKE
-1. Abrir a PowerShell em modo administrador
-2. Executar: 
-```
-Set-ExecutionPolicy Bypass -Scope Process -Force;
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-```
-3. Fechar a Powershell
-4. Abrir novamente a Powershell em modo normal
-5. Executar: `choco install make`
+---
 
-### Instalar npm
-1. Abrir o Command Prompt
-2. Executar:
-```
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+## Setup Instructions
 
-# Download and install Node.js:
-choco install nodejs --version="22.18.0"
-# Verify the Node.js version:
-node -v # Should print "v22.18.0".
-# Verify npm version:
-npm -v # Should print "10.9.3".
-```
-3. Abrir o caminho app/frontend-appmonitor no Command Prompt
-4. Executar: `npm install`
+### Prerequisites
 
-### Instalar o Maven
-1. Abrir a página https://maven.apache.org/download.cgi
-2. Instalar o zip binário
-3. Adicionar o caminho do Maven ao PATH (i.e. *C:\apache-maven-3.9.4*)
+- Enable virtualization technology in BIOS (required for Docker)  
 
+### Install MAKE command
 
-## Como Usar:
-1. No terminal abrir a pasta app/backend-appmonitor
-2. No terminal digitar: `make up` e depois `make deploy`
-3. Noutro terminal abrir a pasta app/backend-appmonitor
-4. No terminal digitar `npm run start`
-5. Abrir o navegador e ir a http://localhost:3000
+1. Open PowerShell as Administrator  
+2. Run the following command to install Chocolatey package manager and Make utility:  
+   ```powershell
+   Set-ExecutionPolicy Bypass -Scope Process -Force;
+   [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+   iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+   ```  
+3. Close PowerShell  
+4. Reopen PowerShell normally  
+5. Run:  `choco install make`
+
+### Install Node.js and npm
+
+1. Open Command Prompt  
+2. Run:  
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+   choco install nodejs --version="22.18.0"
+   node -v  # Should output v22.18.0
+   npm -v   # Should output 10.9.3
+   ```  
+3. Navigate to the frontend application directory:  `cd app/frontend-appmonitor`  
+4. Install dependencies:  `npm install`
+
+### Install Apache Maven
+
+1. Download the binary ZIP from [Apache Maven official site](https://maven.apache.org/download.cgi)  
+2. Extract and add the Maven `bin` folder to your system `PATH` environment variable (e.g., `C:\apache-maven-3.9.4\bin`)  
+
+---
+
+## How to Run
+
+1. Open a terminal and navigate to the backend directory:  `cd app/backend-appmonitor`  
+2. Start the backend services using Make:  `make up` and `make deploy`  
+3. Open another terminal in the backend directory and start the frontend:  `npm run start`  
+4. Open a browser and access the application at:  `http://localhost:3000`
+
+---
+
+## Additional Resources
+
+- **Notion Project Documentation:**  
+  [https://obsidian-tile-511.notion.site/DAE-Project-152be976b0918097a072ca3b38f074c9?pvs=74](https://obsidian-tile-511.notion.site/DAE-Project-152be976b0918097a072ca3b38f074c9?pvs=74)  
+
+- **Video Demonstration:**  
+  ![Video Demonstration](AppMonitor-ExplainatoryVideo.mkv)  
+
+- **Database Architecture Diagram:**  
+  ![Database Architecture](ClassDiagramSketch.png)
