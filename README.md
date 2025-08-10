@@ -6,13 +6,13 @@
 - **Ana Martins** (a0mart)  
 - **Tiago Baptista** (tiagobaptista1)  
 
----
+
 
 ## Project Description
 
 This project aims to develop an enterprise-grade application for monitoring smart packaging, which leverages embedded sensors and wireless connectivity to track parameters such as temperature, pressure, acceleration, and global positioning during shipment. The application consists of both backend and frontend components, enabling seamless communication with the company’s internal systems and providing real-time data visualization.
 
----
+
 
 ## Features
 
@@ -21,7 +21,7 @@ This project aims to develop an enterprise-grade application for monitoring smar
 - **Data Visualization:** Managers can view the latest sensor readings, while customers have access to shipment status and receive alerts in cases of impacts or significant sensor changes.
 - **Sensor Deactivation Post-Delivery:** Sensors automatically deactivate once the package is delivered to the customer, ceasing data transmission.
 
----
+
 
 ## Technologies Used
 
@@ -29,21 +29,21 @@ This project aims to develop an enterprise-grade application for monitoring smar
 - **Frontend:** Vue.js with Nuxt.js framework  
 - **Database:** PostgreSQL  
 
----
+
 
 ## Project Structure
 
 - **Backend:** Implements business logic and data access via REST API  
 - **Frontend:** Provides user interface for simulation and interaction with both external systems and backend services  
 
----
+
 
 ## Requirements
 
 - The application is self-contained and does not rely on external systems.  
 - The backend follows RESTful service principles, emphasizing modularity and best architectural practices such as MVC and ORM.
 
----
+
 
 ## Setup Instructions
 
@@ -82,7 +82,7 @@ This project aims to develop an enterprise-grade application for monitoring smar
 1. Download the binary ZIP from [Apache Maven official site](https://maven.apache.org/download.cgi)  
 2. Extract and add the Maven `bin` folder to your system `PATH` environment variable (e.g., `C:\apache-maven-3.9.4\bin`)  
 
----
+
 
 ## How to Run
 
@@ -91,7 +91,6 @@ This project aims to develop an enterprise-grade application for monitoring smar
 3. Open another terminal in the backend directory and start the frontend:  `npm run start`  
 4. Open a browser and access the application at:  `http://localhost:3000`
 
----
 
 ## Additional Resources
 
@@ -99,7 +98,21 @@ This project aims to develop an enterprise-grade application for monitoring smar
   [https://obsidian-tile-511.notion.site/DAE-Project-152be976b0918097a072ca3b38f074c9?pvs=74](https://obsidian-tile-511.notion.site/DAE-Project-152be976b0918097a072ca3b38f074c9?pvs=74)  
 
 - **Video Demonstration:**  
+
   ![Video Demonstration](AppMonitor-ExplainatoryVideo.mkv)  
 
 - **Database Architecture Diagram:**  
+
   ![Database Architecture](ClassDiagramSketch.png)
+
+- **API Endpoints**
+
+The platform exposes REST API endpoints grouped by user roles and sensor management. The following diagrams illustrate the available endpoints for each category:
+
+| Role/User       | Endpoints Diagram               |
+|-----------------|--------------------------------|
+| **Admin**       | ![Admin Endpoints](Endpoints/Admin_Enpoints.png) |
+| **Customer**    | ![Customer Endpoints](Endpoints/Customer_Endpoints.png) |
+| **Employee**    | ![Employee Endpoints](Endpoints/Employee_Endpoints.png) |
+| **Manager**     | ![Manager Endpoints](Endpoints/Manager_Endpoints.png) |
+| **Sensor**      | ![Sensor Endpoints](Endpoints/Sensor_Enpoints.png) |
